@@ -1,0 +1,71 @@
+/* استایل سکشن یک */
+.gifts-section {
+    width: 100%;
+    padding: 40px 15px;
+}
+
+.gifts-container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.gift-box {
+    display: block;
+    text-decoration: none;
+    padding: 40px 15px;
+    border: 3px solid #F40C1C;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(244, 12, 28, 0.4);
+    transition: all 0.4s ease;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gift-box:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 0 45px rgba(244, 12, 28, 0.7);
+}
+
+.box-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.box-content i {
+    font-size: 45px;
+    color: #ffffff;
+}
+
+.box-content h3 {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* رنگ آیکون‌ها */
+.gold .box-content i {
+    color: #FFD700;
+}
+
+.silver .box-content i {
+    color: #C0C0C0;
+}
+
+.diamond .box-content i {
+    color: #00FFFF;
+}
+
+.legendary .box-content i {
+    color: #FF4500;
+}
+

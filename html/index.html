@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="page_title">Home</title>
+    
+    
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+</head>
+<body>
+
+
+<!-- ============== هدر ============== -->
+<header class="header">
+    <div class="header-container">
+
+        <!-- بخش چپ: زبان با منوی کشویی -->
+        <div class="header-left">
+            <div class="language-wrapper">
+                <button class="language-btn" id="languageToggle">
+                    <span id="currentLanguage">🇬🇧 English</span>
+                    <span class="language-arrow">▼</span>
+                </button>
+                
+                <!-- منوی کشویی زبان -->
+                <div class="language-dropdown" id="languageDropdown">
+                    <ul class="language-list">
+                        <li class="language-item" data-lang="en" onclick="changeLanguage('en', '🇬🇧', 'English')">
+                            <span class="lang-flag">🇬🇧</span>
+                            <span class="lang-name">English</span>
+                        </li>
+                        <li class="language-item" data-lang="fa" onclick="changeLanguage('fa', '🇮🇷', 'فارسی')">
+                            <span class="lang-flag">🇮🇷</span>
+                            <span class="lang-name">فارسی</span>
+                        </li>
+                        <li class="language-item" data-lang="ru" onclick="changeLanguage('ru', '🇷🇺', 'Русский')">
+                            <span class="lang-flag">🇷🇺</span>
+                            <span class="lang-name">Русский</span>
+                        </li>
+                        <li class="language-item" data-lang="zh" onclick="changeLanguage('zh', '🇨🇳', '中文')">
+                            <span class="lang-flag">🇨🇳</span>
+                            <span class="lang-name">中文</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش وسط: دکمه پروفایل -->
+        <div class="header-center">
+            <div class="profile-wrapper">
+                <button class="profile-btn" id="profileToggle">
+                    <img src="#" alt="پروفایل" />
+                </button>
+                
+                <!-- منوی کشویی پروفایل -->
+                <div class="dropdown-menu" id="profileDropdown">
+                    
+                    <div class="dropdown-header">
+                        <img src="#" alt="پروفایل" />
+                        <div class="dropdown-user-info">
+                            <span class="dropdown-username" data-lang-key="user_label">Dear User</span>
+                            <span class="dropdown-email">user@example.com</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="dropdown-list">
+                        <a href="../html/User-information.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/1.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="user_info">User Information</span>
+                            </li>
+                        </a>
+                        <a href="../html/shopping-cart.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/4.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="user_orders">User Orders</span>
+                            </li>
+                        </a>
+                        <a href="../html/bonus.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/3.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="gifts_rewards">Gifts & Rewards</span>
+                            </li>
+                        </a>
+                        <a href="#">
+                            <li class="dropdown-divider"></li>
+                        </a>
+                        <a href="#">
+                            <li class="dropdown-item logout" onclick="alert('Logging out')">
+                                <span class="dropdown-icon">🚪</span>
+                                <span class="dropdown-label" data-lang-key="logout">Logout</span>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش راست: موجودی TON -->
+        <a href="../html/TON.html">
+            <div class="header-right">
+                <div class="balance-box">
+                    <span class="balance-currency">TON</span>
+                    <span class="balance-amount">00</span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- خط جداکننده زیر هدر -->
+    <div class="header-divider"></div>
+</header>
+
+
+<!-- ============== بخش اصلی (مین) ============== -->
+<section class="main-section">
+    <div class="main-container">
+        
+        <!-- باکس اول: سفارش طراحی -->
+        <a href="../html/Design-order.html" class="order-box design-box">
+            <div class="order-content">
+                <h3 class="order-title" data-lang-key="design_order">Design Order</h3>
+                <p class="order-desc" data-lang-key="design_desc">Professional graphic design, logo, etc...</p>
+                <span class="order-arrow">→</span>
+            </div>
+        </a>
+        
+        <!-- باکس دوم: سفارش اتوماتیک -->
+        <a href="../html/Automatic.html" class="order-box auto-box">
+            <div class="order-content">
+                <h3 class="order-title" data-lang-key="auto_order">Automatic Order</h3>
+                <p class="order-desc" data-lang-key="auto_desc">Fast and automatic order processing</p>
+                <span class="order-arrow">→</span>
+            </div>
+        </a>
+        
+    </div>
+</section>
+
+
+<!-- ============== ناوبری پایین صفحه (ثابت) ============== -->
+<div class="nav-bottom">
+    <div class="nav-container">
+        
+        <!-- دکمه نمونه کار -->
+        <a href="https://t.me/Villain_Produce">
+            <button class="nav-btn profile-nav" data-target="profile-section">
+                <img src="../assets/images/icons/5.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="portfolio">Portfolio</span>
+            </button>
+        </a>
+        
+        <!-- دکمه خانه -->
+        <a href="./index.html">
+            <button class="nav-btn home-nav" data-target="home-section">
+                <img src="../assets/images/icons/2.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="home">Home</span>
+            </button>
+        </a>
+        
+        <!-- دکمه هدایا -->
+        <a href="../html/bonus.html">
+            <button class="nav-btn gift-nav" data-target="gift-section">
+                <img src="../assets/images/icons/3.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="gifts">Gifts</span>
+            </button>
+        </a>
+
+    </div>
+</div>
+
+    
+    <script src="../js/main.js"></script>
+    <script src="../js/language.js"></script>
+    <script src="../js/TON.js"></script>
+    <script src="../js/api.js"></script>
+</body>
+</html>

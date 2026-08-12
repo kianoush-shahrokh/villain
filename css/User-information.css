@@ -1,0 +1,410 @@
+
+/* ===== استایل سکشن اطلاعات کاربر ===== */
+.user-section {
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 1px solid #2a2a2a;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+/* آواتار کاربر */
+.user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#6c63ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    border: 4px solid #44435c56;
+    flex-shrink: 0;
+}
+
+/* اطلاعات کاربر */
+.user-info {
+    flex: 1;
+}
+
+.user-info h2 {
+    font-size: 26px;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.user-info .user-detail {
+    color: #aaaaaa;
+    margin: 6px 0;
+    font-size: 15px;
+}
+
+.user-info .user-detail span {
+    color: #F40C1C;
+    font-weight: 600;
+}
+
+/* آمار کاربر */
+.user-stats {
+    display: flex;
+    gap: 30px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.user-stats .stat-item {
+    background: #0a0a0a;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-right: 3px solid #F40C1C;
+}
+
+.user-stats .stat-item .stat-number {
+    color: #F40C1C;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.user-stats .stat-item .stat-label {
+    color: #888;
+    font-size: 13px;
+    margin-right: 8px;
+}
+
+/* ===== استایل سکشن محصولات ===== */
+.products-section {
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid #2a2a2a;
+}
+
+.section-title {
+    color: #F40C1C;
+    font-size: 24px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2a2a2a;
+}
+
+/* شبکه محصولات */
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* ===== استایل کارت محصول ===== */
+.product-card {
+    background: #0a0a0a;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #2a2a2a;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    border-color: #F40C1C;
+    box-shadow: 0 8px 25px rgba(244, 12, 28, 0.15);
+}
+
+/* تصویر محصول */
+.product-image {
+    width: 100%;
+    height: 200px;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-image .no-image {
+    color: #555;
+    font-size: 48px;
+}
+
+/* اطلاعات محصول */
+.product-info {
+    padding: 18px;
+}
+
+.product-name {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.product-code {
+    color: #888;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* بخش پایین کارت */
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #2a2a2a;
+}
+
+.product-date {
+    color: #888;
+    font-size: 13px;
+}
+
+.product-date span {
+    color: #F40C1C;
+}
+
+/* دکمه دانلود */
+.download-btn {
+    background: #F40C1C;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.download-btn:hover {
+    background: #d40a18;
+    transform: scale(1.05);
+}
+
+.download-btn:active {
+    transform: scale(0.95);
+}
+
+.download-btn.downloaded {
+    background: #2a8a3a;
+}
+
+.download-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ===== ریسپانسیو برای موبایل ===== */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .user-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .user-stats {
+        justify-content: center;
+    }
+
+    .products-container {
+        grid-template-columns: 1fr;
+    }
+
+    .product-meta {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .download-btn {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .user-section,
+    .products-section {
+        padding: 18px;
+    }
+
+    .user-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 18px;
+    }
+
+    .user-info h2 {
+        font-size: 20px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== استایل سکشن ارتباط با ادمین ===== */
+.contact-section {
+    margin-top: 30px;
+    padding: 0;
+}
+
+.contact-container {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border-radius: 16px;
+    padding: 40px;
+    border: 1px solid #2a2a2a;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* افکت پس‌زمینه */
+.contact-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(244, 12, 28, 0.05) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.contact-content {
+    position: relative;
+    z-index: 1;
+}
+
+.contact-icon {
+    font-size: 64px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.contact-container h2 {
+    color: #ffffff;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.contact-container p {
+    color: #aaaaaa;
+    font-size: 16px;
+    margin-bottom: 25px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* دکمه تلگرام */
+.telegram-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #F40C1C;
+    color: white;
+    padding: 14px 35px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid #F40C1C;
+    margin-bottom: 20px;
+}
+
+.telegram-btn:hover {
+    background: transparent;
+    color: #F40C1C;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(244, 12, 28, 0.3);
+}
+
+.telegram-btn span {
+    font-size: 22px;
+}
+
+/* اطلاعات تماس */
+.contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.contact-info span {
+    color: #888;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ===== ریسپانسیو برای موبایل ===== */
+@media (max-width: 768px) {
+    .contact-container {
+        padding: 30px 20px;
+    }
+
+    .contact-container h2 {
+        font-size: 22px;
+    }
+
+    .telegram-btn {
+        padding: 12px 25px;
+        font-size: 16px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .contact-info {
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+    }
+}

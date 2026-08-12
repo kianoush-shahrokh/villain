@@ -1,0 +1,495 @@
+/* بخش اصلی گزینه‌ها */
+.thumbnail-options {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #1a1a1a;
+    border: 2px solid #F40C1C;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(244, 12, 28, 0.3);
+  }
+  
+  .options-title {
+    color: #F40C1C;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 35px;
+    border-bottom: 2px solid #F40C1C;
+    padding-bottom: 15px;
+  }
+  
+  /* هر گروه گزینه */
+  .option-group {
+    margin-bottom: 30px;
+  }
+  
+  .option-label {
+    display: block;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  
+  /* دکمه‌های انتخاب */
+  .option-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .option-btn {
+    padding: 10px 20px;
+    background: #2a2a2a;
+    color: #cccccc;
+    border: 2px solid #444444;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  .option-btn:hover {
+    background: #3a3a3a;
+    border-color: #F40C1C;
+    color: #ffffff;
+  }
+  
+  /* حالت فعال (انتخاب شده) */
+  .option-btn.active {
+    background: #F40C1C;
+    border-color: #F40C1C;
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(244, 12, 28, 0.5);
+  }
+  
+  /* بخش آپلود تصویر */
+  .upload-area {
+    border: 2px dashed #444444;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: #121212;
+  }
+  
+  .upload-area:hover {
+    border-color: #F40C1C;
+  }
+  
+  .upload-label {
+    display: block;
+    cursor: pointer;
+    color: #cccccc;
+  }
+  
+  .upload-label span {
+    font-size: 40px;
+    display: block;
+  }
+  
+  .upload-label p {
+    margin: 10px 0 0;
+  }
+  
+  #imageUpload {
+    display: none;
+  }
+  
+  .file-list {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .file-item {
+    background: #2a2a2a;
+    padding: 8px 15px;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 13px;
+    border: 1px solid #444444;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .file-item .remove-file {
+    cursor: pointer;
+    color: #F40C1C;
+    font-weight: bold;
+  }
+  
+  /* بخش توضیحات کاربر */
+  .user-description {
+    width: 100%;
+    min-height: 120px;
+    padding: 15px;
+    background: #121212;
+    color: #ffffff;
+    border: 2px solid #444444;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+  
+  .user-description:focus {
+    outline: none;
+    border-color: #F40C1C;
+    box-shadow: 0 0 15px rgba(244, 12, 28, 0.2);
+  }
+  
+  .user-description::placeholder {
+    color: #666666;
+  }
+  
+  /* بخش آیدی کاربر */
+  .user-id {
+    width: 100%;
+    padding: 12px 15px;
+    background: #121212;
+    color: #ffffff;
+    border: 2px solid #444444;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  .user-id:focus {
+    outline: none;
+    border-color: #F40C1C;
+    box-shadow: 0 0 15px rgba(244, 12, 28, 0.2);
+  }
+  
+  .user-id::placeholder {
+    color: #666666;
+  }
+  
+  /* دکمه ثبت سفارش */
+  .submit-order {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: #F40C1C;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  .submit-order:hover {
+    background: #d40a18;
+    box-shadow: 0 0 30px rgba(244, 12, 28, 0.4);
+    transform: scale(1.02);
+  }
+  
+  /* ریسپانسیو */
+  @media (max-width: 600px) {
+    .thumbnail-options {
+      padding: 20px;
+      margin: 20px 10px;
+    }
+    
+    .option-btn {
+      padding: 8px 15px;
+      font-size: 13px;
+      flex: 1 1 calc(50% - 10px);
+    }
+    
+    .options-title {
+      font-size: 22px;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* ===== بخش VIP ===== */
+.vip-container {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #1a1a1a;
+  border: 2px solid #F40C1C;
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(244, 12, 28, 0.3);
+}
+
+/* هدر VIP */
+.vip-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #F40C1C;
+}
+
+.vip-title {
+  color: #F40C1C;
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.vip-subtitle {
+  color: #ffd700;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.vip-countdown {
+  color: #ffffff;
+  font-size: 16px;
+  background: #2a2a2a;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: inline-block;
+  border: 1px solid #F40C1C;
+}
+
+.vip-countdown span:last-child {
+  color: #F40C1C;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* پکیج‌ها */
+.vip-packages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.vip-package {
+  background: #121212;
+  border: 2px solid #333333;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.vip-package:hover {
+  transform: translateY(-10px);
+  border-color: #F40C1C;
+  box-shadow: 0 10px 40px rgba(244, 12, 28, 0.2);
+}
+
+/* نشان پکیج */
+.package-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: #F40C1C;
+  color: #ffffff;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.package-icon {
+  font-size: 60px;
+  margin: 10px 0;
+}
+
+.package-title {
+  color: #ffffff;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+/* لیست ویژگی‌ها */
+.package-features {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+  text-align: right;
+}
+
+.package-features li {
+  color: #cccccc;
+  padding: 8px 0;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 14px;
+}
+
+.package-features li:last-child {
+  border-bottom: none;
+}
+
+/* قیمت‌ها */
+.package-pricing {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.old-price {
+  color: #888888;
+  font-size: 16px;
+  text-decoration: line-through;
+}
+
+.new-price {
+  color: #ffd700;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.discount-badge {
+  background: #F40C1C;
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* دکمه خرید */
+.vip-order-btn {
+  width: 100%;
+  padding: 14px;
+  background: #F40C1C;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.vip-order-btn:hover {
+  background: #d40a18;
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(244, 12, 28, 0.4);
+}
+
+/* پک سفارشی */
+.vip-custom {
+  text-align: center;
+  padding: 30px;
+  background: #121212;
+  border: 2px dashed #444444;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.vip-custom h4 {
+  color: #ffffff;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.vip-custom p {
+  color: #cccccc;
+  margin-bottom: 20px;
+}
+
+.custom-package-btn {
+  padding: 12px 40px;
+  background: transparent;
+  color: #F40C1C;
+  border: 2px solid #F40C1C;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-package-btn:hover {
+  background: #F40C1C;
+  color: #ffffff;
+  box-shadow: 0 0 30px rgba(244, 12, 28, 0.3);
+}
+
+/* بخش اطلاعات کاربر (مخفّی) */
+.vip-user-info {
+  margin-top: 30px;
+  padding: 20px;
+  background: #121212;
+  border: 1px solid #333333;
+  border-radius: 8px;
+}
+
+.submit-vip-order {
+  width: 100%;
+  padding: 16px;
+  background: #ffd700;
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+}
+
+.submit-vip-order:hover {
+  background: #ffed4a;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+/* ریسپانسیو */
+@media (max-width: 768px) {
+  .vip-packages {
+    grid-template-columns: 1fr;
+  }
+  
+  .vip-title {
+    font-size: 28px;
+  }
+  
+  .vip-countdown {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+}

@@ -1,0 +1,156 @@
+/* ========== تعریف فونت‌های سفارشی ========== */
+
+/* فونت فارسی (Plasma) */
+@font-face {
+    font-family: 'Plasma';
+    src: url('../fonts/Plasma/Plasma-Regular.woff2') format('woff2'),
+         url('../fonts/Plasma/Plasma-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Plasma';
+    src: url('../fonts/Plasma/Plasma-Bold.woff2') format('woff2'),
+         url('../fonts/Plasma/Plasma-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Plasma';
+    src: url('../fonts/Plasma/Plasma-Light.woff2') format('woff2'),
+         url('../fonts/Plasma/Plasma-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* فونت انگلیسی (ShoorRounded) */
+@font-face {
+    font-family: 'ShoorRounded';
+    src: url('../fonts/ShoorRounded/ShoorRounded-Regular.woff2') format('woff2'),
+         url('../fonts/ShoorRounded/ShoorRounded-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ShoorRounded';
+    src: url('../fonts/ShoorRounded/ShoorRounded-Bold.woff2') format('woff2'),
+         url('../fonts/ShoorRounded/ShoorRounded-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ShoorRounded';
+    src: url('../fonts/ShoorRounded/ShoorRounded-Light.woff2') format('woff2'),
+         url('../fonts/ShoorRounded/ShoorRounded-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+/* ========== اعمال فونت‌ها به زبان‌ها ========== */
+
+/* زبان فارسی - فونت Plasma */
+body.lang-fa {
+    font-family: 'Plasma', 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
+}
+
+/* زبان انگلیسی - فونت ShoorRounded */
+body.lang-en {
+    font-family: 'ShoorRounded', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* زبان روسی - فونت پیش‌فرض */
+body.lang-ru {
+    font-family: 'Roboto', 'Arial', 'Helvetica Neue', sans-serif;
+}
+
+/* زبان چینی - فونت پیش‌فرض */
+body.lang-zh {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+/* ========== فونت پیش‌فرض برای کل سایت ========== */
+body {
+    font-family: 'ShoorRounded', 'Plasma', 'Roboto', 'Noto Sans SC', sans-serif;
+    line-height: 1.6;
+}
+
+/* ========== تنظیمات خاص هر فونت ========== */
+
+/* تنظیمات برای فونت فارسی (Plasma) */
+body.lang-fa .order-title,
+body.lang-fa h1,
+body.lang-fa h2,
+body.lang-fa h3 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+body.lang-fa .order-desc,
+body.lang-fa .dropdown-label,
+body.lang-fa .nav-text {
+    font-weight: 400;
+}
+
+/* تنظیمات برای فونت انگلیسی (ShoorRounded) */
+body.lang-en .order-title,
+body.lang-en h1,
+body.lang-en h2,
+body.lang-en h3 {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+body.lang-en .order-desc,
+body.lang-en .dropdown-label,
+body.lang-en .nav-text {
+    font-weight: 400;
+}
+
+/* تنظیمات برای زبان روسی */
+body.lang-ru .order-title,
+body.lang-ru h1,
+body.lang-ru h2,
+body.lang-ru h3 {
+    font-weight: 700;
+}
+
+/* تنظیمات برای زبان چینی */
+body.lang-zh .order-title,
+body.lang-zh .nav-text,
+body.lang-zh .dropdown-label {
+    letter-spacing: 0.5px;
+}
+
+/* ========== تنظیم سایز فونت برای زبان‌های مختلف ========== */
+
+/* فارسی: کمی کوچکتر به دلیل بزرگتر بودن حروف */
+body.lang-fa {
+    font-size: 0.95em;
+}
+
+/* روسی: کمی بزرگتر */
+body.lang-ru {
+    font-size: 1.05em;
+}
+
+/* چینی: سایز معمولی */
+body.lang-zh {
+    font-size: 1em;
+}
+
+/* انگلیسی: سایز معمولی */
+body.lang-en {
+    font-size: 1em;
+}

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="page_title_silver">Silver Box</title>
+    
+    <!-- فونت‌های Google (یا اگر آفلاین داری، این بخش رو حذف کن) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plasma:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shoor+Rounded:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/silver.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    
+
+<!-- ============== هدر ============== -->
+<header class="header">
+    <div class="header-container">
+
+        <!-- بخش چپ: زبان با منوی کشویی -->
+        <div class="header-left">
+            <div class="language-wrapper">
+                <button class="language-btn" id="languageToggle">
+                    <span id="currentLanguage">🇬🇧 English</span>
+                    <span class="language-arrow">▼</span>
+                </button>
+                
+                <!-- منوی کشویی زبان -->
+                <div class="language-dropdown" id="languageDropdown">
+                    <ul class="language-list">
+                        <li class="language-item" data-lang="en" onclick="changeLanguage('en', '🇬🇧', 'English')">
+                            <span class="lang-flag">🇬🇧</span>
+                            <span class="lang-name">English</span>
+                        </li>
+                        <li class="language-item" data-lang="fa" onclick="changeLanguage('fa', '🇮🇷', 'فارسی')">
+                            <span class="lang-flag">🇮🇷</span>
+                            <span class="lang-name">فارسی</span>
+                        </li>
+                        <li class="language-item" data-lang="ru" onclick="changeLanguage('ru', '🇷🇺', 'Русский')">
+                            <span class="lang-flag">🇷🇺</span>
+                            <span class="lang-name">Русский</span>
+                        </li>
+                        <li class="language-item" data-lang="zh" onclick="changeLanguage('zh', '🇨🇳', '中文')">
+                            <span class="lang-flag">🇨🇳</span>
+                            <span class="lang-name">中文</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش وسط: دکمه پروفایل -->
+        <div class="header-center">
+            <div class="profile-wrapper">
+                <button class="profile-btn" id="profileToggle">
+                    <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=40" alt="Profile" />
+                </button>
+                
+                <!-- منوی کشویی -->
+                <div class="dropdown-menu" id="profileDropdown">
+                    
+                    <div class="dropdown-header">
+                        <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=50" alt="Profile" />
+                        <div class="dropdown-user-info">
+                            <span class="dropdown-username" data-lang-key="user_label">Dear User</span>
+                            <span class="dropdown-email">user@example.com</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="dropdown-list">
+                        <a href="../html/User-information.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/1.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="user_info">User Information</span>
+                            </li>
+                        </a>
+                        <a href="../html/shopping-cart.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/4.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="user_orders">User Orders</span>
+                            </li>
+                        </a>
+                        <a href="../html/bonus.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/3.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="gifts_rewards">Gifts & Rewards</span>
+                            </li>
+                        </a>
+                        <a href="#">
+                            <li class="dropdown-divider"></li>
+                        </a>
+                        <a href="#">
+                            <li class="dropdown-item logout" onclick="alert('Logging out')">
+                                <span class="dropdown-icon">🚪</span>
+                                <span class="dropdown-label" data-lang-key="logout">Logout</span>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش راست: موجودی TON -->
+        <a href="../html/TON.html">
+            <div class="header-right">
+                <div class="balance-box">
+                    <span class="balance-currency">TON</span>
+                    <span class="balance-amount">00</span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- خط جداکننده زیر هدر -->
+    <div class="header-divider"></div>
+</header>
+
+
+<!-- ===== SECTION 1 - هدایا شانسی ===== -->
+<section class="section-gifts">
+    <div class="glass-card">
+
+        <!-- عنوان -->
+        <h1 class="gifts-title"><span data-lang-key="spin_wheel">Spin the Wheel of Luck</span></h1>
+
+        <!-- لیست جوایز -->
+        <div class="prizes-grid">
+            <!-- کد تخفیف -->
+            <div class="prize-item" data-type="discount" data-value="60%" >
+                <span class="item-icon">💎</span>
+                <span class="item-text" data-lang-key="discount_20">60% Discount</span>
+                <span class="item-chance">(75%)</span>
+            </div>
+            
+            <div class="prize-item" data-type="discount" data-value="70%">
+                <span class="item-icon">💎</span>
+                <span class="item-text" data-lang-key="discount_50">70% Discount</span>
+                <span class="item-chance">(75%)</span>
+            </div>
+
+            <!-- محصولات -->
+            <div class="prize-item" data-type="product" data-value="26">
+                <img src="../assets/images/flags/3/3.1.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="27">
+                <img src="../assets/images/flags/3/3.2.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="28">
+                <img src="../assets/images/flags/3/3.3.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="29">
+                <img src="../assets/images/flags/3/3.4.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="30">
+                <img src="../assets/images/flags/3/3.5.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="31">
+                <img src="../assets/images/flags/3/3.6.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="32">
+                <img src="../assets/images/flags/3/3.7.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            
+
+
+
+
+
+
+            <div class="prize-item" data-type="product" data-value="33">
+                <img src="../assets/images/flags/4/4.1.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="34">
+                <img src="../assets/images/flags/4/4.2.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="35">
+                <img src="../assets/images/flags/4/4.3.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="36">
+                <img src="../assets/images/flags/4/4.4.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="37">
+                <img src="../assets/images/flags/4/4.5.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="38">
+                <img src="../assets/images/flags/4/4.6.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+            <div class="prize-item" data-type="product" data-value="39">
+                <img src="../assets/images/flags/4/4.7.png" alt="Headphone" class="item-image">
+                <span class="item-chance">25%</span>
+            </div>
+
+        </div>
+
+        <!-- دکمه چرخش -->
+        <button class="spin-btn" id="spinBtn">
+            <span class="btn-text" data-lang-key="spin_button">Spin the Wheel</span>
+            <span class="spinner"></span>
+        </button>
+
+        <!-- نمایش نتیجه -->
+        <div class="result-display" id="resultDisplay">
+            <span class="result-label" data-lang-key="winner_label">🏆 You won:</span>
+            <div class="result-content" id="resultContent">
+                <span class="result-icon">🎯</span>
+                <span class="result-text" data-lang-key="waiting_message">Waiting for your click!</span>
+            </div>
+        </div>
+
+        <!-- آمار -->
+        <div class="stats">
+            <span data-lang-key="attempts">🎯 Attempts: <span class="count" id="attemptCount">0</span></span>
+            <span data-lang-key="last_winner">🏆 Last Winner: <span id="lastWinner">-</span></span>
+            <button class="reset-btn" id="resetBtn" data-lang-key="reset">🔄 Reset</button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ===== بخش پایین صفحه - ارتباط با ادمین ===== -->
+<section class="footer-section">
+    <div class="footer-glass">
+
+        <!-- عنوان -->
+        <h2 class="footer-title" data-lang-key="contact_admin">📨 Contact Admin</h2>
+
+        <!-- دو بخش کنار هم -->
+        <div class="footer-container">
+
+            <!-- سمت راست: ورود آیدی تلگرام -->
+            <div class="footer-box">
+                <div class="footer-icon">🆔</div>
+                <h3 class="footer-box-title" data-lang-key="enter_telegram_id">Enter your Telegram ID</h3>
+                <div class="footer-input-group">
+                    <span class="footer-input-prefix">@</span>
+                    <input type="text" id="telegramId" class="footer-input" placeholder="your_username" dir="ltr">
+                </div>
+                <p class="footer-hint" data-lang-key="telegram_hint">Enter your ID to receive the prize</p>
+                <button class="footer-submit" id="sendIdBtn">
+                    <span>📤</span>
+                    <span data-lang-key="send_id">Send ID</span>
+                </button>
+            </div>
+
+            <!-- سمت چپ: دکمه ارتباط با ادمین -->
+            <div class="footer-box">
+                <div class="footer-icon">👤</div>
+                <h3 class="footer-box-title" data-lang-key="contact_admin_title">Contact Admin</h3>
+                <a href="https://t.me/AdminUsername" target="_blank" class="footer-admin" id="adminLink">
+                    <span>💬</span>
+                    <span data-lang-key="message_admin">Message Admin</span>
+                </a>
+                <p class="footer-hint" data-lang-key="admin_hint">Message the admin to receive your prize</p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ============== ناوبری پایین صفحه (ثابت) ============== -->
+<div class="nav-bottom">
+    <div class="nav-container">
+        
+        <!-- دکمه نمونه کار -->
+        <a href="https://t.me/Villain_Produce">
+            <button class="nav-btn profile-nav" data-target="profile-section">
+                <img src="../assets/images/icons/5.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="portfolio">Portfolio</span>
+            </button>
+        </a>
+        
+        <!-- دکمه خانه -->
+        <a href="./index.html">
+            <button class="nav-btn home-nav" data-target="home-section">
+                <img src="../assets/images/icons/2.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="home">Home</span>
+            </button>
+        </a>
+        
+        <!-- دکمه هدایا -->
+        <a href="../html/bonus.html">
+            <button class="nav-btn gift-nav" data-target="gift-section">
+                <img src="../assets/images/icons/3.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="gifts">Gifts</span>
+            </button>
+        </a>
+
+    </div>
+</div>
+
+
+<!-- ===== مودال تبریک ===== -->
+<div class="modal-overlay" id="congratsModal">
+    <div class="modal-content">
+        <div class="modal-icon">🎉</div>
+        <h2 class="modal-title" data-lang-key="congrats">Congratulations!</h2>
+        <p class="modal-message" data-lang-key="you_won">You won!</p>
+        <p class="modal-prize" id="modalPrize">-</p>
+        <div class="modal-divider"></div>
+        <p class="modal-instruction" data-lang-key="modal_instruction1">Message the admin to receive your prize</p>
+        <br>
+        <p class="modal-instruction" data-lang-key="modal_instruction2">And enter your ID</p>
+    </div>
+</div>
+
+
+<script src="../js/main.js"></script>
+<script src="../js/bonus.js"></script>
+<script src="../js/lagendary.js"></script>
+<script src="../js/language.js"></script>
+<script src="../js/TON.js"></script>
+<script src="../js/api.js"></script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="page_title_ton">Wallet</title>
+    
+    <!-- فونت‌های Google (یا اگر آفلاین داری، این بخش رو حذف کن) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plasma:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shoor+Rounded:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/TON.css">
+</head>
+<body>
+    
+
+<!-- ============== هدر ============== -->
+<header class="header">
+    <div class="header-container">
+
+        <!-- بخش چپ: زبان با منوی کشویی -->
+        <div class="header-left">
+            <div class="language-wrapper">
+                <button class="language-btn" id="languageToggle">
+                    <span id="currentLanguage">🇬🇧 English</span>
+                    <span class="language-arrow">▼</span>
+                </button>
+                
+                <!-- منوی کشویی زبان -->
+                <div class="language-dropdown" id="languageDropdown">
+                    <ul class="language-list">
+                        <li class="language-item" data-lang="en" onclick="changeLanguage('en', '🇬🇧', 'English')">
+                            <span class="lang-flag">🇬🇧</span>
+                            <span class="lang-name">English</span>
+                        </li>
+                        <li class="language-item" data-lang="fa" onclick="changeLanguage('fa', '🇮🇷', 'فارسی')">
+                            <span class="lang-flag">🇮🇷</span>
+                            <span class="lang-name">فارسی</span>
+                        </li>
+                        <li class="language-item" data-lang="ru" onclick="changeLanguage('ru', '🇷🇺', 'Русский')">
+                            <span class="lang-flag">🇷🇺</span>
+                            <span class="lang-name">Русский</span>
+                        </li>
+                        <li class="language-item" data-lang="zh" onclick="changeLanguage('zh', '🇨🇳', '中文')">
+                            <span class="lang-flag">🇨🇳</span>
+                            <span class="lang-name">中文</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش وسط: دکمه پروفایل -->
+        <div class="header-center">
+            <div class="profile-wrapper">
+                <button class="profile-btn" id="profileToggle">
+                    <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=40" alt="Profile" />
+                </button>
+                
+                <!-- منوی کشویی -->
+                <div class="dropdown-menu" id="profileDropdown">
+                    
+                    <div class="dropdown-header">
+                        <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=50" alt="Profile" />
+                        <div class="dropdown-user-info">
+                            <span class="dropdown-username" data-lang-key="user_label">Dear User</span>
+                            <span class="dropdown-email">user@example.com</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="dropdown-list">
+                        <a href="../html/User-information.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/1.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="user_info">User Information</span>
+                            </li>
+                        </a>
+                        <a href="../html/shopping-cart.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/4.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="user_orders">User Orders</span>
+                            </li>
+                        </a>
+                        <a href="../html/bonus.html">
+                            <li class="dropdown-item">
+                                <img src="../assets/images/icons/3.png" alt="" class="img-icon">
+                                <span class="dropdown-label" data-lang-key="gifts_rewards">Gifts & Rewards</span>
+                            </li>
+                        </a>
+                        <a href="#">
+                            <li class="dropdown-divider"></li>
+                        </a>
+                        <a href="#">
+                            <li class="dropdown-item logout" onclick="alert('Logging out')">
+                                <span class="dropdown-icon">🚪</span>
+                                <span class="dropdown-label" data-lang-key="logout">Logout</span>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش راست: موجودی TON -->
+        <a href="../html/TON.html">
+            <div class="header-right">
+                <div class="balance-box">
+                    <span class="balance-currency">TON</span>
+                    <span class="balance-amount">00</span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- خط جداکننده زیر هدر -->
+    <div class="header-divider"></div>
+</header>
+
+
+<!-- کانتینر اصلی صفحه TON  -->
+<div class="ton-wallet-container">
+
+    <!-- ======================================== -->
+    <!-- کارت شماره ۱: وضعیت ولت                  -->
+    <!-- ======================================== -->
+    <div class="card">
+
+        <!-- هدر کارت -->
+        <div class="card-header">
+            <div class="card-title" data-lang-key="wallet_title">Wallet <span>TON</span></div>
+            <span class="badge" data-lang-key="badge_disconnected">Disconnected</span>
+        </div>
+
+        <!-- وضعیت قطع (پیش‌فرض) -->
+        <div class="connect-placeholder">
+            <span class="icon">💎</span>
+            <p data-lang-key="connect_wallet_text">Connect your wallet<br /><small data-lang-key="connect_wallet_sub">To view balance and transactions</small></p>
+            <button class="btn btn-primary" data-lang-key="connect_btn">🔗 Connect Wallet</button>
+        </div>
+
+        <!-- وضعیت متصل (مخفی) -->
+        <div class="connected-content" style="display:none;">
+
+            <!-- آدرس ولت -->
+            <div class="wallet-address">
+                <span class="addr">EQD4fp6FkVfF9wqXwCUwPQk3k...hL8sVfQ</span>
+                <button class="copy-btn">📋</button>
+            </div>
+
+            <!-- موجودی -->
+            <div class="balance">42.50 <small>TON</small></div>
+            <div class="balance-usd">≈ $221.00 USD</div>
+
+            <!-- شبکه -->
+            <div class="network-info">
+                <span class="dot mainnet"></span>
+                <span data-lang-key="mainnet">Mainnet</span>
+            </div>
+
+            <!-- دکمه قطع -->
+            <button class="btn btn-outline" data-lang-key="disconnect_btn">🔌 Disconnect</button>
+
+        </div>
+
+    </div>
+
+    <!-- ======================================== -->
+    <!-- کارت شماره ۲: عملیات سریع               -->
+    <!-- ======================================== -->
+    <div class="card">
+
+        <div class="card-header">
+            <div class="card-title" data-lang-key="actions_title">Actions</div>
+            <span class="badge" data-lang-key="badge_fast">Fast</span>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" disabled data-lang-key="send_btn">📤 Send</button>
+            <button class="btn btn-success" disabled data-lang-key="receive_btn">📥 Receive</button>
+        </div>
+
+        <p class="action-hint" data-lang-key="action_hint">Connect wallet to activate</p>
+
+    </div>
+
+    <!-- ======================================== -->
+    <!-- کارت شماره ۳: تراکنش‌های اخیر           -->
+    <!-- ======================================== -->
+    <div class="card">
+
+        <div class="card-header">
+            <div class="card-title" data-lang-key="transactions_title">Recent Transactions</div>
+            <span class="badge">3</span>
+        </div>
+
+        <!-- لیست تراکنش‌ها -->
+        <div class="tx-list">
+
+            <!-- تراکنش ۱ -->
+            <div class="tx-item">
+                <div class="tx-info">
+                    <span class="tx-type" data-lang-key="tx_send">📤 Sent to ...</span>
+                    <span class="tx-date" data-lang-key="tx_date_1">2 minutes ago</span>
+                </div>
+                <div class="tx-right">
+                    <span class="tx-amount negative">-5.00 TON</span>
+                    <span class="tx-status" data-lang-key="tx_confirm">Confirmed</span>
+                </div>
+            </div>
+
+            <!-- تراکنش ۲ -->
+            <div class="tx-item">
+                <div class="tx-info">
+                    <span class="tx-type" data-lang-key="tx_receive">📥 Received from ...</span>
+                    <span class="tx-date" data-lang-key="tx_date_2">1 hour ago</span>
+                </div>
+                <div class="tx-right">
+                    <span class="tx-amount positive">+12.50 TON</span>
+                    <span class="tx-status" data-lang-key="tx_confirm">Confirmed</span>
+                </div>
+            </div>
+
+            <!-- تراکنش ۳ -->
+            <div class="tx-item">
+                <div class="tx-info">
+                    <span class="tx-type" data-lang-key="tx_staking">🔄 Staking</span>
+                    <span class="tx-date" data-lang-key="tx_date_3">3 hours ago</span>
+                </div>
+                <div class="tx-right">
+                    <span class="tx-amount positive">+0.25 TON</span>
+                    <span class="tx-status pending" data-lang-key="tx_pending">Pending</span>
+                </div>
+            </div>
+
+        </div>
+
+        <button class="btn btn-outline refresh-btn" data-lang-key="refresh_btn">🔄 Refresh Transactions</button>
+
+    </div>
+
+    <!-- ======================================== -->
+    <!-- کارت شماره ۴: اطلاعات بیشتر             -->
+    <!-- ======================================== -->
+    <div class="card info-card">
+
+        <div class="info-row">
+            <span data-lang-key="status_label">Status: <span class="status-text" data-lang-key="status_disconnected">🔴 Disconnected</span></span>
+            <span data-lang-key="version_label">Interface Version: <span class="version">v1.0.0</span></span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ============== ناوبری پایین صفحه (ثابت) ============== -->
+<div class="nav-bottom">
+    <div class="nav-container">
+        
+        <!-- دکمه نمونه کار -->
+        <a href="https://t.me/Villain_Produce">
+            <button class="nav-btn profile-nav" data-target="profile-section">
+                <img src="../assets/images/icons/5.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="portfolio">Portfolio</span>
+            </button>
+        </a>
+        
+        <!-- دکمه خانه -->
+        <a href="./index.html">
+            <button class="nav-btn home-nav" data-target="home-section">
+                <img src="../assets/images/icons/2.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="home">Home</span>
+            </button>
+        </a>
+        
+        <!-- دکمه هدایا -->
+        <a href="../html/bonus.html">
+            <button class="nav-btn gift-nav" data-target="gift-section">
+                <img src="../assets/images/icons/3.png" alt="" class="img-icon">
+                <span class="nav-text" data-lang-key="gifts">Gifts</span>
+            </button>
+        </a>
+
+    </div>
+</div>
+
+
+<script src="../js/main.js"></script>
+<script src="../js/language.js"></script>
+<script src="../js/TON.js"></script>
+<script src="../js/api.js"></script>
+</body>
+</html>

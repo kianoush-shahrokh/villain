@@ -1,0 +1,118 @@
+/* ===== استایل مدرن سکشن باکس‌ها ===== */
+
+.section-boxes {
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px 20px 40px;
+    margin: 20px auto 0;
+}
+
+/* بخش عنوان */
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: #F40C1C;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #F40C1C, #e1444f);
+    border-radius: 4px;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: #718096;
+    margin-top: 18px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+/* کانتینر اصلی باکس‌ها - گرید ۵ ستونه */
+.boxes-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    margin-top: 10px;
+}
+
+/* استایل مدرن هر باکس */
+.box-item {
+    /* background: linear-gradient(145deg, #ffffff, #f8f9fa); */
+    background-image: url(../assets/images/boxes/1d81016c-5a34-4174-a346-b941c4a5e215.png);
+    border: 2px solid #F40C1C;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.08);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* افکت خط زیرین باکس */
+/* .box-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #e74c3c, #f39c12);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.box-item:hover::after {
+    transform: scaleX(1);
+}
+
+.box-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(231, 76, 60, 0.18);
+    border-color: #c0392b;
+    background: linear-gradient(145deg, #ffffff, #ffffff);
+} */
+
+/* استایل لینک داخل باکس */
+.box-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    padding: 10px;
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
+}
+
+.box-link:hover {
+    color: #F40C1C;
+    transform: scale(1.05);
+}
+
