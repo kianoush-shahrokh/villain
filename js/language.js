@@ -261,6 +261,15 @@ const translations = {
         package_select_error: 'Please select a package type!',
         package_name_error: 'Please enter a package name!',
         package_success: '✅ Package created successfully!',
+        filter_all: 'All',
+        filter_special: 'Special',
+        filter_gift: 'Gifts',
+        filter_flag: 'Flag',
+        filter_other: 'Other',
+        cart_selected: 'Selected:',
+        cart_empty: 'Cart is empty!',
+        cart_min_error: 'You must select at least 5 products!',
+        cart_min_warning: '⚠️ Min 5',
     },
     
     fa: {
@@ -519,6 +528,15 @@ const translations = {
         package_select_error: 'لطفاً یک نوع پک انتخاب کنید!',
         package_name_error: 'لطفاً اسم پک را وارد کنید!',
         package_success: '✅ پک با موفقیت ساخته شد!',
+        filter_all: 'همه',
+        filter_special: 'ویژه',
+        filter_gift: 'هدایا',
+        filter_flag: 'پرچم‌ها',
+        filter_other: 'سایر',
+        cart_selected: 'انتخاب شده:',
+        cart_empty: 'سبد خرید خالی است!',
+        cart_min_error: 'حداقل ۵ محصول باید انتخاب کنید!',
+        cart_min_warning: '⚠️ حداقل ۵',
     },
     
     ru: {
@@ -777,7 +795,16 @@ const translations = {
         package_confirm: 'Подтвердить ✓',
         package_select_error: 'Пожалуйста, выберите тип пакета!',
         package_name_error: 'Пожалуйста, введите название пакета!',
-        package_success: '✅ Пакет успешно создан!',    
+        package_success: '✅ Пакет успешно создан!', 
+        filter_all: 'Все',
+        filter_special: 'Специальные',
+        filter_gift: 'Подарки',
+        filter_flag: 'Флаг',
+        filter_other: 'Другое',
+        cart_selected: 'Выбрано:',
+        cart_empty: 'Корзина пуста!',
+        cart_min_error: 'Вы должны выбрать минимум 5 товаров!',
+        cart_min_warning: '⚠️ Мин 5',   
     },
     
     zh: {
@@ -1036,6 +1063,15 @@ const translations = {
         package_select_error: '请选择套餐类型！',
         package_name_error: '请输入套餐名称！',
         package_success: '✅ 套餐创建成功！',
+        filter_all: '全部',
+        filter_special: '特别',
+        filter_gift: '礼品',
+        filter_flag: '旗帜',
+        filter_other: '其他',
+        cart_selected: '已选择:',
+        cart_empty: '购物车是空的！',
+        cart_min_error: '您必须至少选择5个产品！',
+        cart_min_warning: '⚠️ 最少5个',
             }
 };
 

@@ -121,46 +121,43 @@
 </header>
 
 
-
-
-
-
-
-
-<!-- ============== ناوبری پایین صفحه (ثابت) ============== -->
-<div class="nav-bottom">
-    <div class="nav-container">
-        
-        <!-- دکمه نمونه کار -->
-        <a href="https://t.me/Villain_Produce">
-            <button class="nav-btn profile-nav" data-target="profile-section">
-                <img src="../assets/images/icons/5.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="portfolio">Portfolio</span>
-            </button>
-        </a>
-        
-        <!-- دکمه خانه -->
-        <a href="./index.html">
-            <button class="nav-btn home-nav" data-target="home-section">
-                <img src="../assets/images/icons/2.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="home">Home</span>
-            </button>
-        </a>
-        
-        <!-- دکمه هدایا -->
-        <a href="../html/bonus.html">
-            <button class="nav-btn gift-nav" data-target="gift-section">
-                <img src="../assets/images/icons/3.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="gifts">Gifts</span>
-            </button>
-        </a>
-
+<!-- ===== باکس فیلترها ===== -->
+<div class="filter-wrapper">
+    <div class="filter-box">
+        <button class="filter-btn active" data-filter="all" data-lang-key="filter_all">All</button>
+        <button class="filter-btn" data-filter="flag" data-lang-key="filter_flag">Flag</button>
+        <button class="filter-btn" data-filter="gift" data-lang-key="filter_gift">Gifts</button>
+        <button class="filter-btn" data-filter="special" data-lang-key="filter_special">Special</button>
+        <button class="filter-btn" data-filter="other" data-lang-key="filter_other">Other</button>
     </div>
 </div>
 
+<!-- ===== محصولات ===== -->
+<div class="products-grid" id="productsGrid">
+    <!-- محصولات توسط جاوااسکریپت ساخته میشوند -->
+</div>
+
+
+
+
+<!-- ===== دکمه ثابت پایین صفحه ===== -->
+<a href="#" class="cart-fixed-btn" id="cartFixedBtn">
+    <span class="cart-icon">🛒</span>
+    <span class="cart-text" data-lang-key="cart_selected">Selected:</span>
+    <span class="cart-count" id="cartCount">0</span>
+    <span class="cart-divider">|</span>
+    <span class="cart-total" id="cartTotal">0</span>
+    <span class="cart-currency">TON</span>
+    <span class="cart-min-warning" id="cartMinWarning" data-lang-key="cart_min_warning">⚠️ Min 5</span>
+</a>
+
+
+
+
+
 
 <script src="../js/main.js"></script>
-<script src="../js/filter.js"></script>
+<script src="../js/Products.js"></script>
 <script src="../js/language.js"></script>
 <script src="../js/TON.js"></script>
 <script src="../js/api.js"></script>
