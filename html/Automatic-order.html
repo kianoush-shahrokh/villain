@@ -121,101 +121,10 @@
 </header>
 
 
-<!-- ===== سکشن ۱: فیلتر محصولات ===== -->
-<section class="filter-section">
-    <div class="filter-container">
-        <button class="filter-btn active" data-filter="all" data-lang-key="filter_all">All</button>
-        <button class="filter-btn" data-filter="special" data-lang-key="filter_special">Special</button>
-        <button class="filter-btn" data-filter="gift" data-lang-key="filter_gift">Gifts</button>
-        <button class="filter-btn" data-filter="flag" data-lang-key="filter_flag">Flag</button>
-        <button class="filter-btn" data-filter="other" data-lang-key="filter_other">Other</button>
-    </div>
-</section>
 
 
-<!-- ===== سکشن ۲: محصولات ===== -->
-<section class="products-section">
-    <div class="products-container">
-        <!-- محصول ۱ -->
-        <a href="#" class="product-card" data-product-id="1">
-            <div class="product-image">
-                <img src="" alt="Product name">
-            </div>
-            <div class="product-info">
-                <h3 class="product-name" data-lang-key="product1_name">Product Name</h3>
-                <span class="product-code">#1234</span>
-                <div class="product-price-cart">
-                    <span class="product-price">1,000 TON</span>
-                    <button class="add-to-cart" data-lang-key="add_to_cart">🛒</button>
-                </div>
-            </div>
-        </a>
-
-        <!-- محصول ۲ -->
-        <a href="#" class="product-card" data-product-id="2">
-            <div class="product-image">
-                <img src="" alt="Product name">
-            </div>
-            <div class="product-info">
-                <h3 class="product-name" data-lang-key="product2_name">Product Name</h3>
-                <span class="product-code">#5678</span>
-                <div class="product-price-cart">
-                    <span class="product-price">2,500 TON</span>
-                    <button class="add-to-cart" data-lang-key="add_to_cart">🛒</button>
-                </div>
-            </div>
-        </a>
-
-        <!-- محصول ۳ -->
-        <a href="#" class="product-card" data-product-id="3">
-            <div class="product-image">
-                <img src="product3.jpg" alt="Product name">
-            </div>
-            <div class="product-info">
-                <h3 class="product-name" data-lang-key="product3_name">Product Name</h3>
-                <span class="product-code">#9012</span>
-                <div class="product-price-cart">
-                    <span class="product-price">3,750 TON</span>
-                    <button class="add-to-cart" data-lang-key="add_to_cart">🛒</button>
-                </div>
-            </div>
-        </a>
-    </div>
-</section>
 
 
-<!-- ===== مودال سبد خرید با گالری ===== -->
-<div class="modal-overlay" id="productModal">
-    <div class="modal-content">
-        
-        <!-- گالری تصاویر -->
-        <div class="modal-gallery">
-            <button class="gallery-nav prev" id="galleryPrev">❮</button>
-            
-            <div class="gallery-container">
-                <img id="modalImage" src="" alt="Product image">
-                
-                <!-- دات‌های پایین تصویر -->
-                <div class="gallery-dots" id="galleryDots"></div>
-            </div>
-            
-            <button class="gallery-nav next" id="galleryNext">❯</button>
-        </div>
-        
-        <!-- جزئیات محصول -->
-        <div class="modal-details">
-            <h2 id="modalName" data-lang-key="product_name">Product Name</h2>
-            <span class="modal-code" id="modalCode">#1234</span>
-            <div class="modal-price" id="modalPrice">1,000 TON</div>
-        </div>
-        
-        <!-- دکمه‌های مودال -->
-        <div class="modal-actions">
-            <button class="modal-btn cancel" id="modalCancel" data-lang-key="cancel">Cancel</button>
-            <button class="modal-btn add" id="modalAdd" data-lang-key="add_to_cart_modal">Add to Cart</button>
-        </div>
-    </div>
-</div>
 
 
 <!-- ============== ناوبری پایین صفحه (ثابت) ============== -->
