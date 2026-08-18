@@ -228,12 +228,12 @@ const vipData = {
         };
         
         alert(
-          '✅ سفارش VIP شما با موفقیت ثبت شد!\n\n' +
-          '🎁 پک: ' + orderData.package + '\n' +
-          '💰 قیمت: ' + orderData.price + '\n' +
-          '🆔 آیدی کاربر: ' + orderData.userId + '\n' +
-          '📝 توضیحات: ' + orderData.description + '\n' +
-          '📅 تاریخ ثبت: ' + orderData.date
+          ' سفارش VIP شما با موفقیت ثبت شد!\n\n' +
+          ' پک: ' + orderData.package + '\n' +
+          ' قیمت: ' + orderData.price + '\n' +
+          ' آیدی کاربر: ' + orderData.userId + '\n' +
+          ' توضیحات: ' + orderData.description + '\n' +
+          ' تاریخ ثبت: ' + orderData.date
         );
         
         console.log('سفارش VIP:', orderData);
@@ -253,5 +253,5 @@ const vipData = {
     renderPackages();
     startCountdown();
     attachEvents();
-    console.log('✅ بخش VIP آماده است!');
+    console.log(' بخش VIP آماده است!');
   });

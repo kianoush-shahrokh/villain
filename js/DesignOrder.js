@@ -141,11 +141,11 @@ submitBtn.addEventListener('click', function() {
   alert(
     '✅ سفارش شما با موفقیت ثبت شد!\n\n' +
     allSelections.join('\n') + '\n\n' +
-    '🌐 زبان انتخابی: ' + selectedLanguage + '\n' +
-    '📝 توضیحات: ' + description + '\n' +
-    '🆔 آیدی کاربر: ' + userId + '\n' +
-    '📎 تعداد فایل‌ها: ' + uploadedFiles.length + ' عدد\n' +
-    '💰 قیمت کل: ' + orderData.totalPrice + ' TON'
+    ' زبان انتخابی: ' + selectedLanguage + '\n' +
+    ' توضیحات: ' + description + '\n' +
+    ' آیدی کاربر: ' + userId + '\n' +
+    ' تعداد فایل‌ها: ' + uploadedFiles.length + ' عدد\n' +
+    ' قیمت کل: ' + orderData.totalPrice + ' TON'
   );
   
   console.log('سفارش تامبنیل:', orderData);

@@ -81,13 +81,6 @@
     background: rgba(244, 12, 28, 0.08);
 }
 
-/* .product-card img {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 12px;
-    object-fit: cover;
-    background: rgba(255, 255, 255, 0.03);
-} */
 
 
 
@@ -169,6 +162,10 @@
 
 .cart-icon {
     font-size: 1.3rem;
+}
+
+.cart-icon > img {
+    width: 30px;
 }
 
 .cart-text {

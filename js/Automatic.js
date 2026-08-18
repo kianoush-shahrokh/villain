@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cards.forEach(c => c.classList.remove('active'));
             this.classList.add('active');
             selectedType = this.dataset.type;
-            console.log('✅ انتخاب شد:', selectedType);
+            console.log(' انتخاب شد:', selectedType);
         });
     });
     
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // اینجا می‌توانید به بخش ساخت پک بروید
         // window.location.href = '#packageBuilder';
         // یا نمایش پیام موفقیت
-        alert(getTranslation('package_success') || '✅ Package created successfully!');
+        alert(getTranslation('package_success') || ' Package created successfully!');
     });
     
     // Enter key برای ورودی

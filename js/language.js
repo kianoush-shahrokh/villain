@@ -1097,7 +1097,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // تابع اصلی تغییر زبان
 function changeLanguage(lang, flag, name) {
     if (!translations[lang]) {
-        console.error('❌ زبان مورد نظر موجود نیست:', lang);
+        console.error(' زبان مورد نظر موجود نیست:', lang);
         return;
     }
     
@@ -1220,8 +1220,8 @@ function getTranslation(key) {
     return translations[currentLanguage]?.[key] || key;
 }
 
-console.log('✅ سیستم ترجمه با موفقیت بارگذاری شد');
-console.log('🌍 زبان فعلی:', currentLanguage);
+console.log('سیستم ترجمه با موفقیت بارگذاری شد');
+console.log('زبان فعلی:', currentLanguage);
 
 
 
