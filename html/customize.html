@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>استودیو طراحی استیکر</title>
+  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+  <style>
+    :root { --bg: #050505; --panel: #111; --accent: #e11d48; --success: #22c55e; }
+    body { background: var(--bg); color: #fff; font-family: Tahoma, sans-serif; display: flex; justify-content: center; align-items: center; padding: 15px; margin: 0; min-height: 100vh; transition: direction 0.3s; }
+    .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; position: relative; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; }
+    .lang-select { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; outline: none; transition: 0.2s; }
+    .lang-select:hover { border-color: var(--accent); }
+    .lang-select option { background: #111; }
+    .back-btn { background: #1a1a1a; color: #aaa; border: 1px solid #333; padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px; text-decoration: none; }
+    .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .stage { background: #000; border-radius: 20px; height: 210px; display: flex; align-items: center; justify-content: center; position: relative; border: 1px solid #333; flex-shrink: 0; overflow: hidden; }
+    #lottieContainer { width: 150px; height: 150px; }
+    #logoOverlay { position: absolute; width: 60px; height: 60px; pointer-events: none; z-index: 10; display: flex; align-items: center; justify-content: center; }
+    #logoOverlay img, #logoOverlay svg { width: 100%; height: 100%; object-fit: contain; }
+    #textOverlay { position: absolute; z-index: 15; pointer-events: none; font-weight: bold; text-align: center; white-space: nowrap; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+    .tab-bar { display: flex; gap: 10px; margin-bottom: 5px; }
+    .tab-btn { flex: 1; padding: 8px; border-radius: 10px; border: none; background: #222; color: #fff; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
+    .tab-btn.active { background: var(--accent); }
+    .panel-content { overflow-y: auto; max-height: 30vh; display: flex; flex-direction: column; gap: 8px; padding-inline-end: 5px; }
+    .panel-content::-webkit-scrollbar { width: 4px; }
+    .panel-content::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+    .layer-card { background: #1a1a1a; padding: 10px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .color-row { display: flex; gap: 8px; align-items: center; }
+    .dot, .picker { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid #333; transition: all 0.2s; }
+    .picker { background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); position: relative; }
+    .picker input { opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+    .dot.active, .picker.active { border-color: #ffffff; transform: scale(1.15); box-shadow: 0 0 8px rgba(255, 255, 255, 0.4); }
+
+    .input-group { background: #1a1a1a; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
+    .input-group label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 8px; }
+    .text-input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; outline: none; }
+    .text-input:focus { border-color: var(--accent); }
+    .range-input { width: 100%; cursor: pointer; accent-color: var(--accent); }
+
+    .action-row { display: flex; gap: 10px; flex-shrink: 0; margin-top: 5px; }
+    .btn-action { padding: 12px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 0.9rem; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+    .btn-submit { flex: 2; background: linear-gradient(135deg, var(--accent), #990000); color: white; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4); }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit.loading { opacity: 0.7; cursor: not-allowed; }
+    .btn-submit.success { background: var(--success); box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4); }
+
+    /* استایل پیام موفقیت شناور (Toast) */
+    #successToast {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(34, 197, 94, 0.95);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 15px;
+      font-weight: bold;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 100;
+      display: none;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    #successToast.show {
+      display: block;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- پیام موفقیت که روی صفحه ظاهر می‌شود -->
+  <div id="successToast">
+    ✨ طرح شما با موفقیت در دیتابیس ذخیره شد!<br>
+    <span style="font-size: 0.8rem; font-weight: normal;">در حال انتقال به سبد خرید...</span>
+  </div>
+
+  <div class="header">
+    <button class="back-btn" onclick="window.location.href='/html/Automatic-order.html'">
+      <span id="txtBack">بازگشت</span> ❮
+    </button>
+    <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+      <option value="fa">🇮🇷 فارسی</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="ru">🇷🇺 Русский</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+
+  <div class="stage">
+    <div id="lottieContainer"></div>
+    <div id="logoOverlay"></div>
+    <div id="textOverlay"></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabColor" onclick="switchTab('colors')">رنگ‌بندی</button>
+    <button class="tab-btn" id="tabLogo" onclick="switchTab('logo')">لوگو</button>
+    <button class="tab-btn" id="tabText" onclick="switchTab('text')">متن</button>
+  </div>
+
+  <div id="colorsView" class="panel-content"></div>
+  
+  <div id="logoView" class="panel-content" style="display:none; justify-content:center; padding-top:20px;">
+    <label class="btn-action" style="background:#222; color:#fff; border:1px dashed #555;">
+      <span id="txtUploadBtn">انتخاب عکس/لوگو</span>
+      <input type="file" id="logoUpload" accept="image/*, .svg" hidden>
+    </label>
+    <p id="txtLogoHint" style="font-size:0.8rem; color:#888; text-align:center;">فرمت‌های پشتیبانی شده: JPG, PNG, SVG</p>
+  </div>
+
+  <div id="textView" class="panel-content" style="display:none;">
+    <div class="input-group">
+      <label id="txtWrite">متن خود را بنویسید:</label>
+      <input type="text" id="customText" class="text-input" placeholder="..." oninput="updateText()">
+    </div>
+    <div class="input-group">
+      <label><span id="txtSize">اندازه فونت:</span> <span id="sizeValue">20</span>px</label>
+      <input type="range" id="fontSize" class="range-input" min="10" max="60" value="20" oninput="updateText()">
+    </div>
+    <div class="input-group">
+      <label id="txtTextColor">رنگ متن:</label>
+      <input type="color" id="textColor" value="#ffffff" oninput="updateText()" style="background:none; border:none; width:40px; height:40px; cursor:pointer;">
+    </div>
+  </div>
+  
+  <div class="action-row">
+    <button class="btn-action" style="background:#222; color:#aaa; flex:1;" id="txtReset" onclick="location.reload()">ریست</button>
+    <button class="btn-action btn-submit" id="btnSubmit" onclick="saveDesignAndCheckout()">
+      <span id="txtSubmit">ثبت و ادامه خرید</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  let anim = null;
+  const colors = ['#000000', '#E11D48', '#FFFFFF', '#FFD60A'];
+  
+  let designState = {
+    stickerId: null,
+    layers: {}, 
+    logoData: null, 
+    textData: { text: '', size: '20', color: '#ffffff' }
+  };
+  
+  const i18n = {
+    fa: { layer: "لایه", upload: "آپلود لوگو", reset: "ریست", submit: "ثبت و ادامه خرید", back: "بازگشت", tabColor: "رنگ‌بندی", tabLogo: "لوگو", tabText: "متن", writeText: "متن خود را بنویسید:", fontSize: "اندازه فونت:", textColor: "رنگ متن:", logoHint: "JPG, PNG, SVG", loading: "در حال ذخیره...", success: "موفق!", dir: "rtl" },
+    en: { layer: "Layer", upload: "Upload Logo", reset: "Reset", submit: "Save & Checkout", back: "Back", tabColor: "Colors", tabLogo: "Logo", tabText: "Text", writeText: "Write your text:", fontSize: "Font Size:", textColor: "Text Color:", logoHint: "JPG, PNG, SVG", loading: "Saving...", success: "Success!", dir: "ltr" },
+    ru: { layer: "Слой", upload: "Загрузить", reset: "Сброс", submit: "Сохранить и Купить", back: "Назад", tabColor: "Цвета", tabLogo: "Логотип", tabText: "Текст", writeText: "Введите текст:", fontSize: "Размер:", textColor: "Цвет:", logoHint: "JPG, PNG, SVG", loading: "Сохранение...", success: "Успешно!", dir: "ltr" },
+    zh: { layer: "图层", upload: "上传徽标", reset: "重置", submit: "保存并结账", back: "返回", tabColor: "颜色", tabLogo: "徽标", tabText: "文本", writeText: "输入文本:", fontSize: "字体大小:", textColor: "文本颜色:", logoHint: "JPG, PNG, SVG", loading: "保存中...", success: "成功!", dir: "ltr" }
+  };
+  let currentLang = 'fa';
+
+  async function init() {
+    const savedStickers = JSON.parse(localStorage.getItem('selectedStickers') || '[]');
+    designState.stickerId = savedStickers.length > 0 ? savedStickers[0] : 1;
+
+    try {
+        const res = await fetch('http://localhost:3001/api/products');
+        const data = await res.json();
+        anim = lottie.loadAnimation({
+          container: document.getElementById('lottieContainer'),
+          renderer: 'svg', loop: true, autoplay: true, path: data.data[0].json_path
+        });
+        anim.addEventListener('DOMLoaded', buildUI);
+    } catch (err) {
+        console.error("خطا در لود محصولات:", err);
+    }
+  }
+
+  function buildUI() {
+    const svg = document.querySelector('#lottieContainer svg');
+    const groups = Array.from(svg.querySelectorAll(':scope > g > g'));
+    const panel = document.getElementById('colorsView');
+    panel.innerHTML = ''; 
+    
+    groups.forEach((g, i) => {
+      const card = document.createElement('div');
+      card.className = 'layer-card';
+      let colorsHTML = '';
+      colors.forEach(c => colorsHTML += `<div class="dot" style="background:${c}" onclick="applyColor(this, ${i}, '${c}')"></div>`);
+      colorsHTML += `<div class="picker"><input type="color" oninput="applyColor(this.parentElement, ${i}, this.value)"></div>`;
+      
+      card.innerHTML = `
+        <div class="layer-title" style="font-size:12px; color:#aaa; font-weight:bold;">${i18n[currentLang].layer} ${i+1}</div>
+        <div class="color-row">${colorsHTML}</div>
+      `;
+      panel.appendChild(card);
+    });
+    changeLanguage('fa');
+  }
+
+  function switchTab(t) {
+    document.getElementById('colorsView').style.display = t==='colors'?'flex':'none';
+    document.getElementById('logoView').style.display = t==='logo'?'flex':'none';
+    document.getElementById('textView').style.display = t==='text'?'flex':'none';
+    
+    document.getElementById('tabColor').classList.toggle('active', t==='colors');
+    document.getElementById('tabLogo').classList.toggle('active', t==='logo');
+    document.getElementById('tabText').classList.toggle('active', t==='text');
+  }
+
+  function changeLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.dir = i18n[lang].dir;
+    
+    document.getElementById('txtUploadBtn').innerText = i18n[lang].upload;
+    document.getElementById('txtReset').innerText = i18n[lang].reset;
+    document.getElementById('txtSubmit').innerText = i18n[lang].submit;
+    document.getElementById('txtBack').innerText = i18n[lang].back;
+    document.getElementById('tabColor').innerText = i18n[lang].tabColor;
+    document.getElementById('tabLogo').innerText = i18n[lang].tabLogo;
+    document.getElementById('tabText').innerText = i18n[lang].tabText;
+    document.getElementById('txtWrite').innerText = i18n[lang].writeText;
+    document.getElementById('txtSize').innerText = i18n[lang].fontSize;
+    document.getElementById('txtTextColor').innerText = i18n[lang].textColor;
+    document.getElementById('txtLogoHint').innerText = i18n[lang].logoHint;
+
+    const backBtn = document.querySelector('.back-btn');
+    if(i18n[lang].dir === 'ltr') backBtn.innerHTML = `❯ <span id="txtBack">${i18n[lang].back}</span>`;
+    else backBtn.innerHTML = `<span id="txtBack">${i18n[lang].back}</span> ❮`;
+    
+    document.querySelectorAll('.layer-title').forEach((el, index) => {
+      el.innerText = `${i18n[lang].layer} ${index + 1}`;
+    });
+  }
+
+  function applyColor(element, idx, color) {
+    const svg = document.querySelector('#lottieContainer svg');
+    const group = Array.from(svg.querySelectorAll(':scope > g > g'))[idx];
+    if (group) {
+      group.querySelectorAll('path, rect, polygon').forEach(p => { p.setAttribute('fill', color); p.setAttribute('stroke', color); });
+      group.style.filter = `drop-shadow(0 0 0 ${color})`;
+      designState.layers[idx] = color;
+    }
+    if (element && element.closest('.color-row')) {
+      const row = element.closest('.color-row');
+      row.querySelectorAll('.dot, .picker').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+    }
+  }
+
+  function updateText() {
+    const textVal = document.getElementById('customText').value;
+    const sizeVal = document.getElementById('fontSize').value;
+    const colorVal = document.getElementById('textColor').value;
+    
+    designState.textData = { text: textVal, size: sizeVal, color: colorVal };
+    
+    const overlay = document.getElementById('textOverlay');
+    overlay.innerText = textVal;
+    overlay.style.fontSize = sizeVal + 'px';
+    overlay.style.color = colorVal;
+    document.getElementById('sizeValue').innerText = sizeVal;
+    
+    const groups = Array.from(document.querySelectorAll('#lottieContainer svg > g > g'));
+    if (textVal.trim() !== '' && groups[1]) groups[1].style.opacity = '0';
+  }
+
+  document.getElementById('logoUpload').onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      designState.logoData = ev.target.result; 
+      const overlay = document.getElementById('logoOverlay');
+      overlay.innerHTML = file.type.includes('svg') ? ev.target.result : `<img src="${ev.target.result}">`;
+      const groups = Array.from(document.querySelectorAll('#lottieContainer svg > g > g'));
+      if(groups[1]) groups[1].style.opacity = '0';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  async function saveDesignAndCheckout() {
+    const btn = document.getElementById('btnSubmit');
+    const textSpan = document.getElementById('txtSubmit');
+    const toast = document.getElementById('successToast');
+    
+    btn.classList.add('loading');
+    btn.disabled = true;
+    textSpan.innerText = i18n[currentLang].loading;
+
+    try {
+      const response = await fetch('http://localhost:3001/api/save-design', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(designState)
+      });
+      
+      const rawText = await response.text();
+      let data;
+      try {
+        data = JSON.parse(rawText);
+      } catch (e) {
+        throw new Error("پاسخ سرور نامعتبر است: " + rawText);
+      }
+
+      if (response.ok && data.success) {
+        btn.classList.remove('loading');
+        btn.classList.add('success');
+        textSpan.innerText = i18n[currentLang].success;
+
+        // نمایش پیام موفقیت گرافیکی وسط صفحه
+        toast.classList.add('show');
+
+        designState.dbId = data.designId;
+        localStorage.setItem('finalCustomizedSticker', JSON.stringify(designState));
+
+        // کمی مکث برای اینکه کاربر پیام را ببیند، بعد هدایت به سبد خرید
+        setTimeout(() => {
+          window.location.href = '/html/shopping-cart.html';
+        }, 1500);
+      } else {
+        throw new Error(data.message || 'خطا در ثبت اطلاعات');
+      }
+
+    } catch (error) {
+      console.error('خطا:', error);
+      alert('خطا در ذخیره‌سازی: ' + error.message);
+      
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      textSpan.innerText = i18n[currentLang].submit;
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>

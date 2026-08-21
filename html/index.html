@@ -179,5 +179,17 @@
     <script src="../js/language.js"></script>
     <script src="../js/TON.js"></script>
     <script src="../js/api.js"></script>
+    <script>
+  async function loadStickers() {
+    try {
+      const res = await fetch('/api/products');
+      const json = await res.json();
+      console.log('محصولات دیتابیس:', json.data);
+    } catch (err) {
+      console.error('خطا در دریافت استیکرها:', err);
+    }
+  }
+  loadStickers();
+</script>
 </body>
 </html>

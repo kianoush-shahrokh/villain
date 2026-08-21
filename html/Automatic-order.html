@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-key="page_title_auto">Automatic Order</title>
     
-   
-   
-    
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/Automatic-order.css">
     <link rel="stylesheet" href="../css/store.css">
@@ -15,7 +12,6 @@
     <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body>
-    
 
 <!-- ============== هدر ============== -->
 <header class="header">
@@ -62,7 +58,6 @@
                 
                 <!-- منوی کشویی -->
                 <div class="dropdown-menu" id="profileDropdown">
-                    
                     <div class="dropdown-header">
                         <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=50" alt="Profile" />
                         <div class="dropdown-user-info">
@@ -120,13 +115,12 @@
     <div class="header-divider"></div>
 </header>
 
-
 <!-- ===== باکس فیلترها ===== -->
 <div class="filter-wrapper">
     <div class="filter-box">
         <button class="filter-btn active" data-filter="all" data-lang-key="filter_all">All</button>
         <button class="filter-btn" data-filter="flag" data-lang-key="filter_flag">Flag</button>
-        <button class="filter-btn" data-filter="gift" data-lang-key="filter_gift">Gifts</button>
+        <button class="filter-btn" data-filter="gifts" data-lang-key="filter_gift">Gifts</button>
         <button class="filter-btn" data-filter="special" data-lang-key="filter_special">Special</button>
         <button class="filter-btn" data-filter="other" data-lang-key="filter_other">Other</button>
     </div>
@@ -134,33 +128,132 @@
 
 <!-- ===== محصولات ===== -->
 <div class="products-grid" id="productsGrid">
-    <!-- محصولات توسط جاوااسکریپت ساخته میشوند -->
+    <!-- استیکرها به صورت داینامیک از دیتابیس بارگذاری می‌شوند -->
 </div>
 
-
-
-
-<!-- ===== دکمه ثابت پایین صفحه ===== -->
-<a href="#" class="cart-fixed-btn" id="cartFixedBtn">
+<!-- ===== دکمه ثابت پایین صفحه (حذف محدودیت و اتصال به صفحه ادیتور) ===== -->
+<a href="#" class="cart-fixed-btn" id="cartFixedBtn" onclick="proceedToNextPage(event)">
     <span class="cart-icon"><img src="../assets/images/icons/4.png" alt=""></span>
     <span class="cart-text" data-lang-key="cart_selected">Selected:</span>
     <span class="cart-count" id="cartCount">0</span>
     <span class="cart-divider">|</span>
     <span class="cart-total" id="cartTotal">0</span>
     <span class="cart-currency">TON</span>
-    <span class="cart-min-warning" id="cartMinWarning" data-lang-key="cart_min_warning">⚠️ Min 5</span>
+    <!-- اخطار Min 5 کلاً حذف شد -->
 </a>
-
-
-
-
-
-
 
 <script src="../js/main.js"></script>
 <script src="../js/Products.js"></script>
 <script src="../js/language.js"></script>
 <script src="../js/TON.js"></script>
 <script src="../js/api.js"></script>
+
+<!-- اسکریپت رندر استیکرها از PostgreSQL -->
+<script>
+  let allProducts = [];
+  let selectedProducts = new Set();
+
+  async function fetchAndRenderProducts() {
+    try {
+      const response = await fetch('/api/products');
+      const resData = await response.json();
+      
+      if (resData.success && Array.isArray(resData.data)) {
+        allProducts = resData.data;
+        displayProducts(allProducts);
+        setupFilterEvents();
+      }
+    } catch (error) {
+      console.error('خطا در دریافت لیست محصولات:', error);
+    }
+  }
+
+  function displayProducts(products) {
+    const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    products.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.setAttribute('data-id', item.id);
+      card.setAttribute('data-category', item.category);
+
+      card.innerHTML = `
+        <div class="product-preview">
+          <img src="${item.thumbnail_path}" alt="${item.title}" onerror="this.src='../assets/images/icons/1.png'">
+        </div>
+        <div class="product-info">
+          <h3 class="product-title">${item.title}</h3>
+          <span class="product-price">TON ${item.price_ton}</span>
+        </div>
+      `;
+
+      card.addEventListener('click', () => toggleSelectProduct(item, card));
+      grid.appendChild(card);
+    });
+  }
+
+  function toggleSelectProduct(item, cardElement) {
+    if (selectedProducts.has(item.id)) {
+      selectedProducts.delete(item.id);
+      cardElement.classList.remove('selected');
+    } else {
+      selectedProducts.add(item.id);
+      cardElement.classList.add('selected');
+    }
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const countElem = document.getElementById('cartCount');
+    const totalElem = document.getElementById('cartTotal');
+    
+    let totalTon = 0;
+    allProducts.forEach(p => {
+      if (selectedProducts.has(p.id)) {
+        totalTon += parseFloat(p.price_ton || 0);
+      }
+    });
+
+    if (countElem) countElem.innerText = selectedProducts.size;
+    if (totalElem) totalElem.innerText = totalTon.toFixed(2);
+  }
+
+  function setupFilterEvents() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const category = btn.getAttribute('data-filter');
+        if (category === 'all') {
+          displayProducts(allProducts);
+        } else {
+          const filtered = allProducts.filter(p => p.category.toLowerCase() === category.toLowerCase());
+          displayProducts(filtered);
+        }
+      });
+    });
+  }
+
+  // اضافه شدن تابع انتقال به صفحه بعد بدون محدودیت ۵ استیکر
+  function proceedToNextPage(event) {
+      event.preventDefault(); // جلوگیری از رفرش شدن صفحه با تگ a
+      
+      if (selectedProducts.size >= 1) {
+          // ذخیره کردن آیدی استیکرهای انتخاب شده در حافظه تا در صفحه customize لود شوند
+          localStorage.setItem('selectedStickers', JSON.stringify(Array.from(selectedProducts)));
+          // انتقال به صفحه سفارشی سازی
+          window.location.href = 'customize.html';
+      } else {
+          // در صورتی که هیچی انتخاب نکرده باشد
+          alert('Please select at least one sticker.'); 
+      }
+  }
+
+  document.addEventListener('DOMContentLoaded', fetchAndRenderProducts);
+</script>
 </body>
 </html>
