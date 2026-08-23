@@ -17,13 +17,21 @@ app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/html', express.static(path.join(__dirname, 'html')));
 
-const pool = new Pool({
-  user: 'postgres',
-  host: '127.0.0.1',
-  database: 'villain_db',
-  password: '123456',
-  port: 5432,
-});
+// تنظیم هوشمند اتصال به دیتابیس (لوکال یا ابری Pxxl)
+const pool = new Pool(
+  process.env.DATABASE_URL
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false } // برای ارتباط امن با دیتابیس ابری
+      }
+    : {
+        user: 'postgres',
+        host: '127.0.0.1',
+        database: 'villain_db',
+        password: '123456',
+        port: 5432,
+      }
+);
 
 pool.on('error', (err) => {
   console.error('Database client error:', err);
