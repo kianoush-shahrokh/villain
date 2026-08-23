@@ -125,7 +125,6 @@
       box-shadow: 0 4px 16px var(--accent-glow);
     }
 
-    /* استایل نشان پیشنهادی */
     .rec-badge {
       position: absolute;
       top: -7px;
@@ -444,21 +443,32 @@
     designState.stickerId = savedStickers.length > 0 ? savedStickers[0] : 1;
 
     try {
-      const res = await fetch('http://localhost:3001/api/products');
+      const res = await fetch('/api/products');
       const data = await res.json();
-      const product = data.data.find(p => p.id == designState.stickerId) || data.data[0];
+      const product = (data.data && data.data.find(p => p.id == designState.stickerId)) || (data.data && data.data[0]);
 
-      const jsonRes = await fetch(product.json_path);
+      if (!product) {
+        console.error("محصولی یافت نشد.");
+        return;
+      }
+
+      const rawPath = product.json_path || 'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.json';
+      const jsonPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
+      const jsonRes = await fetch(jsonPath);
       rawLottieJson = await jsonRes.json();
 
       anim = lottie.loadAnimation({
         container: document.getElementById('lottieContainer'),
-        renderer: 'svg', loop: true, autoplay: true, 
+        renderer: 'svg', 
+        loop: true, 
+        autoplay: true, 
         animationData: JSON.parse(JSON.stringify(rawLottieJson))
       });
 
       anim.addEventListener('DOMLoaded', buildUI);
-    } catch (err) { console.error("خطا:", err); }
+    } catch (err) { 
+      console.error("خطا در بارگذاری استیکر:", err); 
+    }
 
     makeDraggable(document.getElementById('logoOverlay'), (x, y) => designState.logoPos = { x, y });
     makeDraggable(document.getElementById('textOverlay'), (x, y) => { designState.textData.x = x; designState.textData.y = y; });
@@ -471,9 +481,8 @@
     
     let visualCounter = 1;
 
-    // استخراج لایه‌ها دقیقاً منطبق با ایندکس فایل JSON
     rawLottieJson.layers.forEach((layer, jsonIdx) => {
-      if (layer.ty === 4) { // فقط لایه‌های شیپ (قابل رنگ‌آمیزی)
+      if (layer.ty === 4) {
         const domElement = anim.renderer.elements[jsonIdx];
         if (domElement && domElement.layerElement) {
           const paths = domElement.layerElement.querySelectorAll('path, rect, polygon');
@@ -499,7 +508,6 @@
     });
   }
 
-  // تغییر رنگ بر اساس شماره شناسنامه (Index) دقیق لایه در فایل اصلی
   function applyExactLayerColor(jsonIdx, hex, element) {
     const domElement = anim.renderer.elements[jsonIdx];
     if (domElement && domElement.layerElement) {
@@ -509,7 +517,6 @@
       });
     }
     
-    // ذخیره کدرنگ همراه با شماره لایه واقعی
     designState.layers[jsonIdx] = hex;
 
     if (element && element.closest('.color-row')) {
