@@ -443,18 +443,8 @@
     designState.stickerId = savedStickers.length > 0 ? savedStickers[0] : 1;
 
     try {
-      const res = await fetch('/api/products');
-      const data = await res.json();
-      const product = (data.data && data.data.find(p => p.id == designState.stickerId)) || (data.data && data.data[0]);
-
-      if (!product) {
-        console.error("محصولی یافت نشد.");
-        return;
-      }
-
-      const rawPath = product.json_path || 'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.json';
-      const jsonPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
-      const jsonRes = await fetch(jsonPath);
+      // استفاده مستقیم از روت سرور بدون ارور ۴۰۴
+      const jsonRes = await fetch('/api/sticker-json');
       rawLottieJson = await jsonRes.json();
 
       anim = lottie.loadAnimation({
@@ -480,6 +470,8 @@
     panel.innerHTML = ''; 
     
     let visualCounter = 1;
+
+    if (!rawLottieJson || !rawLottieJson.layers) return;
 
     rawLottieJson.layers.forEach((layer, jsonIdx) => {
       if (layer.ty === 4) {

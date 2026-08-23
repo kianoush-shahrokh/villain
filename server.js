@@ -11,13 +11,15 @@ app.use(cors());
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb', extended: true }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+// سرو فایل‌های استاتیک با ساختار دقیق
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/html', express.static(path.join(__dirname, 'html')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
-// تنظیم اتصال به دیتابیس بدون SSL (برای سازگاری کامل با سرور Pxxl)
+// تنظیم اتصال به دیتابیس بدون SSL (سازگار با سرور Pxxl)
 const pool = new Pool(
   process.env.DATABASE_URL
     ? {
@@ -81,7 +83,7 @@ async function initTables() {
         id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
         category TEXT DEFAULT 'gifts',
-        price TEXT DEFAULT '0',
+        price TEXT DEFAULT '4.00',
         json_path TEXT,
         webp_path TEXT,
         svg_path TEXT,
@@ -96,9 +98,9 @@ async function initTables() {
       await pool.query(`
         INSERT INTO products (title, category, price, json_path, webp_path, svg_path, tgs_path, zip_path)
         VALUES (
-          'استیکر گیفت شاپ',
+          'Gift Shop Emoji',
           'gifts',
-          '0',
+          '4.00',
           'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.json',
           'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.webp',
           'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.svg',
@@ -118,6 +120,16 @@ initTables();
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'html', 'index.html'));
+});
+
+// مسیر دریافت مستقیم فایل JSON برای جلوگیری از خطای ۴۰۴ در ادیتور
+app.get('/api/sticker-json', (req, res) => {
+  const filePath = path.join(__dirname, 'assets', 'stickers', 'GiftShop_Farsi_AgAD-BwAAvQXsVA.json');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/json');
+    return res.sendFile(filePath);
+  }
+  res.status(404).json({ success: false, message: 'فایل استیکر یافت نشد.' });
 });
 
 // مسیر دریافت لیست محصولات
@@ -363,9 +375,10 @@ function createVectorLayer(ip, op, colorArray, svgPathData) {
 app.post('/api/download-tgs', (req, res) => {
   try {
     const { file, layers, svgPathData, logoColor } = req.body; 
-    const absolutePath = path.join(__dirname, file);
+    const relativePath = file || 'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.json';
+    const absolutePath = path.join(__dirname, relativePath.startsWith('/') ? relativePath.slice(1) : relativePath);
 
-    if (!file || !fs.existsSync(absolutePath)) {
+    if (!fs.existsSync(absolutePath)) {
       return res.status(404).send('Sticker file not found');
     }
 
