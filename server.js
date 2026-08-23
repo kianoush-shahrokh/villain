@@ -17,12 +17,12 @@ app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/html', express.static(path.join(__dirname, 'html')));
 
-// تنظیم هوشمند اتصال به دیتابیس (لوکال یا ابری Pxxl)
+// تنظیم اتصال به دیتابیس بدون SSL (برای سازگاری کامل با سرور Pxxl)
 const pool = new Pool(
   process.env.DATABASE_URL
     ? {
         connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }
+        ssl: false
       }
     : {
         user: 'postgres',
@@ -63,7 +63,7 @@ async function initTables() {
       )
     `);
 
-    // ۳. جدول طراحی‌های شخصی‌سازی‌شده
+    // ۳. جدول طراحی‌های سفارشی
     await pool.query(`
       CREATE TABLE IF NOT EXISTS custom_stickers (
         id SERIAL PRIMARY KEY,
@@ -90,7 +90,7 @@ async function initTables() {
       )
     `);
 
-    // درج استیکر پیش‌فرض در صورت خالی بودن جدول محصولات
+    // درج خودکار استیکر پیش‌فرض در صورت خالی بودن جدول
     const existing = await pool.query('SELECT COUNT(*) FROM products');
     if (parseInt(existing.rows[0].count, 10) === 0) {
       await pool.query(`
@@ -106,7 +106,7 @@ async function initTables() {
           'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.zip'
         )
       `);
-      console.log('✅ استیکر پیش‌فرض به دیتابیس اضافه شد.');
+      console.log('✅ استیکر پیش‌فرض با موفقیت به دیتابیس اضافه شد.');
     }
 
     console.log('✅ تمامی جداول دیتابیس آماده هستند.');
@@ -120,7 +120,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'html', 'index.html'));
 });
 
-// دریافت لیست محصولات برای صفحات سفارش و فروشگاه
+// مسیر دریافت لیست محصولات
 app.get('/api/products', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM products ORDER BY id ASC');
@@ -130,7 +130,7 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// ثبت یا به‌روزرسانی اطلاعات کاربر تلگرام
+// مسیر ثبت اطلاعات کاربر تلگرام
 app.post('/api/users', async (req, res) => {
   const { telegram_id, full_name, username } = req.body;
   if (!telegram_id) {
@@ -152,7 +152,7 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
-// دریافت آمار و لیست محصولات خریداری‌شده واقعی کاربر
+// مسیر دریافت خریدهای کاربر
 app.get('/api/user/purchases', async (req, res) => {
   const telegramId = req.query.telegram_id;
   if (!telegramId) {
@@ -196,7 +196,7 @@ app.get('/api/user/purchases', async (req, res) => {
   }
 });
 
-// ذخیره طراحی استیکر
+// مسیر ذخیره طراحی
 app.post('/api/save-design', async (req, res) => {
   const { stickerId, layers, logoData, logoSize, textData, formatMode } = req.body;
   try {
@@ -223,7 +223,6 @@ app.post('/api/save-design', async (req, res) => {
   }
 });
 
-// توابع پردازش لایه‌های رنگی و وکتور Lottie
 function hexToLottieColor(hex) {
   if (!hex) return [1, 1, 1, 1];
   let cleanHex = hex.replace('#', '');
@@ -360,7 +359,7 @@ function createVectorLayer(ip, op, colorArray, svgPathData) {
   };
 }
 
-// تولید و دانلود خروجی TGS تلگرام
+// مسیر دانلود استیکر TGS
 app.post('/api/download-tgs', (req, res) => {
   try {
     const { file, layers, svgPathData, logoColor } = req.body; 
