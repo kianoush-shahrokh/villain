@@ -1,200 +1,679 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="page_title_cart">Shopping Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>سبد خرید</title>
     
     <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plasma:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Shoor+Rounded:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/responsive.css">
-    <link rel="stylesheet" href="../css/fonts.css">
-    <link rel="stylesheet" href="../css/shopping-cart.css">
+    <!-- فونت وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
     <style>
-      .custom-cart-item { background: #1a1a1a; padding: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border: 1px solid #333; gap: 15px; }
-      .cart-sticker-preview { width: 70px; height: 70px; background: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; flex-shrink: 0; }
-      .cart-sticker-preview svg { width: 50px; height: 50px; }
-      .cart-item-details { flex-grow: 1; }
-      .cart-item-details h4 { margin: 0 0 5px 0; color: #fff; font-size: 0.95rem; }
-      .cart-item-details p { margin: 0; color: #aaa; font-size: 0.75rem; }
-      .cart-item-right { display: flex; align-items: center; gap: 15px; }
-      .cart-item-price { color: #e11d48; font-weight: bold; font-size: 0.95rem; white-space: nowrap; }
-      .delete-btn { background: #222; border: 1px solid #444; color: #ff4d4d; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-      .delete-btn:hover { background: #ff4d4d; color: #fff; border-color: #ff4d4d; }
-      .back-to-design { background: #222; color: #aaa; border: 1px solid #333; padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 15px; transition: 0.2s; }
-      .back-to-design:hover { border-color: #e11d48; color: #e11d48; }
+      :root {
+        --bg: #070709;
+        --card-bg: rgba(20, 20, 24, 0.85);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --accent: #f43f5e;
+        --accent-glow: rgba(244, 63, 94, 0.4);
+        --text-muted: #94a3b8;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        min-height: 100vh;
+        min-height: 100dvh;
+        background: var(--bg);
+        color: #fff;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: radial-gradient(circle at 50% 10%, rgba(244, 63, 94, 0.12) 0%, transparent 60%), #070709;
+        padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px)) 14px;
+        overflow-x: hidden;
+      }
+
+      .app-wrapper {
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 12px;
+      }
+
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+
+      .lang-select {
+        background: var(--card-bg);
+        color: #fff;
+        border: 1px solid var(--card-border);
+        padding: 6px 10px;
+        border-radius: 10px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        cursor: pointer;
+        outline: none;
+        backdrop-filter: blur(12px);
+      }
+      .lang-select option {
+        background: #121215;
+        color: #fff;
+      }
+
+      .top-nav-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+      }
+
+      .section-title {
+        font-size: 1.05rem;
+        font-weight: 900;
+        color: #fff;
+      }
+
+      .back-to-design {
+        background: var(--card-bg);
+        color: var(--text-muted);
+        border: 1px solid var(--card-border);
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s ease;
+      }
+
+      .back-to-design:active {
+        transform: scale(0.96);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      .cart-scroll-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 160px;
+      }
+
+      /* کارت استیکر در گوشی */
+      .custom-cart-item {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 12px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+
+      .cart-sticker-preview {
+        width: 82px;
+        height: 82px;
+        min-width: 82px;
+        background: radial-gradient(circle at center, rgba(244, 63, 94, 0.15) 0%, rgba(0,0,0,0.85) 100%), #000;
+        border-radius: 14px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--card-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #cartLottiePreview {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #cartLottiePreview svg {
+        width: 68px;
+        height: 68px;
+      }
+
+      .cart-overlay-logo {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 10;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.7));
+      }
+
+      .cart-overlay-text {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        font-weight: 900;
+        pointer-events: none;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.95);
+        white-space: nowrap;
+        z-index: 12;
+      }
+
+      .cart-item-details {
+        flex: 1;
+        min-width: 0; /* جلوگیری از شکستن کلمات طولانی */
+      }
+
+      .cart-item-details h4 {
+        margin: 0 0 3px 0;
+        color: #fff;
+        font-size: 0.92rem;
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cart-item-details p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cart-badge {
+        display: inline-block;
+        font-size: 0.62rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 6px;
+        background: rgba(244, 63, 94, 0.15);
+        color: var(--accent);
+        border: 1px solid rgba(244, 63, 94, 0.3);
+        margin-top: 5px;
+      }
+
+      .cart-item-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .cart-item-price {
+        color: #38bdf8;
+        font-weight: 900;
+        font-size: 0.92rem;
+        white-space: nowrap;
+      }
+
+      .delete-btn {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: #ef4444;
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        transition: 0.2s;
+      }
+
+      .delete-btn:active {
+        transform: scale(0.9);
+        background: rgba(239, 68, 68, 0.25);
+      }
+
+      /* فوتر و باکس تسویه‌حساب پایین گوشی */
+      .cart-summary-box {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 12px 14px;
+        border-radius: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      }
+
+      .total-col {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .total-label {
+        color: var(--text-muted);
+        font-size: 0.72rem;
+      }
+
+      .total-amount {
+        font-weight: 900;
+        color: #fff;
+        font-size: 1.15rem;
+      }
+
+      .checkout-btn {
+        background: linear-gradient(135deg, var(--accent), #be123c);
+        color: #fff;
+        border: none;
+        padding: 11px 18px;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 0.85rem;
+        cursor: pointer;
+        box-shadow: 0 4px 16px var(--accent-glow);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.2s ease;
+      }
+
+      .checkout-btn:active {
+        transform: scale(0.97);
+      }
+
+      .checkout-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+      }
+
+      /* باکس ریسپانسیو سبد خالی */
+      .empty-cart-container {
+        text-align: center;
+        padding: 30px 16px;
+        background: var(--card-bg);
+        border: 1.5px dashed var(--card-border);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        backdrop-filter: blur(12px);
+      }
+
+      .empty-cart-icon {
+        font-size: 2.6rem;
+        line-height: 1;
+      }
+
+      .empty-cart-title {
+        font-size: 0.98rem;
+        font-weight: 800;
+        color: #fff;
+      }
+
+      .empty-cart-desc {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        max-width: 240px;
+        line-height: 1.4;
+      }
+
+      .btn-go-shop {
+        background: linear-gradient(135deg, var(--accent), #be123c);
+        color: white;
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-size: 0.82rem;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+        box-shadow: 0 4px 16px var(--accent-glow);
+        transition: 0.2s ease;
+      }
+
+      .btn-go-shop:active {
+        transform: scale(0.96);
+      }
+
+      /* تنظیمات بهینه برای صفحات بسیار کوچک (عرض کمتر از ۳۵۰px) */
+      @media (max-width: 350px) {
+        .cart-sticker-preview {
+          width: 70px;
+          height: 70px;
+          min-width: 70px;
+        }
+        #cartLottiePreview svg {
+          width: 58px;
+          height: 58px;
+        }
+        .cart-item-details h4 {
+          font-size: 0.85rem;
+        }
+        .checkout-btn {
+          padding: 9px 14px;
+          font-size: 0.8rem;
+        }
+      }
     </style>
 </head>
 <body>
 
-<!-- ============== هدر ============== -->
-<header class="header">
-    <div class="header-container">
-        <div class="header-left">
-            <div class="language-wrapper">
-                <button class="language-btn" id="languageToggle">
-                    <span id="currentLanguage">🇬🇧 English</span>
-                    <span class="language-arrow">▼</span>
-                </button>
-                <div class="language-dropdown" id="languageDropdown">
-                    <ul class="language-list">
-                        <li class="language-item" data-lang="en" onclick="changeLanguage('en', '🇬🇧', 'English')"><span class="lang-flag">🇬🇧</span> <span class="lang-name">English</span></li>
-                        <li class="language-item" data-lang="fa" onclick="changeLanguage('fa', '🇮🇷', 'فارسی')"><span class="lang-flag">🇮🇷</span> <span class="lang-name">فارسی</span></li>
-                        <li class="language-item" data-lang="ru" onclick="changeLanguage('ru', '🇷🇺', 'Русский')"><span class="lang-flag">🇷🇺</span> <span class="lang-name">Русский</span></li>
-                        <li class="language-item" data-lang="zh" onclick="changeLanguage('zh', '🇨🇳', '中文')"><span class="lang-flag">🇨🇳</span> <span class="lang-name">中文</span></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+<div class="app-wrapper">
+    <header class="header-container">
+        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="fa">🇮🇷 فارسی</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="zh">🇨🇳 中文</option>
+        </select>
+    </header>
 
-        <div class="header-center">
-            <div class="profile-wrapper">
-                <button class="profile-btn" id="profileToggle">
-                    <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=40" alt="Profile" />
-                </button>
-            </div>
-        </div>
-
-        <a href="../html/TON.html">
-            <div class="header-right">
-                <div class="balance-box">
-                    <span class="balance-currency">TON</span>
-                    <span class="balance-amount">00</span>
-                </div>
-            </div>
+    <div class="top-nav-row">
+        <h3 id="txtItemsTitle" class="section-title">اقلام انتخابی</h3>
+        <a href="customize.html" class="back-to-design" id="btnBackToDesign">
+            <span id="backArrow">❮</span> <span id="txtBackDesign">ویرایش طرح</span>
         </a>
     </div>
-    <div class="header-divider"></div>
-</header>
 
-<!-- ============== محتوای اصلی سبد خرید ============== -->
-<main>
-    <div class="page-title" style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h2 data-lang-key="cart_title">🛒 Shopping Cart</h2>
-            <p class="subtitle" data-lang-key="cart_subtitle">View and manage your selected products</p>
-        </div>
-        <!-- دکمه بازگشت به صفحه کاستومایز -->
-        <a href="customize.html" class="back-to-design">❮ ویرایش مجدد طرح</a>
+    <div class="cart-scroll-area">
+        <div id="cart-items"></div>
     </div>
 
-    <div class="cart-container">
-        <div id="cart-items" class="cart-items">
-            <!-- آیتم‌ها اینجا لود می‌شوند -->
+    <div class="cart-summary-box">
+        <div class="total-col">
+            <span id="txtTotalLabel" class="total-label">مبلغ کل سفارش:</span>
+            <span id="cart-total" class="total-amount">0.00 TON</span>
         </div>
-
-        <div class="cart-summary">
-            <div>
-                <span class="total-label" data-lang-key="total_label">Total:</span>
-                <span class="total-amount" id="cart-total">0.00 <span>TON</span></span>
-            </div>
-            <button id="checkout-btn" class="checkout-btn" data-lang-key="checkout_btn">Checkout</button>
-        </div>
-    </div>
-</main>
-
-<!-- ============== ناوبری پایین صفحه ============== -->
-<div class="nav-bottom">
-    <div class="nav-container">
-        <a href="https://t.me/Villain_Produce"><button class="nav-btn profile-nav"><img src="../assets/images/icons/5.png" alt="" class="img-icon"><span class="nav-text" data-lang-key="portfolio">Portfolio</span></button></a>
-        <a href="./index.html"><button class="nav-btn home-nav"><img src="../assets/images/icons/2.png" alt="" class="img-icon"><span class="nav-text" data-lang-key="home">Home</span></button></a>
-        <a href="../html/bonus.html"><button class="nav-btn gift-nav"><img src="../assets/images/icons/3.png" alt="" class="img-icon"><span class="nav-text" data-lang-key="gifts">Gifts</span></button></a>
+        <button class="checkout-btn" id="btnCheckout" onclick="goToCheckout()">
+            <span id="txtBtnCheckout">ادامه به پرداخت</span> <span id="btnArrow">❯</span>
+        </button>
     </div>
 </div>
 
-<script src="../js/main.js"></script>
-<script src="../js/shapping.js"></script>
-<script src="../js/language.js"></script>
-<script src="../js/TON.js"></script>
-<script src="../js/api.js"></script>
-
 <script>
+  let currentLang = 'fa';
+
+  const i18n = {
+    fa: {
+      itemsTitle: "اقلام انتخابی",
+      backDesign: "ویرایش طرح",
+      totalLabel: "مبلغ کل سفارش:",
+      checkoutBtn: "ادامه به پرداخت",
+      emptyTitle: "سبد خرید شما خالی است",
+      emptyDesc: "هنوز استیکری برای خرید انتخاب نکرده‌اید.",
+      btnAddSticker: "🛍️ انتخاب و طراحی استیکر",
+      emptyAlert: "سبد خرید شما خالی است! لطفاً ابتدا یک استیکر انتخاب و طراحی کنید.",
+      defaultSticker: "استیکر اختصاصی",
+      formatWebm: "استیکر لوگودار (.webm)",
+      formatTgs: "استیکر متحرک (.tgs)",
+      textPrefix: "متن:",
+      logoCustomized: "شخصی‌سازی با لوگو",
+      colorCustomized: "پالت رنگی سفارشی",
+      dir: "rtl"
+    },
+    en: {
+      itemsTitle: "Selected Items",
+      backDesign: "Edit Design",
+      totalLabel: "Total Amount:",
+      checkoutBtn: "Proceed to Pay",
+      emptyTitle: "Your Cart is Empty",
+      emptyDesc: "You haven't selected any stickers yet.",
+      btnAddSticker: "🛍️ Choose & Customize",
+      emptyAlert: "Your cart is empty! Please choose and customize a sticker first.",
+      defaultSticker: "Custom Sticker",
+      formatWebm: "Video Sticker (.webm)",
+      formatTgs: "Vector Sticker (.tgs)",
+      textPrefix: "Text:",
+      logoCustomized: "Custom Logo Added",
+      colorCustomized: "Custom Palette",
+      dir: "ltr"
+    },
+    ru: {
+      itemsTitle: "Выбранные товары",
+      backDesign: "Изменить",
+      totalLabel: "Сумма заказа:",
+      checkoutBtn: "К оплате",
+      emptyTitle: "Ваша корзина пуста",
+      emptyDesc: "Вы еще не выбрали ни одного стикера.",
+      btnAddSticker: "🛍️ Выбрать стикер",
+      emptyAlert: "Корзина пуста! Сначала создайте свой стикер.",
+      defaultSticker: "Стикер на заказ",
+      formatWebm: "Видеостикер (.webm)",
+      formatTgs: "Векторный стикер (.tgs)",
+      textPrefix: "Текст:",
+      logoCustomized: "С логотипом",
+      colorCustomized: "Свои цвета",
+      dir: "ltr"
+    },
+    zh: {
+      itemsTitle: "已选商品",
+      backDesign: "重新编辑",
+      totalLabel: "订单总额:",
+      checkoutBtn: "前往支付",
+      emptyTitle: "购物车为空",
+      emptyDesc: "您尚未选择任何贴纸进行定制。",
+      btnAddSticker: "🛍️ 选购并定制贴纸",
+      emptyAlert: "购物车为空！请先选择贴纸进行定制。",
+      defaultSticker: "定制贴纸",
+      formatWebm: "视频贴纸 (.webm)",
+      formatTgs: "矢量贴纸 (.tgs)",
+      textPrefix: "文字:",
+      logoCustomized: "包含自定义徽标",
+      colorCustomized: "自定义配色",
+      dir: "ltr"
+    }
+  };
+
+  function hexToRgb01(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    return [
+      parseInt(hex.substring(0, 2), 16) / 255,
+      parseInt(hex.substring(2, 4), 16) / 255,
+      parseInt(hex.substring(4, 6), 16) / 255,
+      1
+    ];
+  }
+
+  function updateShapesDeep(shapes, rgb) {
+    if (!Array.isArray(shapes)) return;
+    shapes.forEach(sh => {
+      if ((sh.ty === 'fl' || sh.ty === 'st') && sh.c && sh.c.k) {
+        if (typeof sh.c.k[0] === 'number') {
+          sh.c.k = rgb;
+        } else if (Array.isArray(sh.c.k)) {
+          sh.c.k.forEach(kf => {
+            if (kf.s) kf.s = rgb;
+            if (kf.e) kf.e = rgb;
+          });
+        }
+      } else if (sh.ty === 'gr' && sh.it) {
+        updateShapesDeep(sh.it, rgb);
+      }
+    });
+  }
+
+  function changeLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.dir = i18n[lang].dir;
+
+    document.getElementById('txtItemsTitle').innerText = i18n[lang].itemsTitle;
+    document.getElementById('txtBackDesign').innerText = i18n[lang].backDesign;
+    document.getElementById('txtTotalLabel').innerText = i18n[lang].totalLabel;
+    document.getElementById('txtBtnCheckout').innerText = i18n[lang].checkoutBtn;
+    
+    document.getElementById('backArrow').innerText = i18n[lang].dir === 'rtl' ? '❮' : '❯';
+    document.getElementById('btnArrow').innerText = i18n[lang].dir === 'rtl' ? '❯' : '❮';
+
+    loadCartCustomSticker();
+  }
+
   async function loadCartCustomSticker() {
     const cartContainer = document.getElementById('cart-items');
     const totalElement = document.getElementById('cart-total');
+    const btnCheckout = document.getElementById('btnCheckout');
+    const btnBackToDesign = document.getElementById('btnBackToDesign');
     const savedDesign = JSON.parse(localStorage.getItem('finalCustomizedSticker'));
 
+    // اگر سبد خرید خالی باشد
     if (!savedDesign) {
-      cartContainer.innerHTML = '<p style="text-align:center; color:#777; padding: 20px;">سبد خرید شما خالی است.</p>';
-      totalElement.innerHTML = `0.00 <span>TON</span>`;
+      cartContainer.innerHTML = `
+        <div class="empty-cart-container">
+          <div class="empty-cart-icon">🛒</div>
+          <div class="empty-cart-title">${i18n[currentLang].emptyTitle}</div>
+          <div class="empty-cart-desc">${i18n[currentLang].emptyDesc}</div>
+          <a href="/html/Automatic-order.html" class="btn-go-shop">
+            ${i18n[currentLang].btnAddSticker}
+          </a>
+        </div>
+      `;
+      totalElement.innerText = '0.00 TON';
+      btnCheckout.disabled = true;
+      if (btnBackToDesign) btnBackToDesign.style.display = 'none';
       return;
     }
 
+    if (btnBackToDesign) btnBackToDesign.style.display = 'inline-flex';
+    btnCheckout.disabled = false;
+
     try {
-      // گرفتن محصولات از سرور برای استخراج قیمت و انیمیشن
       const res = await fetch('http://localhost:3001/api/products');
       const data = await res.json();
       const product = data.data.find(p => p.id == savedDesign.stickerId) || data.data[0];
-      
-      // فرض می‌کنیم قیمت در دیتابیس ستون price دارد، اگر نداشت پیش‌فرض 1.50 در نظر می‌گیریم
       const price = product.price ? parseFloat(product.price) : 1.50;
 
-      const itemCard = document.createElement('div');
-      itemCard.className = 'custom-cart-item';
+      const isWebm = savedDesign.formatMode === 'webm' || Boolean(savedDesign.logoData);
+      const formatTitle = isWebm ? i18n[currentLang].formatWebm : i18n[currentLang].formatTgs;
 
-      let textDesc = savedDesign.textData && savedDesign.textData.text ? `متن: ${savedDesign.textData.text}` : 'بدون متن سفارشی';
+      let detailsText = '';
+      if (savedDesign.textData && savedDesign.textData.text && savedDesign.textData.text.trim() !== '') {
+        detailsText = `${i18n[currentLang].textPrefix} ${savedDesign.textData.text}`;
+      } else {
+        detailsText = isWebm ? i18n[currentLang].logoCustomized : i18n[currentLang].colorCustomized;
+      }
 
-      itemCard.innerHTML = `
-        <div class="cart-sticker-preview" id="cartLottiePreview"></div>
-        <div class="cart-item-details">
-          <h4>🎨 ${product.name || 'استیکر سفارشی'} (کد: ${savedDesign.dbId || 'ثبت شده'})</h4>
-          <p>${textDesc}</p>
-        </div>
-        <div class="cart-item-right">
-          <div class="cart-item-price">${price.toFixed(2)} TON</div>
-          <button class="delete-btn" onclick="removeCartItem()" title="حذف محصول">🗑️</button>
+      cartContainer.innerHTML = `
+        <div class="custom-cart-item">
+          <div class="cart-sticker-preview">
+            <div id="cartLottiePreview"></div>
+            <img id="cartOverlayLogo" class="cart-overlay-logo" style="display:none;" />
+            <div id="cartOverlayText" class="cart-overlay-text" style="display:none;"></div>
+          </div>
+          <div class="cart-item-details">
+            <h4>${product.name || i18n[currentLang].defaultSticker}</h4>
+            <p>${detailsText}</p>
+            <span class="cart-badge">${formatTitle}</span>
+          </div>
+          <div class="cart-item-right">
+            <div class="cart-item-price">${price.toFixed(2)} TON</div>
+            <button class="delete-btn" onclick="removeCartItem()" title="Delete">🗑️</button>
+          </div>
         </div>
       `;
       
-      cartContainer.innerHTML = '';
-      cartContainer.appendChild(itemCard);
-      totalElement.innerHTML = `${price.toFixed(2)} <span>TON</span>`;
+      totalElement.innerText = `${price.toFixed(2)} TON`;
 
-      // رندر انیمیشن لاتی
-      const anim = lottie.loadAnimation({
+      // اعمال اندازه و موقعیت لوگو در موبایل
+      if (savedDesign.logoData) {
+        const logoEl = document.getElementById('cartOverlayLogo');
+        logoEl.src = savedDesign.logoData;
+        logoEl.style.left = `${savedDesign.logoPos ? savedDesign.logoPos.x : 50}%`;
+        logoEl.style.top = `${savedDesign.logoPos ? savedDesign.logoPos.y : 50}%`;
+        const scaledLogoSize = Math.max(16, Math.round((savedDesign.logoSize || 55) * 0.5));
+        logoEl.style.width = `${scaledLogoSize}px`;
+        logoEl.style.height = `${scaledLogoSize}px`;
+        logoEl.style.display = 'block';
+      }
+
+      // اعمال اندازه و موقعیت متن در موبایل
+      if (savedDesign.textData && savedDesign.textData.text && savedDesign.textData.text.trim() !== '') {
+        const textEl = document.getElementById('cartOverlayText');
+        textEl.innerText = savedDesign.textData.text;
+        textEl.style.left = `${savedDesign.textData.x !== undefined ? savedDesign.textData.x : 50}%`;
+        textEl.style.top = `${savedDesign.textData.y !== undefined ? savedDesign.textData.y : 80}%`;
+        textEl.style.fontSize = `${Math.max(9, Math.round((savedDesign.textData.size || 22) * 0.42))}px`;
+        if (savedDesign.textData.color) textEl.style.color = savedDesign.textData.color;
+        textEl.style.display = 'block';
+      }
+
+      // جایگذاری رنگ‌ها در فایل Lottie
+      const jsonRes = await fetch(product.json_path);
+      const lottieJson = await jsonRes.json();
+
+      if (savedDesign.layers) {
+        Object.keys(savedDesign.layers).forEach(idxStr => {
+          const jsonIdx = parseInt(idxStr, 10);
+          const rgb = hexToRgb01(savedDesign.layers[idxStr]);
+          if (lottieJson.layers[jsonIdx] && lottieJson.layers[jsonIdx].shapes) {
+            updateShapesDeep(lottieJson.layers[jsonIdx].shapes, rgb);
+          }
+        });
+      }
+
+      lottie.loadAnimation({
         container: document.getElementById('cartLottiePreview'),
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        path: product.json_path
-      });
-
-      // اعمال رنگ‌های سفارشی کاربر
-      anim.addEventListener('DOMLoaded', () => {
-        const svg = document.querySelector('#cartLottiePreview svg');
-        if (svg && savedDesign.layers) {
-          const groups = Array.from(svg.querySelectorAll(':scope > g > g'));
-          Object.keys(savedDesign.layers).forEach(idx => {
-            const color = savedDesign.layers[idx];
-            if (groups[idx]) {
-              groups[idx].querySelectorAll('path, rect, polygon').forEach(p => {
-                p.setAttribute('fill', color);
-                p.setAttribute('stroke', color);
-              });
-            }
-          });
-        }
+        animationData: lottieJson
       });
 
     } catch (err) {
-      console.error('خطا در لود سبد خرید:', err);
-      cartContainer.innerHTML = '<p style="text-align:center; color:#ff4d4d;">خطا در بارگذاری اطلاعات سبد خرید.</p>';
+      console.error('Cart render error:', err);
     }
   }
 
-  // تابع حذف استیکر از سبد خرید
   function removeCartItem() {
     localStorage.removeItem('finalCustomizedSticker');
-    loadCartCustomSticker(); // رفرش کردن ظاهر سبد خرید
+    loadCartCustomSticker();
   }
 
-  document.addEventListener('DOMContentLoaded', loadCartCustomSticker);
+  function goToCheckout() {
+    const savedDesign = JSON.parse(localStorage.getItem('finalCustomizedSticker'));
+    if (!savedDesign) {
+      alert(i18n[currentLang].emptyAlert);
+      return;
+    }
+    window.location.href = 'checkout.html';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+    changeLanguage('fa');
+  });
 </script>
 </body>
 </html>

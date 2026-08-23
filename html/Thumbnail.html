@@ -1,23 +1,165 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="page_title_thumbnail">Thumbnail Design</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title id="pageTitle" data-lang-key="page_title_thumbnail">طراحی تامبنیل</title>
     
-    <!-- فونت‌های Google (یا اگر آفلاین داری، این بخش رو حذف کن) -->
-    <link href="https://fonts.googleapis.com/css2?family=Plasma:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Shoor+Rounded:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- فونت رسمی و یکپارچه وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="stylesheet" href="../css/Design-order/Thumbnail.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* ایجاد فضای خالی استاندارد پایین صفحه */
+            padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)) !important;
+            overflow-x: hidden;
+            background: radial-gradient(circle at 50% 10%, rgba(34, 158, 217, 0.12) 0%, transparent 60%), #070709;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .thumbnail-options {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 14px 16px 25px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .options-title {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .option-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .option-btn {
+            flex: 1 1 calc(33.333% - 8px);
+            min-width: 80px;
+            padding: 9px 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 11px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .option-btn.active {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 3px 14px rgba(2, 132, 199, 0.45);
+        }
+
+        .upload-area {
+            background: rgba(20, 20, 24, 0.7);
+            border: 1.5px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            padding: 14px 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .telegram-note-badge {
+            margin-top: 8px;
+            background: rgba(34, 158, 217, 0.1);
+            border: 1px solid rgba(34, 158, 217, 0.25);
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-size: 0.73rem;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            line-height: 1.4;
+        }
+
+        .user-description {
+            width: 100%;
+            background: rgba(20, 20, 24, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            outline: none;
+            min-height: 85px;
+            resize: vertical;
+        }
+
+        .submit-telegram-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #0088cc, #006699);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .submit-telegram-btn:active {
+            transform: scale(0.97);
+            filter: brightness(1.1);
+        }
+
+        @media (max-width: 380px) {
+            .option-btn {
+                flex: 1 1 calc(50% - 8px);
+                font-size: 0.75rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    
 
 <!-- ============== هدر ============== -->
 <header class="header">
@@ -25,28 +167,28 @@
 
         <!-- بخش چپ: زبان با منوی کشویی -->
         <div class="header-left">
-            <div class="language-wrapper">
-                <button class="language-btn" id="languageToggle">
-                    <span id="currentLanguage">🇬🇧 English</span>
+            <div class="language-wrapper" style="position: relative;">
+                <button class="language-btn" id="languageToggle" type="button">
+                    <span id="currentLanguage">🇮🇷 فارسی</span>
                     <span class="language-arrow">▼</span>
                 </button>
                 
                 <!-- منوی کشویی زبان -->
                 <div class="language-dropdown" id="languageDropdown">
-                    <ul class="language-list">
-                        <li class="language-item" data-lang="en" onclick="changeLanguage('en', '🇬🇧', 'English')">
-                            <span class="lang-flag">🇬🇧</span>
-                            <span class="lang-name">English</span>
-                        </li>
-                        <li class="language-item" data-lang="fa" onclick="changeLanguage('fa', '🇮🇷', 'فارسی')">
+                    <ul class="language-list" style="list-style: none; margin: 0; padding: 0;">
+                        <li class="language-item" onclick="selectLang('fa', '🇮🇷', 'فارسی')">
                             <span class="lang-flag">🇮🇷</span>
                             <span class="lang-name">فارسی</span>
                         </li>
-                        <li class="language-item" data-lang="ru" onclick="changeLanguage('ru', '🇷🇺', 'Русский')">
+                        <li class="language-item" onclick="selectLang('en', '🇬🇧', 'English')">
+                            <span class="lang-flag">🇬🇧</span>
+                            <span class="lang-name">English</span>
+                        </li>
+                        <li class="language-item" onclick="selectLang('ru', '🇷🇺', 'Русский')">
                             <span class="lang-flag">🇷🇺</span>
                             <span class="lang-name">Русский</span>
                         </li>
-                        <li class="language-item" data-lang="zh" onclick="changeLanguage('zh', '🇨🇳', '中文')">
+                        <li class="language-item" onclick="selectLang('zh', '🇨🇳', '中文')">
                             <span class="lang-flag">🇨🇳</span>
                             <span class="lang-name">中文</span>
                         </li>
@@ -58,17 +200,15 @@
         <!-- بخش وسط: دکمه پروفایل -->
         <div class="header-center">
             <div class="profile-wrapper">
-                <button class="profile-btn" id="profileToggle">
+                <button class="profile-btn" id="profileToggle" type="button">
                     <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=40" alt="Profile" />
                 </button>
                 
-                <!-- منوی کشویی -->
                 <div class="dropdown-menu" id="profileDropdown">
-                    
                     <div class="dropdown-header">
                         <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=50" alt="Profile" />
                         <div class="dropdown-user-info">
-                            <span class="dropdown-username" data-lang-key="user_label">Dear User</span>
+                            <span class="dropdown-username" data-lang-key="user_label">کاربر گرامی</span>
                             <span class="dropdown-email">user@example.com</span>
                         </div>
                     </div>
@@ -77,19 +217,19 @@
                         <a href="../html/User-information.html">
                             <li class="dropdown-item">
                                 <img src="../assets/images/icons/1.png" alt="" class="img-icon">
-                                <span class="dropdown-label" data-lang-key="user_info">User Information</span>
+                                <span class="dropdown-label" data-lang-key="user_info">اطلاعات کاربری</span>
                             </li>
                         </a>
                         <a href="../html/shopping-cart.html">
                             <li class="dropdown-item">
                                 <img src="../assets/images/icons/4.png" alt="" class="img-icon">
-                                <span class="dropdown-label" data-lang-key="user_orders">User Orders</span>
+                                <span class="dropdown-label" data-lang-key="user_orders">سفارشات من</span>
                             </li>
                         </a>
                         <a href="../html/bonus.html">
                             <li class="dropdown-item">
                                 <img src="../assets/images/icons/3.png" alt="" class="img-icon">
-                                <span class="dropdown-label" data-lang-key="gifts_rewards">Gifts & Rewards</span>
+                                <span class="dropdown-label" data-lang-key="gifts_rewards">جوایز و هدایا</span>
                             </li>
                         </a>
                         <a href="#">
@@ -98,7 +238,7 @@
                         <a href="#">
                             <li class="dropdown-item logout" onclick="alert('Logging out')">
                                 <span class="dropdown-icon">🚪</span>
-                                <span class="dropdown-label" data-lang-key="logout">Logout</span>
+                                <span class="dropdown-label" data-lang-key="logout">خروج</span>
                             </li>
                         </a>
                     </ul>
@@ -107,7 +247,7 @@
         </div>
 
         <!-- بخش راست: موجودی TON -->
-        <a href="../html/TON.html">
+        <a href="../html/TON.html" style="text-decoration: none;">
             <div class="header-right">
                 <div class="balance-box">
                     <span class="balance-currency">TON</span>
@@ -117,109 +257,109 @@
         </a>
 
     </div>
-
-    <!-- خط جداکننده زیر هدر -->
     <div class="header-divider"></div>
 </header>
 
 
 <!-- ===== بخش انتخاب گزینه‌های تامبنیل ===== -->
 <div class="thumbnail-options">
-    <h3 class="options-title" data-lang-key="thumbnail_settings">Thumbnail Settings</h3>
+    <h3 class="options-title" id="txtTitleSettings" data-lang-key="thumbnail_settings">تنظیمات طراحی تامبنیل</h3>
     
     <!-- گزینه ۱: سبک تامبنیل -->
-    <div class="option-group">
-        <label class="option-label" data-lang-key="thumbnail_style">Thumbnail Style:</label>
+    <div class="option-group" data-group="style">
+        <label class="option-label" id="txtLabelStyle" data-lang-key="thumbnail_style">سبک تامبنیل:</label>
         <div class="option-buttons">
-            <button class="option-btn" data-value="vlog" data-lang-key="style_vlog">Vlog</button>
-            <button class="option-btn" data-value="fact" data-lang-key="style_fact">Fact</button>
-            <button class="option-btn" data-value="gaming" data-lang-key="style_gaming">Gaming</button>
-            <button class="option-btn" data-value="manhwa" data-lang-key="style_manhwa">Manhwa</button>
-            <button class="option-btn" data-value="horror" data-lang-key="style_horror">Horror</button>
+            <button class="option-btn" data-value="vlog" data-lang-key="style_vlog" type="button">ولاگ (Vlog)</button>
+            <button class="option-btn" data-value="fact" data-lang-key="style_fact" type="button">فکت (Fact)</button>
+            <button class="option-btn" data-value="gaming" data-lang-key="style_gaming" type="button">گیمینگ (Gaming)</button>
+            <button class="option-btn" data-value="manhwa" data-lang-key="style_manhwa" type="button">مانهوا (Manhwa)</button>
+            <button class="option-btn" data-value="horror" data-lang-key="style_horror" type="button">ترسناک (Horror)</button>
         </div>
     </div>
 
     <!-- گزینه ۲: نوع نوشته -->
-    <div class="option-group">
-        <label class="option-label" data-lang-key="text_type">Text Type:</label>
+    <div class="option-group" data-group="text_type">
+        <label class="option-label" id="txtLabelTextType" data-lang-key="text_type">نوع نوشته:</label>
         <div class="option-buttons">
-            <button class="option-btn" data-value="persian" data-lang-key="text_persian">Persian</button>
-            <button class="option-btn" data-value="english" data-lang-key="text_english">English</button>
-            <button class="option-btn" data-value="russian" data-lang-key="text_russian">Russian</button>
-            <button class="option-btn" data-value="chinese" data-lang-key="text_chinese">Chinese</button>
-            <button class="option-btn" data-value="mixed" data-lang-key="text_mixed">Mixed</button>
+            <button class="option-btn" data-value="persian" data-lang-key="text_persian" type="button">فارسی</button>
+            <button class="option-btn" data-value="english" data-lang-key="text_english" type="button">انگلیسی</button>
+            <button class="option-btn" data-value="russian" data-lang-key="text_russian" type="button">روسی</button>
+            <button class="option-btn" data-value="chinese" data-lang-key="text_chinese" type="button">چینی</button>
+            <button class="option-btn" data-value="mixed" data-lang-key="text_mixed" type="button">ترکیبی</button>
         </div>
     </div>
 
     <!-- گزینه ۳: سایز تامبنیل -->
-    <div class="option-group">
-        <label class="option-label" data-lang-key="thumbnail_size">Thumbnail Size:</label>
+    <div class="option-group" data-group="size">
+        <label class="option-label" id="txtLabelSize" data-lang-key="thumbnail_size">سایز تامبنیل:</label>
         <div class="option-buttons">
-            <button class="option-btn" data-value="720p" data-lang-key="size_720p">1280x720</button>
-            <button class="option-btn" data-value="1080p" data-lang-key="size_1080p">1920x1080</button>
-            <button class="option-btn" data-value="square" data-lang-key="size_square">720x720</button>
+            <button class="option-btn" data-value="1280x720" data-lang-key="size_720p" type="button">1280x720</button>
+            <button class="option-btn" data-value="1920x1080" data-lang-key="size_1080p" type="button">1920x1080</button>
+            <button class="option-btn" data-value="720x720" data-lang-key="size_square" type="button">720x720</button>
         </div>
     </div>
 
     <!-- گزینه ۴: تعداد تصویر -->
-    <div class="option-group">
-        <label class="option-label" data-lang-key="image_count">Number of Images:</label>
+    <div class="option-group" data-group="image_count">
+        <label class="option-label" id="txtLabelImgCount" data-lang-key="image_count">تعداد تصویر:</label>
         <div class="option-buttons">
-            <button class="option-btn" data-value="1" data-lang-key="count_1">1</button>
-            <button class="option-btn" data-value="2" data-lang-key="count_2">2</button>
-            <button class="option-btn" data-value="3" data-lang-key="count_3">3</button>
-            <button class="option-btn" data-value="more" data-lang-key="count_more">More</button>
+            <button class="option-btn" data-value="1" data-lang-key="count_1" type="button">۱</button>
+            <button class="option-btn" data-value="2" data-lang-key="count_2" type="button">۲</button>
+            <button class="option-btn" data-value="3" data-lang-key="count_3" type="button">۳</button>
+            <button class="option-btn" data-value="more" data-lang-key="count_more" type="button">بیشتر</button>
         </div>
     </div>
 
     <!-- گزینه ۵: سطح سفارش -->
-    <div class="option-group">
-        <label class="option-label" data-lang-key="order_level">Order Level:</label>
+    <div class="option-group" data-group="level">
+        <label class="option-label" id="txtLabelLevel" data-lang-key="order_level">سطح سفارش:</label>
         <div class="option-buttons">
-            <button class="option-btn" data-value="normal" data-price="10" data-lang-key="level_normal_thumb">Normal - 10 TON</button>
-            <button class="option-btn" data-value="vip" data-price="25" data-lang-key="level_vip_thumb">VIP - 25 TON</button>
-            <button class="option-btn" data-value="pro" data-price="50" data-lang-key="level_pro_thumb">Pro - 50 TON</button>
+            <button class="option-btn" data-value="normal" data-price="10" data-lang-key="level_normal_thumb" type="button">معمولی - 10 TON</button>
+            <button class="option-btn" data-value="vip" data-price="25" data-lang-key="level_vip_thumb" type="button">ویژه (VIP) - 25 TON</button>
+            <button class="option-btn" data-value="pro" data-price="50" data-lang-key="level_pro_thumb" type="button">حرفه‌ای (Pro) - 50 TON</button>
         </div>
     </div>
 
     <!-- گزینه ۶: رنگ‌بندی -->
-    <div class="option-group">
-        <label class="option-label" data-lang-key="color_scheme">Color Scheme:</label>
+    <div class="option-group" data-group="color_scheme">
+        <label class="option-label" id="txtLabelColor" data-lang-key="color_scheme">رنگ‌بندی:</label>
         <div class="option-buttons">
-            <button class="option-btn" data-value="warm" data-lang-key="color_warm">Warm</button>
-            <button class="option-btn" data-value="cool" data-lang-key="color_cool">Cool</button>
-            <button class="option-btn" data-value="neutral" data-lang-key="color_neutral">Neutral</button>
-            <button class="option-btn" data-value="custom" data-lang-key="color_custom">Custom</button>
+            <button class="option-btn" data-value="warm" data-lang-key="color_warm" type="button">گرم</button>
+            <button class="option-btn" data-value="cool" data-lang-key="color_cool" type="button">سرد</button>
+            <button class="option-btn" data-value="neutral" data-lang-key="color_neutral" type="button">خنثی</button>
+            <button class="option-btn" data-value="custom" data-lang-key="color_custom" type="button">دلخواه</button>
         </div>
     </div>
 
-    <!-- بخش آپلود تصویر -->
+    <!-- بخش آپلود تصویر و راهنمای تلگرام -->
     <div class="option-group">
-        <label class="option-label" data-lang-key="upload_image">Upload Image or Icon (Optional):</label>
+        <label class="option-label" id="txtLabelUpload" data-lang-key="upload_image">آپلود تصاویر یا فایل‌ها (اختیاری):</label>
         <div class="upload-area">
-            <input type="file" id="imageUpload" accept="image/*" multiple>
-            <label for="imageUpload" class="upload-label">
-                <span>📁</span>
-                <p data-lang-key="upload_click">Click to upload or drag files</p>
+            <input type="file" id="imageUpload" accept="image/*" multiple style="display:none;">
+            <label for="imageUpload" class="upload-label" style="cursor:pointer; display:block;">
+                <span style="font-size: 1.6rem;">📁</span>
+                <p id="txtUploadClick" data-lang-key="upload_click" style="font-size: 0.8rem; margin: 4px 0;">برای انتخاب فایل کلیک کنید</p>
             </label>
             <div id="fileList" class="file-list"></div>
+        </div>
+        
+        <!-- پیام راهنما برای ارسال در تلگرام -->
+        <div class="telegram-note-badge">
+            <span>💬</span>
+            <span id="txtTgUploadNote" data-lang-key="tg_upload_note">می‌توانید عکس‌ها و فایل‌های خود را مستقیماً در چت تلگرام نیز ارسال کنید.</span>
         </div>
     </div>
 
     <!-- بخش توضیحات کاربر -->
     <div class="option-group">
-        <label class="option-label" data-lang-key="additional_info">Additional Description:</label>
-        <textarea class="user-description" placeholder="Write your thumbnail design description..." data-lang-key="thumbnail_description_placeholder"></textarea>
+        <label class="option-label" id="txtLabelDesc" data-lang-key="additional_info">توضیحات تکمیلی:</label>
+        <textarea id="userDesc" class="user-description" placeholder="توضیحات مربوط به طرح تامبنیل خود را بنویسید..." data-lang-key="thumbnail_description_placeholder"></textarea>
     </div>
 
-    <!-- بخش آیدی کاربر -->
-    <div class="option-group">
-        <label class="option-label" data-lang-key="telegram_id">Enter your Telegram ID:</label>
-        <input type="text" class="user-id" placeholder="Example: @username or ID number" data-lang-key="telegram_placeholder">
-    </div>
-
-    <!-- دکمه ثبت سفارش -->
-    <button class="submit-order" data-lang-key="submit_thumbnail_order">Submit Thumbnail Order</button>
+    <!-- دکمه اختصاصی ارسال سفارش در تلگرام -->
+    <button class="submit-telegram-btn" id="btnSubmitOrder" type="button" onclick="submitToTelegramDirect()">
+        <span id="txtSubmitOrder" data-lang-key="submit_thumbnail_tg">ارسال سفارش در چت تلگرام</span>
+    </button>
 </div>
 
 
@@ -229,36 +369,463 @@
         
         <!-- دکمه نمونه کار -->
         <a href="https://t.me/Villain_Produce">
-            <button class="nav-btn profile-nav" data-target="profile-section">
+            <button class="nav-btn profile-nav" data-target="profile-section" type="button">
                 <img src="../assets/images/icons/5.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="portfolio">Portfolio</span>
+                <span class="nav-text" data-lang-key="portfolio">نمونه کارها</span>
             </button>
         </a>
         
         <!-- دکمه خانه -->
         <a href="./index.html">
-            <button class="nav-btn home-nav" data-target="home-section">
+            <button class="nav-btn home-nav" data-target="home-section" type="button">
                 <img src="../assets/images/icons/2.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="home">Home</span>
+                <span class="nav-text" data-lang-key="home">خانه</span>
             </button>
         </a>
         
         <!-- دکمه هدایا -->
         <a href="../html/bonus.html">
-            <button class="nav-btn gift-nav" data-target="gift-section">
+            <button class="nav-btn gift-nav" data-target="gift-section" type="button">
                 <img src="../assets/images/icons/3.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="gifts">Gifts</span>
+                <span class="nav-text" data-lang-key="gifts">هدایا</span>
             </button>
         </a>
 
     </div>
 </div>
 
+<script>
+    let currentLang = 'fa';
 
-<script src="../js/main.js"></script>
-<script src="../js/TON.js"></script>
-<script src="../js/language.js"></script>
-<script src="../js/DesignOrder.js"></script>
-<script src="../js/api.js"></script>
+    const i18nDictionary = {
+        fa: {
+            page_title_thumbnail: "طراحی تامبنیل",
+            thumbnail_settings: "تنظیمات طراحی تامبنیل",
+            thumbnail_style: "سبک تامبنیل:",
+            style_vlog: "ولاگ (Vlog)",
+            style_fact: "فکت (Fact)",
+            style_gaming: "گیمینگ (Gaming)",
+            style_manhwa: "مانهوا (Manhwa)",
+            style_horror: "ترسناک (Horror)",
+            text_type: "نوع نوشته:",
+            text_persian: "فارسی",
+            text_english: "انگلیسی",
+            text_russian: "روسی",
+            text_chinese: "چینی",
+            text_mixed: "ترکیبی",
+            thumbnail_size: "سایز تامبنیل:",
+            size_720p: "1280x720",
+            size_1080p: "1920x1080",
+            size_square: "720x720",
+            image_count: "تعداد تصویر:",
+            count_1: "۱",
+            count_2: "۲",
+            count_3: "۳",
+            count_more: "بیشتر",
+            order_level: "سطح سفارش:",
+            level_normal_thumb: "معمولی - 10 TON",
+            level_vip_thumb: "ویژه (VIP) - 25 TON",
+            level_pro_thumb: "حرفه‌ای (Pro) - 50 TON",
+            color_scheme: "رنگ‌بندی:",
+            color_warm: "گرم",
+            color_cool: "سرد",
+            color_neutral: "خنثی",
+            color_custom: "دلخواه",
+            upload_image: "آپلود تصاویر یا فایل‌ها (اختیاری):",
+            upload_click: "برای انتخاب فایل کلیک کنید",
+            tg_upload_note: "می‌توانید عکس‌ها و فایل‌های خود را مستقیماً در چت تلگرام نیز ارسال کنید.",
+            additional_info: "توضیحات تکمیلی:",
+            thumbnail_description_placeholder: "توضیحات مربوط به طرح تامبنیل خود را بنویسید...",
+            submit_thumbnail_tg: "ارسال سفارش در چت تلگرام",
+            user_label: "کاربر گرامی",
+            user_info: "اطلاعات کاربری",
+            user_orders: "سفارشات من",
+            gifts_rewards: "جوایز و هدایا",
+            logout: "خروج",
+            portfolio: "نمونه کارها",
+            home: "خانه",
+            gifts: "هدایا",
+            dir: "rtl",
+
+            // متون خروجی تلگرام با یادآور اختصاصی به خود کاربر و هشتگ‌ها
+            tg_header: "🎨 سفارش جدید طراحی تامبنیل",
+            tg_style: "📌 سبک تامبنیل:",
+            tg_text_type: "✍️ نوع نوشته:",
+            tg_size: "📐 سایز:",
+            tg_count: "🖼️ تعداد تصویر:",
+            tg_level: "💎 سطح سفارش:",
+            tg_color: "🌈 رنگ‌بندی:",
+            tg_files: "📁 فایل‌های آپلودشده:",
+            tg_desc: "📝 توضیحات تکمیلی:",
+            tg_reminder_box: 
+`⚠️ [یادآوری به شما کاربر گرامی]:
+📸 لطفاً تصاویر، عکس چهره، لوگو یا هر فایلی که می‌خواهید روی تامبنیل باشد را همین الان زیر این پیام در چت ارسال فرمایید.`,
+            tg_hashtags: "#سفارش_تامبنیل #طراحی_یوتیوب #Thumbnail_Order",
+            not_selected: "انتخاب نشده",
+            none: "ندارد",
+            in_chat_sent: "در ادامه پیام ارسال می‌شود",
+            files_unit: "فایل انتخاب شده"
+        },
+        en: {
+            page_title_thumbnail: "Thumbnail Design",
+            thumbnail_settings: "Thumbnail Settings",
+            thumbnail_style: "Thumbnail Style:",
+            style_vlog: "Vlog",
+            style_fact: "Fact",
+            style_gaming: "Gaming",
+            style_manhwa: "Manhwa",
+            style_horror: "Horror",
+            text_type: "Text Type:",
+            text_persian: "Persian",
+            text_english: "English",
+            text_russian: "Russian",
+            text_chinese: "Chinese",
+            text_mixed: "Mixed",
+            thumbnail_size: "Thumbnail Size:",
+            size_720p: "1280x720",
+            size_1080p: "1920x1080",
+            size_square: "720x720",
+            image_count: "Number of Images:",
+            count_1: "1",
+            count_2: "2",
+            count_3: "3",
+            count_more: "More",
+            order_level: "Order Level:",
+            level_normal_thumb: "Normal - 10 TON",
+            level_vip_thumb: "VIP - 25 TON",
+            level_pro_thumb: "Pro - 50 TON",
+            color_scheme: "Color Scheme:",
+            color_warm: "Warm",
+            color_cool: "Cool",
+            color_neutral: "Neutral",
+            color_custom: "Custom",
+            upload_image: "Upload Image or Assets (Optional):",
+            upload_click: "Click to upload or choose files",
+            tg_upload_note: "You can also send your images/files directly in Telegram chat.",
+            additional_info: "Additional Description:",
+            thumbnail_description_placeholder: "Write your thumbnail design description...",
+            submit_thumbnail_tg: "Send Order via Telegram Chat",
+            user_label: "Dear User",
+            user_info: "User Information",
+            user_orders: "User Orders",
+            gifts_rewards: "Gifts & Rewards",
+            logout: "Logout",
+            portfolio: "Portfolio",
+            home: "Home",
+            gifts: "Gifts",
+            dir: "ltr",
+
+            // متون خروجی تلگرام با یادآور اختصاصی به خود کاربر و هشتگ‌ها
+            tg_header: "🎨 New Thumbnail Design Order",
+            tg_style: "📌 Style:",
+            tg_text_type: "✍️ Text Type:",
+            tg_size: "📐 Size:",
+            tg_count: "🖼️ Image Count:",
+            tg_level: "💎 Plan Level:",
+            tg_color: "🌈 Color Scheme:",
+            tg_files: "📁 Uploaded Assets:",
+            tg_desc: "📝 Additional Info:",
+            tg_reminder_box: 
+`⚠️ [Reminder for Sender / Dear Client]:
+📸 Please send your images, face photos, logos, or any references right below this message in the chat now!`,
+            tg_hashtags: "#Thumbnail_Order #Design_Request #YouTube_Thumbnail",
+            not_selected: "Not selected",
+            none: "None",
+            in_chat_sent: "Will be sent in chat below",
+            files_unit: "file(s) selected"
+        },
+        ru: {
+            page_title_thumbnail: "Дизайн превью",
+            thumbnail_settings: "Настройки превью",
+            thumbnail_style: "Стиль превью:",
+            style_vlog: "Влог",
+            style_fact: "Факты",
+            style_gaming: "Игры",
+            style_manhwa: "Манхва",
+            style_horror: "Хоррор",
+            text_type: "Язык текста:",
+            text_persian: "Персидский",
+            text_english: "Английский",
+            text_russian: "Русский",
+            text_chinese: "Китайский",
+            text_mixed: "Смешанный",
+            thumbnail_size: "Размер превью:",
+            size_720p: "1280x720",
+            size_1080p: "1920x1080",
+            size_square: "720x720",
+            image_count: "Количество изображений:",
+            count_1: "1",
+            count_2: "2",
+            count_3: "3",
+            count_more: "Больше",
+            order_level: "Уровень заказа:",
+            level_normal_thumb: "Обычный - 10 TON",
+            level_vip_thumb: "VIP - 25 TON",
+            level_pro_thumb: "Pro - 50 TON",
+            color_scheme: "Цветовая гамма:",
+            color_warm: "Теплая",
+            color_cool: "Холодная",
+            color_neutral: "Нейтральная",
+            color_custom: "Своя",
+            upload_image: "Загрузить файлы (необязательно):",
+            upload_click: "Нажмите для выбора файлов",
+            tg_upload_note: "Вы также можете отправить свои файлы прямо в чат Telegram.",
+            additional_info: "Дополнительное описание:",
+            thumbnail_description_placeholder: "Опишите ваши пожелания к дизайну...",
+            submit_thumbnail_tg: "Отправить заказ в Telegram",
+            user_label: "Уважаемый пользователь",
+            user_info: "Информация о пользователе",
+            user_orders: "Мои заказы",
+            gifts_rewards: "Подарки и награды",
+            logout: "Выйти",
+            portfolio: "Портфолио",
+            home: "Главная",
+            gifts: "Подарки",
+            dir: "ltr",
+
+            // متون خروجی تلگرام با یادآور اختصاصی به خود کاربر و هشتگ‌ها
+            tg_header: "🎨 Новый заказ на дизайн превью",
+            tg_style: "📌 Стиль превью:",
+            tg_text_type: "✍️ Язык текста:",
+            tg_size: "📐 Размер:",
+            tg_count: "🖼️ Количество картинок:",
+            tg_level: "💎 Уровень заказа:",
+            tg_color: "🌈 Цветовая схема:",
+            tg_files: "📁 Загруженные файлы:",
+            tg_desc: "📝 Дополнительно:",
+            tg_reminder_box: 
+`⚠️ [Напоминание заказчику]:
+📸 Пожалуйста, отправьте ваши фотографии, логотипы и исходные материалы прямо сюда в чат следующим сообщением!`,
+            tg_hashtags: "#Заказ_Превью #Дизайн_Ютуб #Thumbnail_Order",
+            not_selected: "Не выбрано",
+            none: "Нет",
+            in_chat_sent: "Будет отправлено в диалог",
+            files_unit: "файл(ов)"
+        },
+        zh: {
+            page_title_thumbnail: "封面缩略图设计",
+            thumbnail_settings: "缩略图定制设置",
+            thumbnail_style: "缩略图风格:",
+            style_vlog: "Vlog",
+            style_fact: "科普事实",
+            style_gaming: "游戏",
+            style_manhwa: "漫画",
+            style_horror: "恐怖惊悚",
+            text_type: "文字类型:",
+            text_persian: "波斯语",
+            text_english: "英语",
+            text_russian: "俄语",
+            text_chinese: "中文",
+            text_mixed: "混合",
+            thumbnail_size: "缩略图尺寸:",
+            size_720p: "1280x720",
+            size_1080p: "1920x1080",
+            size_square: "720x720",
+            image_count: "图片数量:",
+            count_1: "1",
+            count_2: "2",
+            count_3: "3",
+            count_more: "更多",
+            order_level: "订单级别:",
+            level_normal_thumb: "标准版 - 10 TON",
+            level_vip_thumb: "VIP版 - 25 TON",
+            level_pro_thumb: "专业版 - 50 TON",
+            color_scheme: "配色方案:",
+            color_warm: "暖色调",
+            color_cool: "冷色调",
+            color_neutral: "中性色",
+            color_custom: "自定义",
+            upload_image: "上传图片或素材 (可选):",
+            upload_click: "点击选择上传文件",
+            tg_note: "您也可以在 Telegram 聊天中直接发送您的图片和素材。",
+            additional_info: "补充说明:",
+            thumbnail_description_placeholder: "请在此填写您的缩略图设计具体要求...",
+            submit_thumbnail_tg: "在 Telegram 聊天中发送订单",
+            user_label: "尊敬的用户",
+            user_info: "用户信息",
+            user_orders: "我的订单",
+            gifts_rewards: "礼品与奖励",
+            logout: "退出登录",
+            portfolio: "作品集",
+            home: "首页",
+            gifts: "奖励",
+            dir: "ltr",
+
+            // متون خروجی تلگرام با یادآور اختصاصی به خود کاربر و هشتگ‌ها
+            tg_header: "🎨 新的缩略图封面设计订单",
+            tg_style: "📌 封面风格:",
+            tg_text_type: "✍️ 文字语言:",
+            tg_size: "📐 尺寸比例:",
+            tg_count: "🖼️ 图片数量:",
+            tg_level: "💎 订单级别:",
+            tg_color: "🌈 配色方案:",
+            tg_files: "📁 上传素材:",
+            tg_desc: "📝 详细说明:",
+            tg_reminder_box: 
+`⚠️ [温馨提示 - 请在此发送素材]:
+📸 亲爱的客户，请立即在此聊天中发送您的参考图片、人物肖像照或品牌Logo等素材！`,
+            tg_hashtags: "#缩略图设计 #YouTube封面 #Thumbnail_Order",
+            not_selected: "未选择",
+            none: "无",
+            in_chat_sent: "稍后在此聊天中发送",
+            files_unit: "个文件"
+        }
+    };
+
+    function selectLang(lang, flag, name) {
+        if (!i18nDictionary[lang]) lang = 'fa';
+        currentLang = lang;
+        const dict = i18nDictionary[lang];
+
+        document.documentElement.dir = dict.dir;
+        document.documentElement.lang = lang;
+
+        const currentLangEl = document.getElementById('currentLanguage');
+        if (currentLangEl) currentLangEl.innerText = `${flag} ${name}`;
+
+        const dropdown = document.getElementById('languageDropdown');
+        if (dropdown) dropdown.classList.remove('show');
+
+        // تغییر تمام کلیدهای متنی
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.getAttribute('data-lang-key');
+            if (dict[key]) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = dict[key];
+                } else {
+                    el.innerText = dict[key];
+                }
+            }
+        });
+
+        localStorage.setItem('selectedAppLanguage', lang);
+    }
+
+    // باز و بسته شدن دراپ‌داون زبان
+    const langToggle = document.getElementById('languageToggle');
+    const langDropdown = document.getElementById('languageDropdown');
+    if (langToggle && langDropdown) {
+        langToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('show');
+        });
+    }
+
+    // باز و بسته شدن منوی پروفایل
+    const profileToggle = document.getElementById('profileToggle');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (profileToggle && profileDropdown) {
+        profileToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', () => {
+            profileDropdown.classList.remove('show');
+        });
+    }
+
+    // انتخاب دکمه‌های گزینه‌ها
+    document.querySelectorAll('.option-group').forEach(group => {
+        const btns = group.querySelectorAll('.option-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    });
+
+    // لیست فایل‌های انتخاب شده
+    const imageUpload = document.getElementById('imageUpload');
+    const fileList = document.getElementById('fileList');
+    if (imageUpload) {
+        imageUpload.addEventListener('change', (e) => {
+            fileList.innerHTML = '';
+            Array.from(e.target.files).forEach(file => {
+                const item = document.createElement('div');
+                item.style.fontSize = '0.75rem';
+                item.style.color = '#38bdf8';
+                item.style.marginTop = '4px';
+                item.innerText = `📄 ${file.name}`;
+                fileList.appendChild(item);
+            });
+        });
+    }
+
+    // ارسال سفارش به تلگرام همراه با باکس یادآوری شفاف به خود کاربر و هشتگ‌ها
+    function submitToTelegramDirect() {
+        const dict = i18nDictionary[currentLang] || i18nDictionary.fa;
+
+        function getSelected(groupName) {
+            const group = document.querySelector(`.option-group[data-group="${groupName}"]`);
+            if (!group) return dict.not_selected;
+            const active = group.querySelector('.option-btn.active');
+            if (!active) return dict.not_selected;
+            
+            const key = active.getAttribute('data-lang-key');
+            if (key && dict[key]) {
+                return dict[key];
+            }
+            return active.innerText.trim();
+        }
+
+        const style = getSelected('style');
+        const textType = getSelected('text_type');
+        const size = getSelected('size');
+        const imageCount = getSelected('image_count');
+        const level = getSelected('level');
+        const colorScheme = getSelected('color_scheme');
+        
+        const description = document.getElementById('userDesc').value.trim() || dict.none;
+
+        let filesText = dict.in_chat_sent;
+        if (imageUpload && imageUpload.files && imageUpload.files.length > 0) {
+            filesText = `${imageUpload.files.length} ${dict.files_unit}`;
+        }
+
+        // ساخت پیام ساختاریافته همراه با هشدار و یادآوری واضح به فرستنده
+        const message = 
+`${dict.tg_header}
+──────────────────
+${dict.tg_style} ${style}
+${dict.tg_text_type} ${textType}
+${dict.tg_size} ${size}
+${dict.tg_count} ${imageCount}
+${dict.tg_level} ${level}
+${dict.tg_color} ${colorScheme}
+${dict.tg_files} ${filesText}
+${dict.tg_desc} ${description}
+──────────────────
+${dict.tg_reminder_box}
+
+${dict.tg_hashtags}`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const targetUsername = "kianoush_shahrokh";
+        const telegramUrl = `https://t.me/${targetUsername}?text=${encodedMessage}`;
+
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
+            window.Telegram.WebApp.openTelegramLink(telegramUrl);
+        } else {
+            window.open(telegramUrl, '_blank');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+        
+        const savedLang = localStorage.getItem('selectedAppLanguage') || 'fa';
+        const flagMap = { fa: '🇮🇷', en: '🇬🇧', ru: '🇷🇺', zh: '🇨🇳' };
+        const nameMap = { fa: 'فارسی', en: 'English', ru: 'Русский', zh: '中文' };
+        selectLang(savedLang, flagMap[savedLang] || '🇮🇷', nameMap[savedLang] || 'فارسی');
+    });
+</script>
+
 </body>
 </html>

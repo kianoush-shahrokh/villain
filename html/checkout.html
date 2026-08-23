@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>تکمیل و پرداخت</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- فونت وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #070709;
+            --card-bg: rgba(20, 20, 24, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent: #f43f5e;
+            --accent-glow: rgba(244, 63, 94, 0.45);
+            --success: #10b981;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: var(--bg);
+            color: #fff;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at 50% 10%, rgba(244, 63, 94, 0.12) 0%, transparent 60%), #070709;
+            padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px)) 14px;
+            overflow-x: hidden;
+        }
+
+        .checkout-wrapper {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+
+        .back-btn {
+            background: var(--card-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:active {
+            transform: scale(0.96);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .lang-select {
+            background: var(--card-bg);
+            color: #fff;
+            border: 1px solid var(--card-border);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            backdrop-filter: blur(12px);
+        }
+        .lang-select option {
+            background: #121215;
+            color: #fff;
+        }
+
+        .checkout-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            backdrop-filter: blur(14px);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .main-title {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .preview-box {
+            background: radial-gradient(circle at center, rgba(244, 63, 94, 0.12) 0%, rgba(0,0,0,0.85) 100%), #000;
+            border-radius: 16px;
+            height: 175px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+
+        #checkoutLottie {
+            width: 135px;
+            height: 135px;
+            position: relative;
+            pointer-events: none;
+        }
+
+        .overlay-logo {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            object-fit: contain;
+            z-index: 5;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.7));
+        }
+
+        .overlay-text {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            pointer-events: none;
+            font-size: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .info-card {
+            background: rgba(15, 15, 18, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .price-text {
+            font-size: 1.2rem;
+            color: #38bdf8;
+            font-weight: 900;
+        }
+
+        .btn-pay {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-pay:active {
+            transform: scale(0.97);
+            filter: brightness(1.1);
+        }
+
+        .btn-bypass {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            border: 1px dashed var(--card-border);
+            padding: 11px;
+            width: 100%;
+            border-radius: 13px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-bypass:active {
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="checkout-wrapper">
+    <header class="header-container">
+        <a href="shopping-cart.html" class="back-btn">
+            <span id="backArrow">❮</span> <span id="txtBack">بازگشت به سبد</span>
+        </a>
+        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="fa">🇮🇷 فارسی</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="zh">🇨🇳 中文</option>
+        </select>
+    </header>
+
+    <div class="checkout-card">
+        <h2 class="main-title" id="txtMainTitle">تکمیل و پرداخت</h2>
+        
+        <div class="preview-box">
+            <div id="checkoutLottie"></div>
+            <img id="checkoutLogo" class="overlay-logo" style="display:none;" />
+            <div id="checkoutText" class="overlay-text" style="display:none;"></div>
+        </div>
+
+        <div class="info-card">
+            <div>
+                <span id="txtDesignCodeLabel">کد سفارش:</span>
+                <span id="designIdText" style="color:#fff; font-weight:700;">-</span>
+            </div>
+            <div class="price-text">1.50 TON</div>
+        </div>
+
+        <button class="btn-pay" onclick="processPayment()">
+            <span>💎</span> <span id="txtBtnPay">پرداخت و ثبت نهایی</span>
+        </button>
+
+        <button class="btn-bypass" onclick="window.location.href='success.html'">
+            <span>🚀</span> <span id="txtBtnBypass">عبور از پرداخت (تست لوکال و دانلود)</span>
+        </button>
+    </div>
+</div>
+
+<script>
+    let currentLang = 'fa';
+    let tonConnectUI = null;
+
+    const i18n = {
+        fa: {
+            back: "بازگشت به سبد",
+            mainTitle: "تکمیل و پرداخت",
+            designCodeLabel: "کد سفارش:",
+            btnPay: "پرداخت و ثبت نهایی",
+            btnBypass: "عبور از پرداخت (تست لوکال و دانلود)",
+            registered: "ثبت شده",
+            walletNotConnected: "کیف پول شما متصل نیست! در حال انتقال...",
+            paySuccess: "پرداخت موفق بود!",
+            payFail: "تراکنش انجام نشد یا توسط کاربر لغو گردید.",
+            dir: "rtl"
+        },
+        en: {
+            back: "Back to Cart",
+            mainTitle: "Order & Payment",
+            designCodeLabel: "Order ID:",
+            btnPay: "Pay with TON",
+            btnBypass: "Bypass Payment (Local Test & Download)",
+            registered: "Registered",
+            walletNotConnected: "Wallet not connected! Redirecting...",
+            paySuccess: "Payment successful!",
+            payFail: "Transaction failed or cancelled by user.",
+            dir: "ltr"
+        },
+        ru: {
+            back: "Назад в корзину",
+            mainTitle: "Оплата заказа",
+            designCodeLabel: "Код заказа:",
+            btnPay: "Оплатить через TON",
+            btnBypass: "Пропустить оплату (Тест и скачивание)",
+            registered: "Зарегистрирован",
+            walletNotConnected: "Кошелек не подключен! Переход...",
+            paySuccess: "Оплата прошла успешно!",
+            payFail: "Транзакция отменена или не удалась.",
+            dir: "ltr"
+        },
+        zh: {
+            back: "返回购物车",
+            mainTitle: "确认并支付",
+            designCodeLabel: "订单编号:",
+            btnPay: "使用 TON 支付",
+            btnBypass: "跳过支付 (本地测试并下载)",
+            registered: "已登记",
+            walletNotConnected: "钱包未连接！正在跳转...",
+            paySuccess: "支付成功！",
+            payFail: "交易失败或已取消。",
+            dir: "ltr"
+        }
+    };
+
+    function hexToRgb01(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        return [
+            parseInt(hex.substring(0, 2), 16) / 255,
+            parseInt(hex.substring(2, 4), 16) / 255,
+            parseInt(hex.substring(4, 6), 16) / 255,
+            1
+        ];
+    }
+
+    function updateShapesDeep(shapes, rgb) {
+        if (!Array.isArray(shapes)) return;
+        shapes.forEach(sh => {
+            if ((sh.ty === 'fl' || sh.ty === 'st') && sh.c && sh.c.k) {
+                if (typeof sh.c.k[0] === 'number') {
+                    sh.c.k = rgb;
+                } else if (Array.isArray(sh.c.k)) {
+                    sh.c.k.forEach(kf => {
+                        if (kf.s) kf.s = rgb;
+                        if (kf.e) kf.e = rgb;
+                    });
+                }
+            } else if (sh.ty === 'gr' && sh.it) {
+                updateShapesDeep(sh.it, rgb);
+            }
+        });
+    }
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.dir = i18n[lang].dir;
+
+        document.getElementById('txtBack').innerText = i18n[lang].back;
+        document.getElementById('txtMainTitle').innerText = i18n[lang].mainTitle;
+        document.getElementById('txtDesignCodeLabel').innerText = i18n[lang].designCodeLabel;
+        document.getElementById('txtBtnPay').innerText = i18n[lang].btnPay;
+        document.getElementById('txtBtnBypass').innerText = i18n[lang].btnBypass;
+        document.getElementById('backArrow').innerText = i18n[lang].dir === 'rtl' ? '❮' : '❯';
+
+        const savedDesign = JSON.parse(localStorage.getItem('finalCustomizedSticker'));
+        if (savedDesign) {
+            document.getElementById('designIdText').innerText = savedDesign.dbId || i18n[lang].registered;
+        }
+    }
+
+    async function initPreview() {
+        try {
+            tonConnectUI = new TON_CONNECT_UI.TonConnectUI({ 
+                manifestUrl: 'https://raw.githubusercontent.com/ton-connect/docs/main/demo-dapp-manifest.json' 
+            });
+        } catch (e) {
+            console.warn('TonConnect init error:', e);
+        }
+
+        const savedDesign = JSON.parse(localStorage.getItem('finalCustomizedSticker'));
+        if (!savedDesign) {
+            window.location.href = 'shopping-cart.html';
+            return;
+        }
+
+        document.getElementById('designIdText').innerText = savedDesign.dbId || i18n[currentLang].registered;
+
+        // تنظیم اندازه و مختصات لوگو در پیش‌نمایش
+        if (savedDesign.logoData) {
+            const logoEl = document.getElementById('checkoutLogo');
+            logoEl.src = savedDesign.logoData;
+            logoEl.style.left = `${savedDesign.logoPos ? savedDesign.logoPos.x : 50}%`;
+            logoEl.style.top = `${savedDesign.logoPos ? savedDesign.logoPos.y : 50}%`;
+            const scaledLogo = Math.max(18, Math.round((savedDesign.logoSize || 55) * 0.7));
+            logoEl.style.width = `${scaledLogo}px`;
+            logoEl.style.height = `${scaledLogo}px`;
+            logoEl.style.display = 'block';
+        }
+
+        // تنظیم اندازه، رنگ و مختصات متن
+        if (savedDesign.textData && savedDesign.textData.text) {
+            const textEl = document.getElementById('checkoutText');
+            textEl.innerText = savedDesign.textData.text;
+            textEl.style.left = `${savedDesign.textData.x !== undefined ? savedDesign.textData.x : 50}%`;
+            textEl.style.top = `${savedDesign.textData.y !== undefined ? savedDesign.textData.y : 80}%`;
+            textEl.style.fontSize = `${Math.max(10, Math.round((savedDesign.textData.size || 22) * 0.65))}px`;
+            if (savedDesign.textData.color) textEl.style.color = savedDesign.textData.color;
+            textEl.style.display = 'block';
+        }
+
+        try {
+            const res = await fetch('http://localhost:3001/api/products');
+            const data = await res.json();
+            const product = data.data.find(p => p.id == savedDesign.stickerId) || data.data[0];
+
+            const jsonRes = await fetch(product.json_path);
+            const lottieJson = await jsonRes.json();
+
+            // اعمال دقیق رنگ‌ها بر اساس ایندکس JSON
+            if (savedDesign.layers) {
+                Object.keys(savedDesign.layers).forEach(idxStr => {
+                    const jsonIdx = parseInt(idxStr, 10);
+                    const rgb = hexToRgb01(savedDesign.layers[idxStr]);
+                    if (lottieJson.layers[jsonIdx] && lottieJson.layers[jsonIdx].shapes) {
+                        updateShapesDeep(lottieJson.layers[jsonIdx].shapes, rgb);
+                    }
+                });
+            }
+
+            lottie.loadAnimation({
+                container: document.getElementById('checkoutLottie'),
+                renderer: 'svg', 
+                loop: true, 
+                autoplay: true, 
+                animationData: lottieJson
+            });
+        } catch (err) {
+            console.error('Error loading checkout preview:', err);
+        }
+    }
+
+    async function processPayment() {
+        if (!tonConnectUI || !tonConnectUI.wallet) {
+            alert(i18n[currentLang].walletNotConnected);
+            window.location.href = 'TON.html';
+            return;
+        }
+
+        try {
+            await tonConnectUI.sendTransaction({
+                validUntil: Math.floor(Date.now() / 1000) + 360,
+                messages: [{ 
+                    address: "UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ", 
+                    amount: "1500000000" 
+                }]
+            });
+            alert(i18n[currentLang].paySuccess);
+            window.location.href = 'success.html';
+        } catch (e) {
+            alert(i18n[currentLang].payFail);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+        changeLanguage('fa');
+        initPreview();
+    });
+</script>
+</body>
+</html>

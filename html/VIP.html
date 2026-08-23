@@ -1,23 +1,274 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="page_title_vip">VIP Packages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title id="pageTitle" data-lang-key="page_title_vip">پک‌های ویژه VIP</title>
     
-    <!-- فونت‌های Google (یا اگر آفلاین داری، این بخش رو حذف کن) -->
-    <link href="https://fonts.googleapis.com/css2?family=Plasma:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Shoor+Rounded:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- فونت رسمی و یکپارچه وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/responsive.css" />
     <link rel="stylesheet" href="../css/Design-order/Thumbnail.css">
     <link rel="stylesheet" href="../css/Design-order.css" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* ایجاد فضای خالی استاندارد برای جلوگیری از همپوشانی با نوار ناوبری پایین */
+            padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)) !important;
+            overflow-x: hidden;
+            background: radial-gradient(circle at 50% 10%, rgba(244, 63, 94, 0.12) 0%, transparent 60%), #070709;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .vip-container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 14px 16px 25px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* هدر جشنواره و تایمر خلاقانه */
+        .vip-header {
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(20, 20, 24, 0.85));
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            border-radius: 20px;
+            padding: 20px 16px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(244, 63, 94, 0.15);
+            backdrop-filter: blur(12px);
+        }
+
+        .vip-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #f43f5e, #fb7185);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .vip-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted, #94a3b8);
+            margin-bottom: 12px;
+        }
+
+        .vip-countdown {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #38bdf8;
+            direction: ltr; /* ثابت ماندن جهت اعداد تایمر در همه زبان‌ها */
+        }
+
+        /* استایل کارت‌های پک VIP */
+        .vip-packages {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .vip-card {
+            background: rgba(20, 20, 24, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            backdrop-filter: blur(12px);
+            transition: all 0.25s ease;
+        }
+
+        .vip-card:hover {
+            border-color: rgba(244, 63, 94, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .vip-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vip-card-name {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .vip-card-price {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+
+        .vip-card-desc {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        .vip-buy-btn {
+            background: linear-gradient(135deg, #f43f5e, #be123c);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(244, 63, 94, 0.35);
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .vip-buy-btn:active {
+            transform: scale(0.97);
+            filter: brightness(1.1);
+        }
+
+        /* بخش پکیج سفارشی */
+        .vip-custom {
+            background: rgba(20, 20, 24, 0.75);
+            border: 1.5px dashed rgba(244, 63, 94, 0.4);
+            border-radius: 18px;
+            padding: 18px 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .vip-custom h4 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .vip-custom p {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        .custom-package-btn {
+            background: linear-gradient(135deg, #0088cc, #006699);
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 136, 204, 0.35);
+            transition: 0.2s;
+        }
+
+        .custom-package-btn:active {
+            transform: scale(0.97);
+        }
+
+        .telegram-note-badge {
+            margin-top: 6px;
+            background: rgba(34, 158, 217, 0.1);
+            border: 1px solid rgba(34, 158, 217, 0.25);
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-size: 0.73rem;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            line-height: 1.4;
+        }
+
+        /* فرم توضیحات پکیج سفارشی */
+        .vip-user-info {
+            background: rgba(20, 20, 24, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .option-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .user-description {
+            width: 100%;
+            background: rgba(15, 15, 18, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            outline: none;
+            min-height: 85px;
+            resize: vertical;
+        }
+
+        .submit-vip-order {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.92rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+            transition: 0.2s;
+        }
+
+        .submit-vip-order:active {
+            transform: scale(0.97);
+        }
+    </style>
 </head>
 <body>
-    
 
 <!-- ============== هدر ============== -->
 <header class="header">
@@ -25,28 +276,28 @@
 
         <!-- بخش چپ: زبان با منوی کشویی -->
         <div class="header-left">
-            <div class="language-wrapper">
-                <button class="language-btn" id="languageToggle">
-                    <span id="currentLanguage">🇬🇧 English</span>
+            <div class="language-wrapper" style="position: relative;">
+                <button class="language-btn" id="languageToggle" type="button">
+                    <span id="currentLanguage">🇮🇷 فارسی</span>
                     <span class="language-arrow">▼</span>
                 </button>
                 
                 <!-- منوی کشویی زبان -->
                 <div class="language-dropdown" id="languageDropdown">
-                    <ul class="language-list">
-                        <li class="language-item" data-lang="en" onclick="changeLanguage('en', '🇬🇧', 'English')">
-                            <span class="lang-flag">🇬🇧</span>
-                            <span class="lang-name">English</span>
-                        </li>
-                        <li class="language-item" data-lang="fa" onclick="changeLanguage('fa', '🇮🇷', 'فارسی')">
+                    <ul class="language-list" style="list-style: none; margin: 0; padding: 0;">
+                        <li class="language-item" onclick="selectLang('fa', '🇮🇷', 'فارسی')">
                             <span class="lang-flag">🇮🇷</span>
                             <span class="lang-name">فارسی</span>
                         </li>
-                        <li class="language-item" data-lang="ru" onclick="changeLanguage('ru', '🇷🇺', 'Русский')">
+                        <li class="language-item" onclick="selectLang('en', '🇬🇧', 'English')">
+                            <span class="lang-flag">🇬🇧</span>
+                            <span class="lang-name">English</span>
+                        </li>
+                        <li class="language-item" onclick="selectLang('ru', '🇷🇺', 'Русский')">
                             <span class="lang-flag">🇷🇺</span>
                             <span class="lang-name">Русский</span>
                         </li>
-                        <li class="language-item" data-lang="zh" onclick="changeLanguage('zh', '🇨🇳', '中文')">
+                        <li class="language-item" onclick="selectLang('zh', '🇨🇳', '中文')">
                             <span class="lang-flag">🇨🇳</span>
                             <span class="lang-name">中文</span>
                         </li>
@@ -58,17 +309,15 @@
         <!-- بخش وسط: دکمه پروفایل -->
         <div class="header-center">
             <div class="profile-wrapper">
-                <button class="profile-btn" id="profileToggle">
+                <button class="profile-btn" id="profileToggle" type="button">
                     <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=40" alt="Profile" />
                 </button>
                 
-                <!-- منوی کشویی -->
                 <div class="dropdown-menu" id="profileDropdown">
-                    
                     <div class="dropdown-header">
                         <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=50" alt="Profile" />
                         <div class="dropdown-user-info">
-                            <span class="dropdown-username" data-lang-key="user_label">Dear User</span>
+                            <span class="dropdown-username" data-lang-key="user_label">کاربر گرامی</span>
                             <span class="dropdown-email">user@example.com</span>
                         </div>
                     </div>
@@ -77,19 +326,19 @@
                         <a href="../html/User-information.html">
                             <li class="dropdown-item">
                                 <img src="../assets/images/icons/1.png" alt="" class="img-icon">
-                                <span class="dropdown-label" data-lang-key="user_info">User Information</span>
+                                <span class="dropdown-label" data-lang-key="user_info">اطلاعات کاربری</span>
                             </li>
                         </a>
                         <a href="../html/shopping-cart.html">
                             <li class="dropdown-item">
                                 <img src="../assets/images/icons/4.png" alt="" class="img-icon">
-                                <span class="dropdown-label" data-lang-key="user_orders">User Orders</span>
+                                <span class="dropdown-label" data-lang-key="user_orders">سفارشات من</span>
                             </li>
                         </a>
                         <a href="../html/bonus.html">
                             <li class="dropdown-item">
                                 <img src="../assets/images/icons/3.png" alt="" class="img-icon">
-                                <span class="dropdown-label" data-lang-key="gifts_rewards">Gifts & Rewards</span>
+                                <span class="dropdown-label" data-lang-key="gifts_rewards">جوایز و هدایا</span>
                             </li>
                         </a>
                         <a href="#">
@@ -98,7 +347,7 @@
                         <a href="#">
                             <li class="dropdown-item logout" onclick="alert('Logging out')">
                                 <span class="dropdown-icon">🚪</span>
-                                <span class="dropdown-label" data-lang-key="logout">Logout</span>
+                                <span class="dropdown-label" data-lang-key="logout">خروج</span>
                             </li>
                         </a>
                     </ul>
@@ -107,7 +356,7 @@
         </div>
 
         <!-- بخش راست: موجودی TON -->
-        <a href="../html/TON.html">
+        <a href="../html/TON.html" style="text-decoration: none;">
             <div class="header-right">
                 <div class="balance-box">
                     <span class="balance-currency">TON</span>
@@ -117,8 +366,6 @@
         </a>
 
     </div>
-
-    <!-- خط جداکننده زیر هدر -->
     <div class="header-divider"></div>
 </header>
 
@@ -126,34 +373,58 @@
 <!-- ===== بخش VIP ===== -->
 <div class="vip-container">
     <div class="vip-header">
-        <h3 class="vip-title" data-lang-key="vip_title">🎉 VIP Special Packages</h3>
-        <p class="vip-subtitle" data-lang-key="vip_subtitle">Christmas Festival - Amazing Discounts</p>
+        <h3 class="vip-title" data-lang-key="vip_title">🎉 جشنواره پکیج‌های ویژه VIP</h3>
+        <p class="vip-subtitle" data-lang-key="vip_subtitle">تخفیف‌های شگفت‌انگیز و خدمات اختصاصی</p>
         <div class="vip-countdown">
-            <span data-lang-key="time_left">⏳ Time Left:</span>
-            <span id="countdown" data-lang-key="countdown_text">5 days 14 hours 30 minutes</span>
+            <span data-lang-key="time_left">⏳ زمان باقی‌مانده:</span>
+            <span id="countdown">05d : 14h : 30m : 00s</span>
         </div>
     </div>
 
     <div class="vip-packages" id="vipPackages">
-        <!-- پک‌ها توسط JS ساخته می‌شوند -->
+        <!-- پک ۱ -->
+        <div class="vip-card">
+            <div class="vip-card-top">
+                <span class="vip-card-name" data-lang-key="pack_1_name">👑 مگاپک یوتیوبر (Mega Creator)</span>
+                <span class="vip-card-price">45 TON</span>
+            </div>
+            <p class="vip-card-desc" data-lang-key="pack_1_desc">شامل ۱۰ تامبنیل حرفه‌ای، ۳ بنر کانال و ۵ پست اختصاصی اینستاگرام.</p>
+            <button class="vip-buy-btn" type="button" onclick="buyVipPackage('Mega Creator VIP Pack', '45 TON')" data-lang-key="buy_pack_btn">خرید پکیج VIP</button>
+        </div>
+
+        <!-- پک ۲ -->
+        <div class="vip-card">
+            <div class="vip-card-top">
+                <span class="vip-card-name" data-lang-key="pack_2_name">🚀 پک برندینگ کامل (Full Branding)</span>
+                <span class="vip-card-price">80 TON</span>
+            </div>
+            <p class="vip-card-desc" data-lang-key="pack_2_desc">شامل طراحی لوگو اختصاصی، پک کامل ایموجی، بنر و قالب‌های ثابت شبکه اجتماعی.</p>
+            <button class="vip-buy-btn" type="button" onclick="buyVipPackage('Full Branding VIP Pack', '80 TON')" data-lang-key="buy_pack_btn">خرید پکیج VIP</button>
+        </div>
     </div>
 
+    <!-- بخش ساخت پکیج سفارشی -->
     <div class="vip-custom">
-        <h4 data-lang-key="custom_package_title">✨ Create Custom Package</h4>
-        <p data-lang-key="custom_package_desc">If the packages above don't meet your needs, you can create your own package.</p>
-        <button class="custom-package-btn" data-lang-key="custom_package_btn">Create Custom Package</button>
+        <h4 data-lang-key="custom_package_title">✨ ساخت پکیج اختصاصی دلخواه</h4>
+        <p data-lang-key="custom_package_desc">اگر پک‌های آماده مطابق نیاز شما نیست، می‌توانید ترکیب دلخواه خود را سفارش دهید.</p>
+        <button class="custom-package-btn" type="button" onclick="toggleCustomForm()" data-lang-key="custom_package_btn">درخواست پکیج سفارشی</button>
     </div>
 
-    <div class="vip-user-info" style="display:none;">
+    <!-- فرم سفارش پکیج سفارشی -->
+    <div class="vip-user-info" id="customFormContainer" style="display:none;">
         <div class="option-group">
-            <label class="option-label" data-lang-key="telegram_id">Enter your Telegram ID:</label>
-            <input type="text" class="user-id" placeholder="Example: @username or ID number" data-lang-key="telegram_placeholder">
+            <label class="option-label" id="txtLabelDesc" data-lang-key="additional_info">توضیحات پکیج سفارشی:</label>
+            <textarea id="userDesc" class="user-description" placeholder="جزئیات و نیازهای پکیج اختصاصی خود را بنویسید..." data-lang-key="vip_description_placeholder"></textarea>
         </div>
-        <div class="option-group">
-            <label class="option-label" data-lang-key="additional_info">Additional Description:</label>
-            <textarea class="user-description" placeholder="Write your specific needs..." data-lang-key="vip_description_placeholder"></textarea>
+
+        <div class="telegram-note-badge">
+            <span>💬</span>
+            <span id="txtTgUploadNote" data-lang-key="tg_upload_note">می‌توانید عکس‌ها و فایل‌های خود را مستقیماً در چت تلگرام نیز ارسال کنید.</span>
         </div>
-        <button class="submit-vip-order" data-lang-key="submit_vip_order">Submit VIP Order</button>
+
+        <button class="submit-vip-order" type="button" onclick="submitCustomVipOrder()">
+            <span id="txtSubmitVip" data-lang-key="submit_vip_order">ارسال سفارش در چت تلگرام</span>
+        </button>
     </div>
 </div>
 
@@ -164,37 +435,328 @@
         
         <!-- دکمه نمونه کار -->
         <a href="https://t.me/Villain_Produce">
-            <button class="nav-btn profile-nav" data-target="profile-section">
+            <button class="nav-btn profile-nav" data-target="profile-section" type="button">
                 <img src="../assets/images/icons/5.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="portfolio">Portfolio</span>
+                <span class="nav-text" data-lang-key="portfolio">نمونه کارها</span>
             </button>
         </a>
         
         <!-- دکمه خانه -->
         <a href="./index.html">
-            <button class="nav-btn home-nav" data-target="home-section">
+            <button class="nav-btn home-nav" data-target="home-section" type="button">
                 <img src="../assets/images/icons/2.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="home">Home</span>
+                <span class="nav-text" data-lang-key="home">خانه</span>
             </button>
         </a>
         
         <!-- دکمه هدایا -->
         <a href="../html/bonus.html">
-            <button class="nav-btn gift-nav" data-target="gift-section">
+            <button class="nav-btn gift-nav" data-target="gift-section" type="button">
                 <img src="../assets/images/icons/3.png" alt="" class="img-icon">
-                <span class="nav-text" data-lang-key="gifts">Gifts</span>
+                <span class="nav-text" data-lang-key="gifts">هدایا</span>
             </button>
         </a>
 
     </div>
 </div>
 
+<script>
+    let currentLang = 'fa';
 
-<script src="../js/main.js"></script>
-<script src="../js/DesignOrder.js"></script>
-<script src="../js/VIP.js"></script>
-<script src="../js/language.js"></script>
-<script src="../js/TON.js"></script>
-<script src="../js/api.js"></script>
+    const i18nDictionary = {
+        fa: {
+            page_title_vip: "پک‌های ویژه VIP",
+            vip_title: "🎉 جشنواره پکیج‌های ویژه VIP",
+            vip_subtitle: "تخفیف‌های شگفت‌انگیز و خدمات اختصاصی",
+            time_left: "⏳ زمان باقی‌مانده:",
+            pack_1_name: "👑 مگاپک یوتیوبر (Mega Creator)",
+            pack_1_desc: "شامل ۱۰ تامبنیل حرفه‌ای، ۳ بنر کانال و ۵ پست اختصاصی اینستاگرام.",
+            pack_2_name: "🚀 پک برندینگ کامل (Full Branding)",
+            pack_2_desc: "شامل طراحی لوگو اختصاصی، پک کامل ایموجی، بنر و قالب‌های ثابت شبکه اجتماعی.",
+            buy_pack_btn: "خرید پکیج VIP",
+            custom_package_title: "✨ ساخت پکیج اختصاصی دلخواه",
+            custom_package_desc: "اگر پک‌های آماده مطابق نیاز شما نیست، می‌توانید ترکیب دلخواه خود را سفارش دهید.",
+            custom_package_btn: "درخواست پکیج سفارشی",
+            additional_info: "توضیحات پکیج سفارشی:",
+            vip_description_placeholder: "جزئیات و نیازهای پکیج اختصاصی خود را بنویسید...",
+            submit_vip_order: "ارسال سفارش در چت تلگرام",
+            user_label: "کاربر گرامی",
+            user_info: "اطلاعات کاربری",
+            user_orders: "سفارشات من",
+            gifts_rewards: "جوایز و هدایا",
+            logout: "خروج",
+            portfolio: "نمونه کارها",
+            home: "خانه",
+            gifts: "هدایا",
+            dir: "rtl",
+
+            tg_header_pack: "👑 سفارش پکیج ویژه VIP",
+            tg_header_custom: "✨ درخواست پکیج اختصاصی VIP",
+            tg_pack_name: "📦 نام پکیج:",
+            tg_price: "💎 قیمت:",
+            tg_desc: "📝 توضیحات و جزئیات:",
+            tg_reminder_box: 
+`⚠️ [یادآوری به شما کاربر گرامی]:
+📸 لطفاً عکس‌ها، نمونه کارها، لوگو یا فایل‌های مدنظرتان را همین الان زیر این پیام در چت ارسال فرمایید.`,
+            tg_hashtags: "#سفارش_VIP #پکیج_اختصاصی #VIP_Package #Branding",
+            none: "ندارد"
+        },
+        en: {
+            page_title_vip: "VIP Packages",
+            vip_title: "🎉 VIP Special Packages Festival",
+            vip_subtitle: "Amazing discounts and exclusive professional services",
+            time_left: "⏳ Time Left:",
+            pack_1_name: "👑 Mega Creator Youtuber Pack",
+            pack_1_desc: "Includes 10 pro thumbnails, 3 channel banners, and 5 custom Instagram posts.",
+            pack_2_name: "🚀 Full Branding VIP Pack",
+            pack_2_desc: "Includes custom logo design, complete emoji pack, banners, and social templates.",
+            buy_pack_btn: "Buy VIP Package",
+            custom_package_title: "✨ Create Custom Package",
+            custom_package_desc: "If standard packages don't meet your needs, request your own custom bundle.",
+            custom_package_btn: "Request Custom Package",
+            additional_info: "Custom Package Description:",
+            vip_description_placeholder: "Write your custom requirements and specific needs...",
+            submit_vip_order: "Send Order via Telegram Chat",
+            user_label: "Dear User",
+            user_info: "User Information",
+            user_orders: "User Orders",
+            gifts_rewards: "Gifts & Rewards",
+            logout: "Logout",
+            portfolio: "Portfolio",
+            home: "Home",
+            gifts: "Gifts",
+            dir: "ltr",
+
+            tg_header_pack: "👑 VIP Special Package Order",
+            tg_header_custom: "✨ Custom VIP Package Request",
+            tg_pack_name: "📦 Package Name:",
+            tg_price: "💎 Price:",
+            tg_desc: "📝 Description & Details:",
+            tg_reminder_box: 
+`⚠️ [Reminder for Sender / Dear Client]:
+📸 Please send your images, branding references, or files right below this message in the chat now!`,
+            tg_hashtags: "#VIP_Package #Custom_Order #Branding",
+            none: "None"
+        },
+        ru: {
+            page_title_vip: "VIP пакеты",
+            vip_title: "🎉 Фестиваль VIP пакетов",
+            vip_subtitle: "Потрясающие скидки и эксклюзивные услуги",
+            time_left: "⏳ Осталось времени:",
+            pack_1_name: "👑 Мега Пак для Ютуберов",
+            pack_1_desc: "Включает 10 про-превью, 3 баннера для канала и 5 постов для Instagram.",
+            pack_2_name: "🚀 Полный брендинг (Full Branding)",
+            pack_2_desc: "Включает дизайн логотипа, набор эмодзи, баннеры и шаблоны.",
+            buy_pack_btn: "Купить VIP пакет",
+            custom_package_title: "✨ Свой собственный пакет",
+            custom_package_desc: "Если стандартные пакеты вам не подходят, создайте свою комбинацию.",
+            custom_package_btn: "Запросить свой пакет",
+            additional_info: "Описание кастомного пакета:",
+            vip_description_placeholder: "Опишите ваши требования к индивидуальному пакету...",
+            submit_vip_order: "Отправить заказ в Telegram",
+            user_label: "Уважаемый пользователь",
+            user_info: "Информация о пользователе",
+            user_orders: "Мои заказы",
+            gifts_rewards: "Подарки и награды",
+            logout: "Выйти",
+            portfolio: "Портфолио",
+            home: "Главная",
+            gifts: "Подарки",
+            dir: "ltr",
+
+            tg_header_pack: "👑 Заказ VIP пакета",
+            tg_header_custom: "✨ Запрос индивидуального VIP пакета",
+            tg_pack_name: "📦 Пакет:",
+            tg_price: "💎 Цена:",
+            tg_desc: "📝 Описание и детали:",
+            tg_reminder_box: 
+`⚠️ [Напоминание заказчику]:
+📸 Пожалуйста, отправьте ваши исходные материалы, логотипы или референсы прямо в этот диалог следующим сообщением!`,
+            tg_hashtags: "#VIP_Заказ #Брендинг #VIP_Package",
+            none: "Нет"
+        },
+        zh: {
+            page_title_vip: "VIP 特惠套餐",
+            vip_title: "🎉 VIP 专享套餐节",
+            vip_subtitle: "惊人折扣与专业定制独家服务",
+            time_left: "⏳ 剩余时间:",
+            pack_1_name: "👑 创作者超级套餐 (Mega Creator)",
+            pack_1_desc: "包含 10 个专业封面、3 个频道横幅和 5 个 Instagram 帖子。",
+            pack_2_name: "🚀 全面品牌塑造 (Full Branding)",
+            pack_2_desc: "包含独家 Logo 设计、全套 Emoji 表情、横幅及社媒固定模板。",
+            buy_pack_btn: "购买 VIP 套餐",
+            custom_package_title: "✨ 创建自定义套餐",
+            custom_package_desc: "如果预设套餐不符合您的需求，您可以自由组合定制专属套餐。",
+            custom_package_btn: "申请自定义套餐",
+            additional_info: "自定义套餐说明:",
+            vip_description_placeholder: "请在此填写您的具体定制需求与细节...",
+            submit_vip_order: "在 Telegram 聊天中发送订单",
+            user_label: "尊敬的用户",
+            user_info: "用户信息",
+            user_orders: "我的订单",
+            gifts_rewards: "礼品与奖励",
+            logout: "退出登录",
+            portfolio: "作品集",
+            home: "首页",
+            gifts: "奖励",
+            dir: "ltr",
+
+            tg_header_pack: "👑 VIP 特惠套餐订单",
+            tg_header_custom: "✨ 自定义 VIP 套餐请求",
+            tg_pack_name: "📦 套餐名称:",
+            tg_price: "💎 价格:",
+            tg_desc: "📝 详细说明:",
+            tg_reminder_box: 
+`⚠️ [温馨提示 - 请在此发送素材]:
+📸 亲爱的客户，请立即在此聊天中发送您的品牌素材、参考图或具体要求！`,
+            tg_hashtags: "#VIP套餐 #品牌定制 #VIP_Package",
+            none: "无"
+        }
+    };
+
+    function selectLang(lang, flag, name) {
+        if (!i18nDictionary[lang]) lang = 'fa';
+        currentLang = lang;
+        const dict = i18nDictionary[lang];
+
+        document.documentElement.dir = dict.dir;
+        document.documentElement.lang = lang;
+
+        const currentLangEl = document.getElementById('currentLanguage');
+        if (currentLangEl) currentLangEl.innerText = `${flag} ${name}`;
+
+        const dropdown = document.getElementById('languageDropdown');
+        if (dropdown) dropdown.classList.remove('show');
+
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.getAttribute('data-lang-key');
+            if (dict[key]) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = dict[key];
+                } else {
+                    el.innerText = dict[key];
+                }
+            }
+        });
+
+        localStorage.setItem('selectedAppLanguage', lang);
+    }
+
+    // تایمر زنده با نمایش روز، ساعت، دقیقه و ثانیه
+    function startCountdown() {
+        // تنظیم زمان پایان (مثلاً ۵ روز و ۱۴ ساعت و ۳۰ دقیقه از زمان حال)
+        let totalSeconds = (5 * 24 * 3600) + (14 * 3600) + (30 * 60);
+
+        const countdownEl = document.getElementById('countdown');
+        if (!countdownEl) return;
+
+        setInterval(() => {
+            if (totalSeconds > 0) totalSeconds--;
+            
+            const days = Math.floor(totalSeconds / (3600 * 24));
+            const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            const pad = (n) => String(n).padStart(2, '0');
+            countdownEl.innerText = `${days}d : ${pad(hours)}h : ${pad(minutes)}m : ${pad(seconds)}s`;
+        }, 1000);
+    }
+
+    // باز و بسته شدن دراپ‌داون زبان
+    const langToggle = document.getElementById('languageToggle');
+    const langDropdown = document.getElementById('languageDropdown');
+    if (langToggle && langDropdown) {
+        langToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('show');
+        });
+    }
+
+    // باز و بسته شدن منوی پروفایل
+    const profileToggle = document.getElementById('profileToggle');
+    const profileDropdown = document.getElementById('profileDropdown');
+    if (profileToggle && profileDropdown) {
+        profileToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+        document.addEventListener('click', () => {
+            profileDropdown.classList.remove('show');
+        });
+    }
+
+    function toggleCustomForm() {
+        const form = document.getElementById('customFormContainer');
+        if (form) {
+            form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+            if (form.style.display === 'flex') {
+                form.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }
+
+    function buyVipPackage(packageName, packagePrice) {
+        const dict = i18nDictionary[currentLang] || i18nDictionary.fa;
+
+        const message = 
+`${dict.tg_header_pack}
+──────────────────
+${dict.tg_pack_name} ${packageName}
+${dict.tg_price} ${packagePrice}
+──────────────────
+${dict.tg_reminder_box}
+
+${dict.tg_hashtags}`;
+
+        sendToTelegram(message);
+    }
+
+    function submitCustomVipOrder() {
+        const dict = i18nDictionary[currentLang] || i18nDictionary.fa;
+        const description = document.getElementById('userDesc').value.trim() || dict.none;
+
+        const message = 
+`${dict.tg_header_custom}
+──────────────────
+${dict.tg_desc} ${description}
+──────────────────
+${dict.tg_reminder_box}
+
+${dict.tg_hashtags}`;
+
+        sendToTelegram(message);
+    }
+
+    function sendToTelegram(message) {
+        const encodedMessage = encodeURIComponent(message);
+        const targetUsername = "kianoush_shahrokh";
+        const telegramUrl = `https://t.me/${targetUsername}?text=${encodedMessage}`;
+
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
+            window.Telegram.WebApp.openTelegramLink(telegramUrl);
+        } else {
+            window.open(telegramUrl, '_blank');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+        
+        const savedLang = localStorage.getItem('selectedAppLanguage') || 'fa';
+        const flagMap = { fa: '🇮🇷', en: '🇬🇧', ru: '🇷🇺', zh: '🇨🇳' };
+        const nameMap = { fa: 'فارسی', en: 'English', ru: 'Русский', zh: '中文' };
+        selectLang(savedLang, flagMap[savedLang] || '🇮🇷', nameMap[savedLang] || 'فارسی');
+
+        startCountdown();
+    });
+</script>
+
 </body>
 </html>

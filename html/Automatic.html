@@ -156,10 +156,9 @@
         <div class="package-name-input">
             <input type="text" id="packageName" placeholder="Enter your package name..." class="package-input" data-lang-placeholder="package_name_placeholder">
         </div>
+        
         <!-- دکمه تایید -->
-         <a href="../html/Automatic-order.html">
-             <button class="btn-confirm" data-lang-key="package_confirm">Confirm ✓</button>
-         </a>
+        <button class="btn-confirm" id="btnConfirm" onclick="handlePackageSubmit()" data-lang-key="package_confirm">Confirm ✓</button>
     </div>
 </section>
 
@@ -201,5 +200,35 @@
     <script src="../js/language.js"></script>
     <script src="../js/TON.js"></script>
     <script src="../js/api.js"></script>
+
+    <script>
+        function handlePackageSubmit() {
+            const input = document.getElementById('packageName');
+            const packageName = input.value.trim();
+
+            if (!packageName) {
+                input.focus();
+                input.style.border = "2px solid #e11d48";
+                input.placeholder = "Please enter a package name first!";
+                return;
+            }
+
+            // بازگرداندن استایل اولیه در صورت وارد کردن مقدار
+            input.style.border = "";
+
+            // ذخیره نام پکیج در صورت نیاز به استفاده در صفحات بعدی
+            localStorage.setItem('selectedPackageName', packageName);
+
+            // انتقال به صفحه بعدی
+            window.location.href = "../html/Automatic-order.html";
+        }
+
+        // بررسی زدن کلید Enter داخل فیلد ورودی
+        document.getElementById('packageName').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handlePackageSubmit();
+            }
+        });
+    </script>
 </body>
 </html>

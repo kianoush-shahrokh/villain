@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-key="page_title">Home</title>
     
-    
+    <!-- اسکریپت رسمی مینی‌اپ تلگرام برای خواندن اطلاعات کاربر -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="../css/fonts.css">
@@ -53,17 +55,20 @@
         <div class="header-center">
             <div class="profile-wrapper">
                 <button class="profile-btn" id="profileToggle">
-                    <img src="#" alt="پروفایل" />
+                    <!-- id اضافه شد تا عکس پروفایل تلگرام روی آن لود شود -->
+                    <img id="userAvatar" src="#" alt="پروفایل" />
                 </button>
                 
                 <!-- منوی کشویی پروفایل -->
                 <div class="dropdown-menu" id="profileDropdown">
                     
                     <div class="dropdown-header">
-                        <img src="#" alt="پروفایل" />
+                        <!-- id اضافه شد تا عکس پروفایل تلگرام در هدر منو هم لود شود -->
+                        <img id="userAvatarDropdown" src="#" alt="پروفایل" />
                         <div class="dropdown-user-info">
-                            <span class="dropdown-username" data-lang-key="user_label">Dear User</span>
-                            <span class="dropdown-email">user@example.com</span>
+                            <!-- ids اضافه شدند تا نام و آیدی تلگرام جایگزین شود -->
+                            <span class="dropdown-username" id="userName" data-lang-key="user_label">Dear User</span>
+                            <span class="dropdown-email" id="userHandle">user@example.com</span>
                         </div>
                     </div>
                     
@@ -179,17 +184,44 @@
     <script src="../js/language.js"></script>
     <script src="../js/TON.js"></script>
     <script src="../js/api.js"></script>
+
+    <!-- اسکریپت اتصال اطلاعات زنده حساب تلگرام به پروفایل -->
     <script>
-  async function loadStickers() {
-    try {
-      const res = await fetch('/api/products');
-      const json = await res.json();
-      console.log('محصولات دیتابیس:', json.data);
-    } catch (err) {
-      console.error('خطا در دریافت استیکرها:', err);
-    }
-  }
-  loadStickers();
-</script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+
+                const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+                if (tgUser) {
+                    const fullName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || "Dear User";
+                    const username = tgUser.username ? `@${tgUser.username}` : `ID: ${tgUser.id}`;
+
+                    const nameEl = document.getElementById('userName');
+                    const handleEl = document.getElementById('userHandle');
+                    if (nameEl) nameEl.innerText = fullName;
+                    if (handleEl) handleEl.innerText = username;
+
+                    if (tgUser.photo_url) {
+                        const avatar1 = document.getElementById('userAvatar');
+                        const avatar2 = document.getElementById('userAvatarDropdown');
+                        if (avatar1) avatar1.src = tgUser.photo_url;
+                        if (avatar2) avatar2.src = tgUser.photo_url;
+                    }
+                }
+            }
+        });
+
+        async function loadStickers() {
+            try {
+                const res = await fetch('/api/products');
+                const json = await res.json();
+                console.log('محصولات دیتابیس:', json.data);
+            } catch (err) {
+                console.error('خطا در دریافت استیکرها:', err);
+            }
+        }
+        loadStickers();
+    </script>
 </body>
 </html>

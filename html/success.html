@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>دانلود استیکر</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- فونت وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #070709;
+            --card-bg: rgba(20, 20, 24, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent: #f43f5e;
+            --accent-glow: rgba(244, 63, 94, 0.45);
+            --success: #10b981;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: var(--bg);
+            color: #fff;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at 50% 10%, rgba(244, 63, 94, 0.12) 0%, transparent 60%), #070709;
+            padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px)) 14px;
+            overflow-x: hidden;
+        }
+
+        .success-wrapper {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+
+        .back-btn {
+            background: var(--card-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:active {
+            transform: scale(0.96);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .lang-select {
+            background: var(--card-bg);
+            color: #fff;
+            border: 1px solid var(--card-border);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            backdrop-filter: blur(12px);
+        }
+        .lang-select option {
+            background: #121215;
+            color: #fff;
+        }
+
+        .success-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            backdrop-filter: blur(14px);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .success-badge-top {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            align-self: center;
+        }
+
+        .main-title {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .sub-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .stage-wrapper {
+            background: radial-gradient(circle at center, rgba(244, 63, 94, 0.12) 0%, rgba(0,0,0,0.85) 100%), #000;
+            border-radius: 16px;
+            height: 165px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.7);
+        }
+
+        #successLottie {
+            width: 135px;
+            height: 135px;
+            pointer-events: none;
+        }
+
+        .overlay-logo {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10;
+            object-fit: contain;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6));
+        }
+
+        .overlay-text {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            pointer-events: none;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.95);
+            white-space: nowrap;
+            z-index: 12;
+        }
+
+        .format-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            padding: 6px 12px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--accent), #be123c);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 18px var(--accent-glow);
+            transition: all 0.2s ease;
+        }
+
+        .btn-download:active {
+            transform: scale(0.97);
+            filter: brightness(1.1);
+        }
+
+        .btn-download:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* استایل باکس کشویی هوشمند راهنما */
+        .accordion-guide {
+            background: rgba(15, 15, 18, 0.75);
+            border: 1px solid rgba(244, 63, 94, 0.25);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header {
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(244, 63, 94, 0.06);
+            user-select: none;
+        }
+
+        .accordion-header-title {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #fb7185;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .accordion-arrow {
+            font-size: 0.75rem;
+            color: #fb7185;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-guide.open .accordion-arrow {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease-out, padding 0.3s ease;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            text-align: right;
+            line-height: 1.6;
+            padding: 0 14px;
+        }
+
+        .accordion-guide.open .accordion-content {
+            max-height: 250px;
+            padding: 12px 14px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .accordion-content ol {
+            padding-right: 18px;
+            padding-left: 18px;
+            margin: 4px 0;
+        }
+
+        .accordion-content li {
+            margin-bottom: 4px;
+        }
+
+        .accordion-content code {
+            color: var(--accent);
+            font-weight: bold;
+            background: rgba(244, 63, 94, 0.15);
+            padding: 1px 5px;
+            border-radius: 4px;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        .home-btn {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .home-btn:active {
+            transform: scale(0.97);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-wrapper">
+    <header class="header-container">
+        <a href="checkout.html" class="back-btn">
+            <span id="backArrow">❮</span> <span id="txtBack">بازگشت به پرداخت</span>
+        </a>
+        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="fa">🇮🇷 فارسی</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="zh">🇨🇳 中文</option>
+        </select>
+    </header>
+
+    <div class="success-card">
+        <div class="success-badge-top">
+            <span>✓</span> <span id="txtBadge">پرداخت با موفقیت انجام شد</span>
+        </div>
+
+        <h2 class="main-title" id="txtMainTitle">استیکر شما آماده دانلود است</h2>
+        <p class="sub-desc" id="txtSubDesc">فایل اختصاصی شما پردازش شد.</p>
+
+        <div class="stage-wrapper" id="stageWrapper">
+            <div id="successLottie"></div>
+            <img id="successLogo" class="overlay-logo" style="display:none;" />
+            <div id="successText" class="overlay-text" style="display:none;"></div>
+        </div>
+
+        <div id="formatBadge" class="format-badge">...</div>
+
+        <button id="btnDownload" class="btn-download" onclick="handleDownload()">
+            <span>📥</span> <span id="txtBtnDownload">دانلود استیکر تلگرام</span>
+        </button>
+
+        <!-- باکس کشویی راهنمای افزودن به تلگرام -->
+        <div class="accordion-guide" id="guideAccordion">
+            <div class="accordion-header" onclick="toggleGuideAccordion()">
+                <div class="accordion-header-title">
+                    <span>💡</span>
+                    <span id="txtAccordionTitle">راهنمای ثبت در ربات استیکر تلگرام</span>
+                </div>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-content" id="accordionBody">
+                <!-- متن راهنما بر اساس فرمت TGS یا WebM توسط JS پر می‌شود -->
+            </div>
+        </div>
+
+        <a href="index.html" class="home-btn">
+            <span>🏠</span> <span id="txtHome">بازگشت به صفحه اصلی</span>
+        </a>
+    </div>
+</div>
+
+<div id="hiddenHost" style="position: absolute; width: 512px; height: 512px; top: -9999px; left: -9999px; visibility: hidden;"></div>
+
+<script>
+    let savedDesign = null;
+    let modifiedLottieJson = null;
+    let currentLang = 'fa';
+
+    const i18n = {
+        fa: {
+            back: "بازگشت به پرداخت",
+            badge: "پرداخت با موفقیت انجام شد",
+            mainTitle: "استیکر شما آماده دانلود است",
+            subDesc: "فایل اختصاصی شما با رنگ‌بندی و ابعاد دقیق آماده شد.",
+            btnDownload: "دانلود استیکر تلگرام",
+            home: "بازگشت به صفحه اصلی",
+            formatTgs: "فرمت خروجی: استیکر وکتور (.tgs)",
+            formatWebm: "فرمت خروجی: استیکر ویدیویی استاندارد (.webm)",
+            accordionTitle: "راهنمای ثبت در ربات استیکر تلگرام",
+            guideTgsSteps: `
+                <ol>
+                    <li>فایل <code>.tgs</code> را دانلود کنید.</li>
+                    <li>وارد ربات رسمی <code>@Stickers</code> در تلگرام شوید.</li>
+                    <li>دستور <code>/newanimated</code> را ارسال کنید.</li>
+                    <li>یک نام برای پک انتخاب کرده و فایل دانلود شده را به صورت <b>File (بدون فشرده‌سازی)</b> بفرستید.</li>
+                    <li>یک ایموجی به آن اختصاص دهید و پک را منتشر کنید!</li>
+                </ol>
+            `,
+            guideWebmSteps: `
+                <ol>
+                    <li>فایل <code>.webm</code> را دانلود کنید.</li>
+                    <li>وارد ربات رسمی <code>@Stickers</code> در تلگرام شوید.</li>
+                    <li>دستور <code>/newvideo</code> را ارسال کنید.</li>
+                    <li>یک نام برای پک انتخاب کرده و فایل ویدیو را به صورت <b>File</b> برای ربات بفرستید.</li>
+                    <li>ایموجی مرتبط را ارسال و پک استیکر خود را نهایی کنید!</li>
+                </ol>
+            `,
+            loadingTgs: "⏳ در حال ساخت فایل TGS...",
+            loadingWebm: "⏳ در حال رندر ویدیوی WebM...",
+            noOrder: "سفارشی یافت نشد!",
+            dir: "rtl"
+        },
+        en: {
+            back: "Back to Checkout",
+            badge: "Payment Completed Successfully",
+            mainTitle: "Your Sticker is Ready",
+            subDesc: "Your custom file is ready with exact palette and scale.",
+            btnDownload: "Download Telegram Sticker",
+            home: "Back to Home",
+            formatTgs: "Output Format: Vector Sticker (.tgs)",
+            formatWebm: "Output Format: Standard Video Sticker (.webm)",
+            accordionTitle: "How to Add to Telegram Sticker Bot",
+            guideTgsSteps: `
+                <ol>
+                    <li>Download the <code>.tgs</code> file above.</li>
+                    <li>Open official bot <code>@Stickers</code> in Telegram.</li>
+                    <li>Send the <code>/newanimated</code> command.</li>
+                    <li>Choose a pack name and send the downloaded file as a <b>File (Uncompressed)</b>.</li>
+                    <li>Assign an emoji and publish your sticker pack!</li>
+                </ol>
+            `,
+            guideWebmSteps: `
+                <ol>
+                    <li>Download the <code>.webm</code> video sticker.</li>
+                    <li>Open official bot <code>@Stickers</code> in Telegram.</li>
+                    <li>Send the <code>/newvideo</code> command.</li>
+                    <li>Choose a pack name and send the downloaded video as a <b>File</b>.</li>
+                    <li>Assign an emoji and publish your animated sticker!</li>
+                </ol>
+            `,
+            loadingTgs: "⏳ Compressing TGS...",
+            loadingWebm: "⏳ Rendering WebM...",
+            noOrder: "No customized sticker found!",
+            dir: "ltr"
+        },
+        ru: {
+            back: "Назад к оплате",
+            badge: "Оплата прошла успешно",
+            mainTitle: "Ваш стикер готов к скачиванию",
+            subDesc: "Файл с точной цветовой палитрой и размерами готов.",
+            btnDownload: "Скачать стикер Telegram",
+            home: "На главную",
+            formatTgs: "Формат: Векторный стикер (.tgs)",
+            formatWebm: "Формат: Видеостикер (.webm)",
+            accordionTitle: "Инструкция по добавлению в @Stickers",
+            guideTgsSteps: `
+                <ol>
+                    <li>Скачайте файл <code>.tgs</code>.</li>
+                    <li>Перейдите в официальный бот <code>@Stickers</code> в Telegram.</li>
+                    <li>Отправьте команду <code>/newanimated</code>.</li>
+                    <li>Задайте имя набора и отправьте файл как <b>Документ (файл)</b>.</li>
+                    <li>Привяжите эмодзи и опубликуйте стикерпак!</li>
+                </ol>
+            `,
+            guideWebmSteps: `
+                <ol>
+                    <li>Скачайте файл <code>.webm</code>.</li>
+                    <li>Перейдите в бот <code>@Stickers</code> в Telegram.</li>
+                    <li>Отправьте команду <code>/newvideo</code>.</li>
+                    <li>Задайте имя набора и отправьте видеофайл как <b>Документ (файл)</b>.</li>
+                    <li>Привяжите эмодзи и завершите добавление!</li>
+                </ol>
+            `,
+            loadingTgs: "⏳ Сжатие TGS...",
+            loadingWebm: "⏳ Рендеринг WebM...",
+            noOrder: "Заказ не найден!",
+            dir: "ltr"
+        },
+        zh: {
+            back: "返回支付",
+            badge: "支付成功",
+            mainTitle: "您的贴纸已准备就绪",
+            subDesc: "已按精准配色与尺寸生成专属贴纸。",
+            btnDownload: "下载 Telegram 贴纸",
+            home: "返回首页",
+            formatTgs: "输出格式: 矢量贴纸 (.tgs)",
+            formatWebm: "输出格式: 标准视频贴纸 (.webm)",
+            accordionTitle: "如何在 Telegram 中添加此贴纸",
+            guideTgsSteps: `
+                <ol>
+                    <li>点击上方按钮下载 <code>.tgs</code> 文件。</li>
+                    <li>在 Telegram 中打开官方机器人 <code>@Stickers</code>。</li>
+                    <li>发送命令 <code>/newanimated</code>。</li>
+                    <li>输入贴纸包名称，并将下载的文件以 <b>文件形式 (未压缩)</b> 发送给机器人。</li>
+                    <li>关联一个 Emoji 表情并发布贴纸包！</li>
+                </ol>
+            `,
+            guideWebmSteps: `
+                <ol>
+                    <li>下载 <code>.webm</code> 格式视频贴纸。</li>
+                    <li>在 Telegram 中打开官方机器人 <code>@Stickers</code>。</li>
+                    <li>发送命令 <code>/newvideo</code>。</li>
+                    <li>输入贴纸包名称，并将下载的视频以 <b>文件形式</b> 发送给机器人。</li>
+                    <li>关联一个 Emoji 表情即可完成发布！</li>
+                </ol>
+            `,
+            loadingTgs: "⏳ 正在生成 TGS...",
+            loadingWebm: "⏳ 正在渲染视频...",
+            noOrder: "未找到定制贴纸！",
+            dir: "ltr"
+        }
+    };
+
+    function hexToRgb01(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        return [
+            parseInt(hex.substring(0, 2), 16) / 255,
+            parseInt(hex.substring(2, 4), 16) / 255,
+            parseInt(hex.substring(4, 6), 16) / 255,
+            1
+        ];
+    }
+
+    function updateShapesDeep(shapes, rgb) {
+        if (!Array.isArray(shapes)) return;
+        shapes.forEach(sh => {
+            if ((sh.ty === 'fl' || sh.ty === 'st') && sh.c && sh.c.k) {
+                if (typeof sh.c.k[0] === 'number') {
+                    sh.c.k = rgb;
+                } else if (Array.isArray(sh.c.k)) {
+                    sh.c.k.forEach(kf => {
+                        if (kf.s) kf.s = rgb;
+                        if (kf.e) kf.e = rgb;
+                    });
+                }
+            } else if (sh.ty === 'gr' && sh.it) {
+                updateShapesDeep(sh.it, rgb);
+            }
+        });
+    }
+
+    // باز و بسته کردن باکس آکاردئونی راهنما
+    function toggleGuideAccordion() {
+        const accordion = document.getElementById('guideAccordion');
+        if (accordion) {
+            accordion.classList.toggle('open');
+        }
+    }
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.dir = i18n[lang].dir;
+
+        document.getElementById('txtBack').innerText = i18n[lang].back;
+        document.getElementById('txtBadge').innerText = i18n[lang].badge;
+        document.getElementById('txtMainTitle').innerText = i18n[lang].mainTitle;
+        document.getElementById('txtSubDesc').innerText = i18n[lang].subDesc;
+        document.getElementById('txtBtnDownload').innerText = i18n[lang].btnDownload;
+        document.getElementById('txtHome').innerText = i18n[lang].home;
+        document.getElementById('txtAccordionTitle').innerText = i18n[lang].accordionTitle;
+        document.getElementById('backArrow').innerText = i18n[lang].dir === 'rtl' ? '❮' : '❯';
+
+        const isWebm = savedDesign && (savedDesign.formatMode === 'webm' || Boolean(savedDesign.logoData) || Boolean(savedDesign.textData && savedDesign.textData.text));
+        
+        document.getElementById('formatBadge').innerText = isWebm ? i18n[lang].formatWebm : i18n[lang].formatTgs;
+        document.getElementById('accordionBody').innerHTML = isWebm ? i18n[lang].guideWebmSteps : i18n[lang].guideTgsSteps;
+    }
+
+    async function initSuccessPage() {
+        savedDesign = JSON.parse(localStorage.getItem('finalCustomizedSticker'));
+        if (!savedDesign) {
+            document.querySelector('.success-card').innerHTML = `
+                <h3 style="color:#f43f5e; padding: 20px 0;">${i18n[currentLang].noOrder}</h3>
+                <a href="index.html" class="home-btn">${i18n[currentLang].home}</a>
+            `;
+            return;
+        }
+
+        // تنظیم اندازه و موقعیت لوگو در پیش‌نمایش
+        if (savedDesign.logoData) {
+            const logoEl = document.getElementById('successLogo');
+            logoEl.src = savedDesign.logoData;
+            logoEl.style.left = `${savedDesign.logoPos ? savedDesign.logoPos.x : 50}%`;
+            logoEl.style.top = `${savedDesign.logoPos ? savedDesign.logoPos.y : 50}%`;
+            const scaledLogo = Math.max(18, Math.round((savedDesign.logoSize || 55) * 0.8));
+            logoEl.style.width = `${scaledLogo}px`;
+            logoEl.style.height = `${scaledLogo}px`;
+            logoEl.style.display = 'block';
+        }
+
+        // تنظیم اندازه و موقعیت متن در پیش‌نمایش
+        if (savedDesign.textData && savedDesign.textData.text) {
+            const textEl = document.getElementById('successText');
+            textEl.innerText = savedDesign.textData.text;
+            textEl.style.left = `${savedDesign.textData.x !== undefined ? savedDesign.textData.x : 50}%`;
+            textEl.style.top = `${savedDesign.textData.y !== undefined ? savedDesign.textData.y : 80}%`;
+            textEl.style.fontSize = `${Math.max(10, Math.round((savedDesign.textData.size || 22) * 0.75))}px`;
+            if (savedDesign.textData.color) textEl.style.color = savedDesign.textData.color;
+            textEl.style.display = 'block';
+        }
+
+        try {
+            const res = await fetch('http://localhost:3001/api/products');
+            const data = await res.json();
+            const product = data.data.find(p => p.id == savedDesign.stickerId) || data.data[0];
+
+            const jsonRes = await fetch(product.json_path);
+            modifiedLottieJson = await jsonRes.json();
+
+            // اعمال دقیق رنگ‌ها بر اساس ایندکس JSON
+            if (savedDesign.layers) {
+                Object.keys(savedDesign.layers).forEach(idxStr => {
+                    const jsonIdx = parseInt(idxStr, 10);
+                    const rgb = hexToRgb01(savedDesign.layers[idxStr]);
+                    if (modifiedLottieJson.layers[jsonIdx] && modifiedLottieJson.layers[jsonIdx].shapes) {
+                        updateShapesDeep(modifiedLottieJson.layers[jsonIdx].shapes, rgb);
+                    }
+                });
+            }
+
+            lottie.loadAnimation({
+                container: document.getElementById('successLottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                animationData: JSON.parse(JSON.stringify(modifiedLottieJson))
+            });
+        } catch (err) {
+            console.error('Error loading Lottie preview:', err);
+        }
+
+        changeLanguage('fa');
+    }
+
+    async function handleDownload() {
+        const btn = document.getElementById('btnDownload');
+        const origContent = btn.innerHTML;
+        btn.disabled = true;
+
+        const isWebmMode = savedDesign.formatMode === 'webm' || Boolean(savedDesign.logoData) || Boolean(savedDesign.textData && savedDesign.textData.text);
+        
+        if (isWebmMode) {
+            btn.innerHTML = `<span>⏳</span> <span>${i18n[currentLang].loadingWebm}</span>`;
+            await generatePreciseWebm();
+        } else {
+            btn.innerHTML = `<span>⏳</span> <span>${i18n[currentLang].loadingTgs}</span>`;
+            generateDirectTgs();
+        }
+
+        btn.innerHTML = origContent;
+        btn.disabled = false;
+    }
+
+    // ساخت فایل TGS استاندارد
+    function generateDirectTgs() {
+        try {
+            const jsonStr = JSON.stringify(modifiedLottieJson);
+            const gzipped = pako.gzip(jsonStr, { level: 9 });
+            const blob = new Blob([gzipped], { type: 'application/x-tgsticker' });
+            downloadBlob(blob, 'sticker.tgs');
+        } catch (e) {
+            alert('Error creating TGS file');
+        }
+    }
+
+    // ساخت فایل WebM با حفظ شفافیت و تطابق دقیق فریم‌ها
+    async function generatePreciseWebm() {
+        return new Promise(async (resolve) => {
+            const host = document.getElementById('hiddenHost');
+            host.innerHTML = '';
+
+            const renderAnim = lottie.loadAnimation({
+                container: host,
+                renderer: 'svg',
+                loop: false,
+                autoplay: false,
+                animationData: JSON.parse(JSON.stringify(modifiedLottieJson))
+            });
+
+            await new Promise(r => renderAnim.addEventListener('DOMLoaded', r));
+            const svg = host.querySelector('svg');
+
+            let logoImg = null;
+            if (savedDesign.logoData) {
+                logoImg = new Image();
+                logoImg.src = savedDesign.logoData;
+                await new Promise(r => logoImg.onload = r);
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d', { alpha: true });
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+
+            const totalLottieFrames = renderAnim.totalFrames || 60;
+            const framesToCapture = 60; // ۲ ثانیه قطعی
+            const renderedCanvases = [];
+            const scaleFactor = 512 / 165;
+
+            for (let f = 0; f < framesToCapture; f++) {
+                const targetFrame = (f * (totalLottieFrames / framesToCapture)) % totalLottieFrames;
+                renderAnim.goToAndStop(targetFrame, true);
+
+                const svgString = new XMLSerializer().serializeToString(svg);
+                const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                const blobURL = URL.createObjectURL(svgBlob);
+
+                await new Promise(frameDone => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const offCanvas = document.createElement('canvas');
+                        offCanvas.width = 512;
+                        offCanvas.height = 512;
+                        const offCtx = offCanvas.getContext('2d', { alpha: true });
+                        offCtx.imageSmoothingEnabled = true;
+                        offCtx.imageSmoothingQuality = 'high';
+                        offCtx.drawImage(img, 0, 0, 512, 512);
+
+                        if (logoImg) {
+                            const posX = (savedDesign.logoPos ? savedDesign.logoPos.x : 50) / 100 * 512;
+                            const posY = (savedDesign.logoPos ? savedDesign.logoPos.y : 50) / 100 * 512;
+                            const logoRenderSize = (parseFloat(savedDesign.logoSize) || 55) * scaleFactor;
+                            offCtx.drawImage(logoImg, posX - logoRenderSize / 2, posY - logoRenderSize / 2, logoRenderSize, logoRenderSize);
+                        }
+
+                        if (savedDesign.textData && savedDesign.textData.text) {
+                            const exactFontSize = Math.round((parseFloat(savedDesign.textData.size) || 22) * scaleFactor);
+                            offCtx.font = `900 ${exactFontSize}px Vazirmatn, Tahoma, sans-serif`;
+                            offCtx.fillStyle = savedDesign.textData.color || '#ffffff';
+                            offCtx.textAlign = 'center';
+                            offCtx.textBaseline = 'middle';
+                            offCtx.shadowColor = 'rgba(0,0,0,0.95)';
+                            offCtx.shadowBlur = Math.round(6 * scaleFactor);
+
+                            const posX = (savedDesign.textData.x !== undefined ? savedDesign.textData.x : 50) / 100 * 512;
+                            const posY = (savedDesign.textData.y !== undefined ? savedDesign.textData.y : 80) / 100 * 512;
+                            offCtx.fillText(savedDesign.textData.text, posX, posY);
+                        }
+
+                        renderedCanvases.push(offCanvas);
+                        URL.revokeObjectURL(blobURL);
+                        frameDone();
+                    };
+                    img.src = blobURL;
+                });
+            }
+
+            renderAnim.destroy();
+            host.innerHTML = '';
+
+            const stream = canvas.captureStream(30);
+            let mimeType = 'video/webm; codecs=vp9';
+            if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm; codecs=vp8';
+            const recorder = new MediaRecorder(stream, { mimeType: mimeType, videoBitsPerSecond: 2500000 });
+
+            const chunks = [];
+            recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                downloadBlob(blob, 'sticker.webm');
+                resolve();
+            };
+
+            ctx.drawImage(renderedCanvases[0], 0, 0);
+            recorder.start();
+
+            let playbackIndex = 0;
+            const playbackInterval = setInterval(() => {
+                playbackIndex++;
+                if (playbackIndex < renderedCanvases.length) {
+                    ctx.clearRect(0, 0, 512, 512);
+                    ctx.drawImage(renderedCanvases[playbackIndex], 0, 0);
+                } else {
+                    clearInterval(playbackInterval);
+                    recorder.stop();
+                }
+            }, 1000 / 30);
+        });
+    }
+
+    function downloadBlob(blob, filename) {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+        initSuccessPage();
+    });
+</script>
+</body>
+</html>

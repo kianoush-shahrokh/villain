@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-key="page_title_user">User Information</title>
     
-    <!-- فونت‌های Google (یا اگر آفلاین داری، این بخش رو حذف کن) -->
+    <!-- اسکریپت رسمی مینی‌اپ تلگرام برای خواندن هویت واقعی کاربر -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- فونت‌های Google -->
     <link href="https://fonts.googleapis.com/css2?family=Plasma:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Shoor+Rounded:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -55,21 +58,21 @@
             </div>
         </div>
 
-        <!-- بخش وسط: دکمه پروفایل -->
+        <!-- بخش وسط: دکمه پروفایل هدر -->
         <div class="header-center">
             <div class="profile-wrapper">
                 <button class="profile-btn" id="profileToggle">
-                    <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=40" alt="Profile" />
+                    <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=40" alt="Profile" />
                 </button>
                 
                 <!-- منوی کشویی -->
                 <div class="dropdown-menu" id="profileDropdown">
                     
                     <div class="dropdown-header">
-                        <img src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=50" alt="Profile" />
+                        <img id="dropdownUserAvatar" src="https://ui-avatars.com/api/?name=User&background=6C63FF&color=fff&size=50" alt="Profile" />
                         <div class="dropdown-user-info">
-                            <span class="dropdown-username" data-lang-key="user_label">Dear User</span>
-                            <span class="dropdown-email">user@example.com</span>
+                            <span class="dropdown-username" id="dropdownUserName" data-lang-key="user_label">Dear User</span>
+                            <span class="dropdown-email" id="dropdownUserHandle">user@example.com</span>
                         </div>
                     </div>
                     
@@ -127,26 +130,29 @@
 <section class="user-section">
     <div class="user-profile">
         <!-- آواتار کاربر -->
-        <div class="user-avatar" data-lang-key="user_avatar">User</div>
+        <div class="user-avatar" id="profileAvatarBox" style="overflow: hidden; padding: 0;">
+            <img id="mainUserAvatarImg" src="" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+            <span id="profileAvatarText">User</span>
+        </div>
         
-        <!-- اطلاعات کاربری -->
+        <!-- اطلاعات کاربری واقعی -->
         <div class="user-info">
-            <h2 data-lang-key="user_name">John Doe</h2>
-            <div class="user-detail" data-lang-key="user_email">📧 Email: <span>user@example.com</span></div>
-            <div class="user-detail" data-lang-key="user_member">📅 Member since: <span>March 2024</span></div>
+            <h2 id="profileFullName">John Doe</h2>
+            <div class="user-detail">📧 Telegram ID / Username: <span id="profileEmail">user@example.com</span></div>
+            <div class="user-detail" data-lang-key="user_member">📅 Member since: <span id="profileMemberDate">-</span></div>
             
-            <!-- آمار کاربر -->
+            <!-- آمار واقعی کاربر -->
             <div class="user-stats">
                 <div class="stat-item">
-                    <span class="stat-number">12</span>
+                    <span class="stat-number" id="statPurchases">0</span>
                     <span class="stat-label" data-lang-key="stat_purchases">Purchases</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">4</span>
+                    <span class="stat-number" id="statPending">0</span>
                     <span class="stat-label" data-lang-key="stat_pending">Pending</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">8</span>
+                    <span class="stat-number" id="statDownloaded">0</span>
                     <span class="stat-label" data-lang-key="stat_downloaded">Downloaded</span>
                 </div>
             </div>
@@ -157,8 +163,10 @@
 <!-- ===== سکشن ۲: محصولات خریداری شده ===== -->
 <section class="products-section">
     <h2 class="section-title" data-lang-key="purchased_products">📦 Purchased Products</h2>
-    <!-- کانتینر محصولات که توسط جاوااسکریپت پر میشه -->
-    <div class="products-container" id="productsContainer"></div>
+    <!-- کانتینر محصولات واقعی دریافتی از سرور -->
+    <div class="products-container" id="productsContainer">
+        <p style="color: #94a3b8; font-size: 0.85rem; padding: 10px;" id="noProductsText">هنوز محصولی خریداری نکرده‌اید.</p>
+    </div>
 </section>
 
 <!-- ===== سکشن ۳: ارتباط با ادمین ===== -->
@@ -167,7 +175,7 @@
         <div class="contact-content">
             <h2 data-lang-key="support_title">Contact Support</h2>
             <p data-lang-key="support_desc">For questions, issues or further guidance, contact the admin</p>
-            <a href="https://t.me/your_telegram_id" target="_blank" class="telegram-btn" data-lang-key="contact_admin_btn">
+            <a href="https://t.me/kianoush_shahrokh" target="_blank" class="telegram-btn" data-lang-key="contact_admin_btn">
                 📨 Contact Admin on Telegram
             </a>
             <div class="contact-info">
@@ -216,5 +224,92 @@
 <script src="../js/language.js"></script>
 <script src="../js/TON.js"></script>
 <script src="../js/api.js"></script>
+
+<script>
+    async function initUserData() {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+
+            const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+            if (tgUser) {
+                const fullName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || "Telegram User";
+                const username = tgUser.username ? `@${tgUser.username}` : `ID: ${tgUser.id}`;
+                const telegramId = tgUser.id;
+
+                // نمایش نام و آیدی واقعی کاربر در صفحه
+                document.getElementById('profileFullName').innerText = fullName;
+                document.getElementById('profileEmail').innerText = username;
+                document.getElementById('dropdownUserName').innerText = fullName;
+                document.getElementById('dropdownUserHandle').innerText = username;
+
+                if (tgUser.photo_url) {
+                    document.getElementById('headerUserAvatar').src = tgUser.photo_url;
+                    document.getElementById('dropdownUserAvatar').src = tgUser.photo_url;
+                    
+                    const mainAvatarImg = document.getElementById('mainUserAvatarImg');
+                    mainAvatarImg.src = tgUser.photo_url;
+                    mainAvatarImg.style.display = 'block';
+                    document.getElementById('profileAvatarText').style.display = 'none';
+                } else {
+                    document.getElementById('profileAvatarText').innerText = fullName.charAt(0).toUpperCase();
+                }
+
+                // ثبت یا همگام‌سازی کاربر در دیتابیس بک‌اند
+                try {
+                    await fetch('http://localhost:3001/api/users', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            telegram_id: telegramId,
+                            full_name: fullName,
+                            username: tgUser.username || ''
+                        })
+                    });
+
+                    // فراخوانی لیست واقعی محصولات خریداری‌شده کاربر از بک‌اند
+                    const res = await fetch(`http://localhost:3001/api/user/purchases?telegram_id=${telegramId}`);
+                    const data = await res.json();
+                    
+                    if (data && data.success) {
+                        document.getElementById('statPurchases').innerText = data.purchasesCount || 0;
+                        document.getElementById('statPending').innerText = data.pendingCount || 0;
+                        document.getElementById('statDownloaded').innerText = data.downloadedCount || 0;
+
+                        const container = document.getElementById('productsContainer');
+                        if (data.products && data.products.length > 0) {
+                            container.innerHTML = '';
+                            data.products.forEach(prod => {
+                                container.innerHTML += `
+                                    <div class="product-card" style="background: rgba(20,20,24,0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; margin-bottom: 10px;">
+                                        <h4 style="color:#fff; font-size:0.9rem;">${prod.name}</h4>
+                                        <p style="color:#94a3b8; font-size:0.75rem;">تاریخ خرید: ${prod.date}</p>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            container.innerHTML = '<p style="color: #94a3b8; font-size: 0.85rem;">هنوز محصولی خریداری نکرده‌اید.</p>';
+                        }
+                    } else {
+                        // اگر سرور پاسخ داد ولی محصولی نبود یا ساختار موفق نبود
+                        document.getElementById('statPurchases').innerText = '0';
+                        document.getElementById('statPending').innerText = '0';
+                        document.getElementById('statDownloaded').innerText = '0';
+                        document.getElementById('productsContainer').innerHTML = '<p style="color: #94a3b8; font-size: 0.85rem;">هنوز محصولی خریداری نکرده‌اید.</p>';
+                    }
+                } catch (e) {
+                    console.warn('Backend connection error:', e);
+                    // در صورت قطع بودن سرور بک‌اند، به صورت پیش‌فرض همه چیز روی صفر باشد
+                    document.getElementById('statPurchases').innerText = '0';
+                    document.getElementById('statPending').innerText = '0';
+                    document.getElementById('statDownloaded').innerText = '0';
+                    document.getElementById('productsContainer').innerHTML = '<p style="color: #94a3b8; font-size: 0.85rem;">هنوز محصولی خریداری نکرده‌اید.</p>';
+                }
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initUserData);
+</script>
 </body>
 </html>

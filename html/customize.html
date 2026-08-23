@@ -2,89 +2,253 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>استودیو طراحی استیکر</title>
   <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
   <style>
-    :root { --bg: #050505; --panel: #111; --accent: #e11d48; --success: #22c55e; }
-    body { background: var(--bg); color: #fff; font-family: Tahoma, sans-serif; display: flex; justify-content: center; align-items: center; padding: 15px; margin: 0; min-height: 100vh; transition: direction 0.3s; }
-    .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; position: relative; }
+    :root {
+      --bg: #070709;
+      --card-bg: rgba(20, 20, 24, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #f43f5e;
+      --accent-glow: rgba(244, 63, 94, 0.45);
+      --success: #10b981;
+      --text-muted: #94a3b8;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      font-family: 'Vazirmatn', sans-serif; 
+      -webkit-tap-highlight-color: transparent; 
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: var(--bg);
+      color: #fff;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      background: radial-gradient(circle at 50% 10%, rgba(244, 63, 94, 0.12) 0%, transparent 60%), #070709;
+    }
     
-    .header { display: flex; justify-content: space-between; align-items: center; }
-    .lang-select { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; outline: none; transition: 0.2s; }
-    .lang-select:hover { border-color: var(--accent); }
-    .lang-select option { background: #111; }
-    .back-btn { background: #1a1a1a; color: #aaa; border: 1px solid #333; padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px; text-decoration: none; }
-    .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .container {
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+      position: relative;
+    }
 
-    .stage { background: #000; border-radius: 20px; height: 210px; display: flex; align-items: center; justify-content: center; position: relative; border: 1px solid #333; flex-shrink: 0; overflow: hidden; }
-    #lottieContainer { width: 150px; height: 150px; }
-    #logoOverlay { position: absolute; width: 60px; height: 60px; pointer-events: none; z-index: 10; display: flex; align-items: center; justify-content: center; }
-    #logoOverlay img, #logoOverlay svg { width: 100%; height: 100%; object-fit: contain; }
-    #textOverlay { position: absolute; z-index: 15; pointer-events: none; font-weight: bold; text-align: center; white-space: nowrap; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
 
-    .tab-bar { display: flex; gap: 10px; margin-bottom: 5px; }
-    .tab-btn { flex: 1; padding: 8px; border-radius: 10px; border: none; background: #222; color: #fff; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
-    .tab-btn.active { background: var(--accent); }
-    .panel-content { overflow-y: auto; max-height: 30vh; display: flex; flex-direction: column; gap: 8px; padding-inline-end: 5px; }
-    .panel-content::-webkit-scrollbar { width: 4px; }
-    .panel-content::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    .back-btn {
+      background: var(--card-bg);
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      backdrop-filter: blur(12px);
+      transition: all 0.25s ease;
+    }
 
-    .layer-card { background: #1a1a1a; padding: 10px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .color-row { display: flex; gap: 8px; align-items: center; }
-    .dot, .picker { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid #333; transition: all 0.2s; }
-    .picker { background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); position: relative; }
-    .picker input { opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-    .dot.active, .picker.active { border-color: #ffffff; transform: scale(1.15); box-shadow: 0 0 8px rgba(255, 255, 255, 0.4); }
+    .lang-select {
+      background: var(--card-bg);
+      color: #fff;
+      border: 1px solid var(--card-border);
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      outline: none;
+    }
+    .lang-select option { background: #121215; color: #fff; }
 
-    .input-group { background: #1a1a1a; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
-    .input-group label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 8px; }
-    .text-input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; outline: none; }
-    .text-input:focus { border-color: var(--accent); }
-    .range-input { width: 100%; cursor: pointer; accent-color: var(--accent); }
+    .mode-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: rgba(15, 15, 18, 0.8);
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      gap: 5px;
+      flex-shrink: 0;
+    }
 
-    .action-row { display: flex; gap: 10px; flex-shrink: 0; margin-top: 5px; }
-    .btn-action { padding: 12px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 0.9rem; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
-    .btn-submit { flex: 2; background: linear-gradient(135deg, var(--accent), #990000); color: white; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4); }
-    .btn-submit:active { transform: scale(0.98); }
-    .btn-submit.loading { opacity: 0.7; cursor: not-allowed; }
-    .btn-submit.success { background: var(--success); box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4); }
+    .mode-btn {
+      padding: 7px 4px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .mode-btn .sub { font-size: 0.62rem; font-weight: 400; opacity: 0.7; }
+    .mode-btn.active {
+      background: linear-gradient(135deg, var(--accent), #be123c);
+      color: #fff;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
 
-    /* استایل پیام موفقیت شناور (Toast) */
-    #successToast {
+    /* استایل نشان پیشنهادی */
+    .rec-badge {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: rgba(34, 197, 94, 0.95);
-      color: white;
-      padding: 15px 25px;
-      border-radius: 15px;
-      font-weight: bold;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      z-index: 100;
-      display: none;
+      top: -7px;
+      left: 6px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      font-size: 0.58rem;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      line-height: 1.3;
+    }
+
+    .mode-badge-info {
+      font-size: 0.7rem;
       text-align: center;
-      transition: transform 0.3s ease;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed var(--card-border);
+      padding: 6px 10px;
+      border-radius: 10px;
+      flex-shrink: 0;
     }
-    #successToast.show {
-      display: block;
-      transform: translate(-50%, -50%) scale(1);
+
+    .stage-wrapper {
+      background: radial-gradient(circle at center, rgba(244, 63, 94, 0.1) 0%, rgba(0,0,0,0.6) 100%), #000;
+      border-radius: 20px;
+      height: 165px;
+      min-height: 140px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.85);
+      touch-action: none;
     }
+
+    #lottieContainer { width: 135px; height: 135px; pointer-events: none; }
+
+    .draggable-item {
+      position: absolute;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      transform: translate(-50%, -50%);
+    }
+
+    #logoOverlay { 
+      width: 55px; height: 55px; z-index: 10; display: flex; 
+      align-items: center; justify-content: center;
+      border: 1px dashed transparent; border-radius: 8px;
+    }
+    #logoOverlay.active-drag { border-color: var(--accent); background: rgba(244, 63, 94, 0.1); }
+    #logoOverlay img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6)); pointer-events: none; }
+
+    #textOverlay { 
+      z-index: 15; font-weight: 900; text-align: center; white-space: nowrap; 
+      text-shadow: 0 2px 6px rgba(0,0,0,0.95); padding: 4px 8px; border-radius: 6px; border: 1px dashed transparent;
+    }
+    #textOverlay.active-drag { border-color: var(--accent); background: rgba(244, 63, 94, 0.1); }
+
+    .tab-bar {
+      display: flex; gap: 6px; background: rgba(15, 15, 18, 0.8);
+      padding: 3px; border-radius: 12px; border: 1px solid var(--card-border); flex-shrink: 0;
+    }
+    .tab-btn { flex: 1; padding: 6px 0; border-radius: 9px; border: none; background: transparent; color: var(--text-muted); font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+    .tab-btn.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+    .panel-container { flex-shrink: 0; min-height: 125px; display: flex; flex-direction: column; justify-content: center; }
+    .panel-content { display: flex; flex-direction: column; gap: 6px; max-height: 140px; overflow-y: auto; }
+
+    .layer-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); padding: 6px 12px;
+      border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .layer-title { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); }
+    .color-row { display: flex; gap: 6px; align-items: center; }
+
+    .dot, .picker {
+      width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.12);
+    }
+    .picker { background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); position: relative; overflow: hidden; }
+    .picker input { opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer; }
+    .dot.active, .picker.active { border-color: #fff; transform: scale(1.25); box-shadow: 0 0 14px rgba(255,255,255,0.6); }
+
+    .upload-box {
+      background: var(--card-bg); border: 1.5px dashed var(--card-border); border-radius: 14px;
+      padding: 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    
+    .input-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .input-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); }
+    .text-input { width: 100%; background: #0c0c0e; border: 1px solid var(--card-border); color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; outline: none; }
+    .range-input { width: 100%; cursor: pointer; accent-color: var(--accent); height: 4px; }
+
+    .action-row { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-action { padding: 11px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; justify-content: center; align-items: center; }
+    .btn-reset { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-muted); flex: 1; }
+    .btn-submit { flex: 2.3; background: linear-gradient(135deg, var(--accent), #be123c); color: white; box-shadow: 0 4px 18px var(--accent-glow); }
+
+    #successToast {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.85); background: rgba(16, 185, 129, 0.95);
+      color: white; padding: 12px 20px; border-radius: 14px; font-weight: 700; z-index: 100; display: none; text-align: center;
+    }
+    #successToast.show { display: block; transform: translate(-50%, -50%) scale(1); }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- پیام موفقیت که روی صفحه ظاهر می‌شود -->
   <div id="successToast">
-    ✨ طرح شما با موفقیت در دیتابیس ذخیره شد!<br>
-    <span style="font-size: 0.8rem; font-weight: normal;">در حال انتقال به سبد خرید...</span>
+    <span id="toastMsg">✨ طرح با موفقیت ذخیره شد!</span><br>
+    <span id="toastSub" style="font-size: 0.72rem; font-weight: 400; opacity: 0.9;">در حال انتقال به سبد خرید...</span>
   </div>
 
   <div class="header">
     <button class="back-btn" onclick="window.location.href='/html/Automatic-order.html'">
-      <span id="txtBack">بازگشت</span> ❮
+      <span id="backIcon">❮</span> <span id="txtBack">بازگشت</span>
     </button>
     <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
       <option value="fa">🇮🇷 فارسی</option>
@@ -94,152 +258,260 @@
     </select>
   </div>
 
-  <div class="stage">
+  <div class="mode-selector">
+    <button class="mode-btn active" id="btnModeTgs" onclick="setMode('tgs')">
+      <span class="rec-badge" id="txtRecBadge">پیشنهادی</span>
+      <span id="txtModeTgs">استیکر متحرک</span>
+      <span class="sub" id="txtModeTgsSub">وکتور خالص (.tgs)</span>
+    </button>
+    <button class="mode-btn" id="btnModeWebm" onclick="setMode('webm')">
+      <span id="txtModeWebm">استیکر لوگودار</span>
+      <span class="sub" id="txtModeWebmSub">ویدیویی شفاف (.webm)</span>
+    </button>
+  </div>
+
+  <p class="mode-badge-info" id="modeInfoText"></p>
+
+  <div class="stage-wrapper" id="stageWrapper">
     <div id="lottieContainer"></div>
-    <div id="logoOverlay"></div>
-    <div id="textOverlay"></div>
+    <div id="logoOverlay" class="draggable-item" style="top: 50%; left: 50%;"></div>
+    <div id="textOverlay" class="draggable-item" style="top: 80%; left: 50%;"></div>
   </div>
 
-  <div class="tab-bar">
-    <button class="tab-btn active" id="tabColor" onclick="switchTab('colors')">رنگ‌بندی</button>
-    <button class="tab-btn" id="tabLogo" onclick="switchTab('logo')">لوگو</button>
-    <button class="tab-btn" id="tabText" onclick="switchTab('text')">متن</button>
+  <div class="tab-bar" id="tabBar" style="display: none;">
+    <button class="tab-btn active" id="tabLogo" onclick="switchTab('logo')">🖼️ <span id="txtTabLogo">لوگو</span></button>
+    <button class="tab-btn" id="tabText" onclick="switchTab('text')">✍️ <span id="txtTabText">متن</span></button>
+    <button class="tab-btn" id="tabColor" onclick="switchTab('colors')">🎨 <span id="txtTabColor">رنگ‌بندی</span></button>
   </div>
 
-  <div id="colorsView" class="panel-content"></div>
-  
-  <div id="logoView" class="panel-content" style="display:none; justify-content:center; padding-top:20px;">
-    <label class="btn-action" style="background:#222; color:#fff; border:1px dashed #555;">
-      <span id="txtUploadBtn">انتخاب عکس/لوگو</span>
-      <input type="file" id="logoUpload" accept="image/*, .svg" hidden>
-    </label>
-    <p id="txtLogoHint" style="font-size:0.8rem; color:#888; text-align:center;">فرمت‌های پشتیبانی شده: JPG, PNG, SVG</p>
-  </div>
-
-  <div id="textView" class="panel-content" style="display:none;">
-    <div class="input-group">
-      <label id="txtWrite">متن خود را بنویسید:</label>
-      <input type="text" id="customText" class="text-input" placeholder="..." oninput="updateText()">
+  <div class="panel-container">
+    <div id="colorsView" class="panel-content"></div>
+    
+    <div id="logoView" class="panel-content" style="display:none;">
+      <label class="upload-box" for="logoUpload">
+        <div style="font-size: 1.4rem;">📤</div>
+        <div id="txtUploadTitle" style="font-size: 0.8rem; font-weight: 700; color: #fff;">انتخاب تصویر لوگو</div>
+        <div id="txtUploadSub" style="font-size: 0.65rem; color: var(--text-muted);">برای جابه‌جایی، لوگو را بکشید</div>
+        <input type="file" id="logoUpload" accept="image/*, .svg" hidden>
+      </label>
+      
+      <div class="input-card" id="logoSizeCard" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="input-label"><span id="txtLogoSizeLabel">اندازه لوگو</span>: (<span id="logoSizeVal">55</span>px)</span>
+        </div>
+        <input type="range" id="logoSizeSlider" class="range-input" min="25" max="110" value="55" oninput="updateLogoSize(this.value)">
+      </div>
     </div>
-    <div class="input-group">
-      <label><span id="txtSize">اندازه فونت:</span> <span id="sizeValue">20</span>px</label>
-      <input type="range" id="fontSize" class="range-input" min="10" max="60" value="20" oninput="updateText()">
-    </div>
-    <div class="input-group">
-      <label id="txtTextColor">رنگ متن:</label>
-      <input type="color" id="textColor" value="#ffffff" oninput="updateText()" style="background:none; border:none; width:40px; height:40px; cursor:pointer;">
+
+    <div id="textView" class="panel-content" style="display:none;">
+      <div class="input-card">
+        <span class="input-label" id="txtLabelInput">متن سفارشی:</span>
+        <input type="text" id="customText" class="text-input" placeholder="..." oninput="updateText()">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="input-label"><span id="txtLabelSize">اندازه متن</span>: (<span id="sizeValue">22</span>px)</span>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span class="input-label" id="txtLabelColor">رنگ:</span>
+            <input type="color" id="textColor" value="#ffffff" oninput="updateText()" style="background:none; border:none; width:24px; height:24px; cursor:pointer;">
+          </div>
+        </div>
+        <input type="range" id="fontSize" class="range-input" min="12" max="48" value="22" oninput="updateText()">
+      </div>
     </div>
   </div>
   
   <div class="action-row">
-    <button class="btn-action" style="background:#222; color:#aaa; flex:1;" id="txtReset" onclick="location.reload()">ریست</button>
-    <button class="btn-action btn-submit" id="btnSubmit" onclick="saveDesignAndCheckout()">
-      <span id="txtSubmit">ثبت و ادامه خرید</span>
-    </button>
+    <button class="btn-action btn-reset" id="txtResetBtn" onclick="location.reload()">ریست</button>
+    <button class="btn-action btn-submit" id="btnSubmit" onclick="saveDesignAndCheckout()">ثبت و ادامه خرید</button>
   </div>
 </div>
 
 <script>
   let anim = null;
-  const colors = ['#000000', '#E11D48', '#FFFFFF', '#FFD60A'];
+  let rawLottieJson = null;
+  const palette = ['#000000', '#E11D48', '#FFFFFF', '#FFD60A', '#3B82F6', '#10B981'];
+  let currentLang = 'fa';
   
   let designState = {
-    stickerId: null,
+    stickerId: 1,
+    formatMode: 'tgs',
     layers: {}, 
     logoData: null, 
-    textData: { text: '', size: '20', color: '#ffffff' }
+    logoSize: 55,
+    logoPos: { x: 50, y: 50 },
+    textData: { text: '', size: '22', color: '#ffffff', x: 50, y: 80 }
   };
-  
+
   const i18n = {
-    fa: { layer: "لایه", upload: "آپلود لوگو", reset: "ریست", submit: "ثبت و ادامه خرید", back: "بازگشت", tabColor: "رنگ‌بندی", tabLogo: "لوگو", tabText: "متن", writeText: "متن خود را بنویسید:", fontSize: "اندازه فونت:", textColor: "رنگ متن:", logoHint: "JPG, PNG, SVG", loading: "در حال ذخیره...", success: "موفق!", dir: "rtl" },
-    en: { layer: "Layer", upload: "Upload Logo", reset: "Reset", submit: "Save & Checkout", back: "Back", tabColor: "Colors", tabLogo: "Logo", tabText: "Text", writeText: "Write your text:", fontSize: "Font Size:", textColor: "Text Color:", logoHint: "JPG, PNG, SVG", loading: "Saving...", success: "Success!", dir: "ltr" },
-    ru: { layer: "Слой", upload: "Загрузить", reset: "Сброс", submit: "Сохранить и Купить", back: "Назад", tabColor: "Цвета", tabLogo: "Логотип", tabText: "Текст", writeText: "Введите текст:", fontSize: "Размер:", textColor: "Цвет:", logoHint: "JPG, PNG, SVG", loading: "Сохранение...", success: "Успешно!", dir: "ltr" },
-    zh: { layer: "图层", upload: "上传徽标", reset: "重置", submit: "保存并结账", back: "返回", tabColor: "颜色", tabLogo: "徽标", tabText: "文本", writeText: "输入文本:", fontSize: "字体大小:", textColor: "文本颜色:", logoHint: "JPG, PNG, SVG", loading: "保存中...", success: "成功!", dir: "ltr" }
+    fa: {
+      back: "بازگشت", recBadge: "پیشنهادی", modeTgs: "استیکر متحرک", modeTgsSub: "وکتور خالص (.tgs)", modeWebm: "استیکر لوگودار", modeWebmSub: "ویدیویی شفاف (.webm)",
+      infoTgs: "⚡ <b>حالت وکتور تلگرام:</b> سبک و سریع برای تغییر پالت رنگی.", infoWebm: "🎬 <b>استیکر لوگودار:</b> لوگو و متن را با لمس جابه‌جا کرده و سایز آن را تغییر دهید.",
+      tabLogo: "لوگو", tabText: "متن", tabColor: "رنگ‌بندی", layerTitle: "لایه رنگی", uploadTitle: "انتخاب تصویر لوگو", uploadSub: "برای جابه‌جایی، لوگو را روی استیکر بکشید",
+      logoSizeLabel: "اندازه لوگو", inputLabel: "متن سفارشی:", inputPlaceholder: "متن دلخواه...", labelSize: "اندازه متن", labelColor: "رنگ",
+      resetBtn: "ریست", submitBtn: "ثبت و ادامه خرید", toastMsg: "✨ طرح با موفقیت ذخیره شد!", toastSub: "در حال انتقال به سبد خرید...", dir: "rtl"
+    },
+    en: {
+      back: "Back", recBadge: "Recommended", modeTgs: "Animated Sticker", modeTgsSub: "Pure Vector (.tgs)", modeWebm: "Logo Sticker", modeWebmSub: "Transparent Video (.webm)",
+      infoTgs: "⚡ <b>Telegram Vector:</b> Fast and lightweight for color customization.", infoWebm: "🎬 <b>Logo Sticker:</b> Drag & resize your logo and custom text freely.",
+      tabLogo: "Logo", tabText: "Text", tabColor: "Colors", layerTitle: "Color Layer", uploadTitle: "Upload Logo Image", uploadSub: "Drag and drop the logo on the sticker to reposition",
+      logoSizeLabel: "Logo Size", inputLabel: "Custom Text:", inputPlaceholder: "Enter text...", labelSize: "Text Size", labelColor: "Color",
+      resetBtn: "Reset", submitBtn: "Save & Checkout", toastMsg: "✨ Design saved successfully!", toastSub: "Redirecting to cart...", dir: "ltr"
+    },
+    ru: {
+      back: "Назад", recBadge: "Рекомендуется", modeTgs: "Анимированный", modeTgsSub: "Вектор (.tgs)", modeWebm: "С логотипом", modeWebmSub: "Видео (.webm)",
+      infoTgs: "⚡ <b>Вектор Telegram:</b> Легкий и быстрый для смены палитры.", infoWebm: "🎬 <b>Стикер с логотипом:</b> Перетаскивайте и меняйте размер логотипа и текста.",
+      tabLogo: "Логотип", tabText: "Текст", tabColor: "Цвета", layerTitle: "Слой", uploadTitle: "Загрузить логотип", uploadSub: "Перетащите логотип по стикеру для изменения позиции",
+      logoSizeLabel: "Размер логотипа", inputLabel: "Ваш текст:", inputPlaceholder: "Введите текст...", labelSize: "Размер текста", labelColor: "Цвет",
+      resetBtn: "Сброс", submitBtn: "Сохранить и Купить", toastMsg: "✨ Дизайн успешно сохранен!", toastSub: "Переход в корзину...", dir: "ltr"
+    },
+    zh: {
+      back: "返回", recBadge: "推荐", modeTgs: "动态贴纸", modeTgsSub: "纯矢量 (.tgs)", modeWebm: "徽标贴纸", modeWebmSub: "透明视频 (.webm)",
+      infoTgs: "⚡ <b>Telegram 矢量模式:</b> 仅支持修改图层颜色。", infoWebm: "🎬 <b>徽标贴纸模式:</b> 可自由拖拽和缩放徽标及自定义文字。",
+      tabLogo: "徽标", tabText: "文字", tabColor: "调色", layerTitle: "图层", uploadTitle: "上传徽标图片", uploadSub: "可在贴纸上直接拖拽调整位置",
+      logoSizeLabel: "徽标大小", inputLabel: "自定义文字:", inputPlaceholder: "输入文字...", labelSize: "文字大小", labelColor: "颜色",
+      resetBtn: "重置", submitBtn: "保存并结账", toastMsg: "✨ 设计已成功保存！", toastSub: "正在跳转至购物车...", dir: "ltr"
+    }
   };
-  let currentLang = 'fa';
+
+  function changeLanguage(lang) {
+    if(!i18n[lang]) lang = 'en';
+    currentLang = lang;
+    document.documentElement.dir = i18n[lang].dir;
+
+    document.getElementById('txtBack').innerText = i18n[lang].back;
+    document.getElementById('txtRecBadge').innerText = i18n[lang].recBadge;
+    document.getElementById('txtModeTgs').innerText = i18n[lang].modeTgs;
+    document.getElementById('txtModeTgsSub').innerText = i18n[lang].modeTgsSub;
+    document.getElementById('txtModeWebm').innerText = i18n[lang].modeWebm;
+    document.getElementById('txtModeWebmSub').innerText = i18n[lang].modeWebmSub;
+    document.getElementById('txtTabLogo').innerText = i18n[lang].tabLogo;
+    document.getElementById('txtTabText').innerText = i18n[lang].tabText;
+    document.getElementById('txtTabColor').innerText = i18n[lang].tabColor;
+    document.getElementById('txtUploadTitle').innerText = i18n[lang].uploadTitle;
+    document.getElementById('txtUploadSub').innerText = i18n[lang].uploadSub;
+    document.getElementById('txtLogoSizeLabel').innerText = i18n[lang].logoSizeLabel;
+    document.getElementById('txtLabelInput').innerText = i18n[lang].inputLabel;
+    document.getElementById('customText').placeholder = i18n[lang].inputPlaceholder;
+    document.getElementById('txtLabelSize').innerText = i18n[lang].labelSize;
+    document.getElementById('txtLabelColor').innerText = i18n[lang].labelColor;
+    document.getElementById('txtResetBtn').innerText = i18n[lang].resetBtn;
+    document.getElementById('btnSubmit').innerText = i18n[lang].submitBtn;
+    document.getElementById('toastMsg').innerText = i18n[lang].toastMsg;
+    document.getElementById('toastSub').innerText = i18n[lang].toastSub;
+    document.getElementById('backIcon').innerText = i18n[lang].dir === 'rtl' ? '❮' : '❯';
+
+    updateModeUI();
+    document.querySelectorAll('.layer-title').forEach((el, index) => el.innerText = `${i18n[currentLang].layerTitle} ${index + 1}`);
+  }
+
+  function updateModeUI() {
+    const infoText = document.getElementById('modeInfoText');
+    infoText.innerHTML = designState.formatMode === 'tgs' ? i18n[currentLang].infoTgs : i18n[currentLang].infoWebm;
+  }
+
+  function setMode(mode) {
+    designState.formatMode = mode;
+    if (mode === 'tgs') {
+      document.getElementById('btnModeTgs').classList.add('active');
+      document.getElementById('btnModeWebm').classList.remove('active');
+      document.getElementById('tabBar').style.display = 'none';
+      designState.logoData = null;
+      designState.textData = { text: '', size: '22', color: '#ffffff', x: 50, y: 80 };
+      document.getElementById('logoOverlay').innerHTML = '';
+      document.getElementById('textOverlay').innerText = '';
+      document.getElementById('customText').value = '';
+      document.getElementById('logoSizeCard').style.display = 'none';
+      switchTab('colors');
+    } else {
+      document.getElementById('btnModeWebm').classList.add('active');
+      document.getElementById('btnModeTgs').classList.remove('active');
+      document.getElementById('tabBar').style.display = 'flex';
+      switchTab('logo');
+    }
+    updateModeUI();
+  }
+
+  function updateLogoSize(val) {
+    designState.logoSize = parseFloat(val);
+    const overlay = document.getElementById('logoOverlay');
+    overlay.style.width = `${val}px`;
+    overlay.style.height = `${val}px`;
+    document.getElementById('logoSizeVal').innerText = val;
+  }
 
   async function init() {
     const savedStickers = JSON.parse(localStorage.getItem('selectedStickers') || '[]');
     designState.stickerId = savedStickers.length > 0 ? savedStickers[0] : 1;
 
     try {
-        const res = await fetch('http://localhost:3001/api/products');
-        const data = await res.json();
-        anim = lottie.loadAnimation({
-          container: document.getElementById('lottieContainer'),
-          renderer: 'svg', loop: true, autoplay: true, path: data.data[0].json_path
-        });
-        anim.addEventListener('DOMLoaded', buildUI);
-    } catch (err) {
-        console.error("خطا در لود محصولات:", err);
-    }
-  }
+      const res = await fetch('http://localhost:3001/api/products');
+      const data = await res.json();
+      const product = data.data.find(p => p.id == designState.stickerId) || data.data[0];
 
-  function buildUI() {
-    const svg = document.querySelector('#lottieContainer svg');
-    const groups = Array.from(svg.querySelectorAll(':scope > g > g'));
-    const panel = document.getElementById('colorsView');
-    panel.innerHTML = ''; 
-    
-    groups.forEach((g, i) => {
-      const card = document.createElement('div');
-      card.className = 'layer-card';
-      let colorsHTML = '';
-      colors.forEach(c => colorsHTML += `<div class="dot" style="background:${c}" onclick="applyColor(this, ${i}, '${c}')"></div>`);
-      colorsHTML += `<div class="picker"><input type="color" oninput="applyColor(this.parentElement, ${i}, this.value)"></div>`;
-      
-      card.innerHTML = `
-        <div class="layer-title" style="font-size:12px; color:#aaa; font-weight:bold;">${i18n[currentLang].layer} ${i+1}</div>
-        <div class="color-row">${colorsHTML}</div>
-      `;
-      panel.appendChild(card);
-    });
+      const jsonRes = await fetch(product.json_path);
+      rawLottieJson = await jsonRes.json();
+
+      anim = lottie.loadAnimation({
+        container: document.getElementById('lottieContainer'),
+        renderer: 'svg', loop: true, autoplay: true, 
+        animationData: JSON.parse(JSON.stringify(rawLottieJson))
+      });
+
+      anim.addEventListener('DOMLoaded', buildUI);
+    } catch (err) { console.error("خطا:", err); }
+
+    makeDraggable(document.getElementById('logoOverlay'), (x, y) => designState.logoPos = { x, y });
+    makeDraggable(document.getElementById('textOverlay'), (x, y) => { designState.textData.x = x; designState.textData.y = y; });
     changeLanguage('fa');
   }
 
-  function switchTab(t) {
-    document.getElementById('colorsView').style.display = t==='colors'?'flex':'none';
-    document.getElementById('logoView').style.display = t==='logo'?'flex':'none';
-    document.getElementById('textView').style.display = t==='text'?'flex':'none';
+  function buildUI() {
+    const panel = document.getElementById('colorsView');
+    panel.innerHTML = ''; 
     
-    document.getElementById('tabColor').classList.toggle('active', t==='colors');
-    document.getElementById('tabLogo').classList.toggle('active', t==='logo');
-    document.getElementById('tabText').classList.toggle('active', t==='text');
-  }
+    let visualCounter = 1;
 
-  function changeLanguage(lang) {
-    currentLang = lang;
-    document.documentElement.dir = i18n[lang].dir;
-    
-    document.getElementById('txtUploadBtn').innerText = i18n[lang].upload;
-    document.getElementById('txtReset').innerText = i18n[lang].reset;
-    document.getElementById('txtSubmit').innerText = i18n[lang].submit;
-    document.getElementById('txtBack').innerText = i18n[lang].back;
-    document.getElementById('tabColor').innerText = i18n[lang].tabColor;
-    document.getElementById('tabLogo').innerText = i18n[lang].tabLogo;
-    document.getElementById('tabText').innerText = i18n[lang].tabText;
-    document.getElementById('txtWrite').innerText = i18n[lang].writeText;
-    document.getElementById('txtSize').innerText = i18n[lang].fontSize;
-    document.getElementById('txtTextColor').innerText = i18n[lang].textColor;
-    document.getElementById('txtLogoHint').innerText = i18n[lang].logoHint;
-
-    const backBtn = document.querySelector('.back-btn');
-    if(i18n[lang].dir === 'ltr') backBtn.innerHTML = `❯ <span id="txtBack">${i18n[lang].back}</span>`;
-    else backBtn.innerHTML = `<span id="txtBack">${i18n[lang].back}</span> ❮`;
-    
-    document.querySelectorAll('.layer-title').forEach((el, index) => {
-      el.innerText = `${i18n[lang].layer} ${index + 1}`;
+    // استخراج لایه‌ها دقیقاً منطبق با ایندکس فایل JSON
+    rawLottieJson.layers.forEach((layer, jsonIdx) => {
+      if (layer.ty === 4) { // فقط لایه‌های شیپ (قابل رنگ‌آمیزی)
+        const domElement = anim.renderer.elements[jsonIdx];
+        if (domElement && domElement.layerElement) {
+          const paths = domElement.layerElement.querySelectorAll('path, rect, polygon');
+          if (paths.length > 0) {
+            const card = document.createElement('div');
+            card.className = 'layer-card';
+            let colorsHTML = '';
+            
+            palette.forEach(c => {
+              colorsHTML += `<div class="dot" style="background:${c}" onclick="applyExactLayerColor(${jsonIdx}, '${c}', this)"></div>`;
+            });
+            colorsHTML += `<div class="picker"><input type="color" oninput="applyExactLayerColor(${jsonIdx}, this.value, this.parentElement)"></div>`;
+            
+            card.innerHTML = `
+              <div class="layer-title">${i18n[currentLang].layerTitle} ${visualCounter}</div>
+              <div class="color-row">${colorsHTML}</div>
+            `;
+            panel.appendChild(card);
+            visualCounter++;
+          }
+        }
+      }
     });
   }
 
-  function applyColor(element, idx, color) {
-    const svg = document.querySelector('#lottieContainer svg');
-    const group = Array.from(svg.querySelectorAll(':scope > g > g'))[idx];
-    if (group) {
-      group.querySelectorAll('path, rect, polygon').forEach(p => { p.setAttribute('fill', color); p.setAttribute('stroke', color); });
-      group.style.filter = `drop-shadow(0 0 0 ${color})`;
-      designState.layers[idx] = color;
+  // تغییر رنگ بر اساس شماره شناسنامه (Index) دقیق لایه در فایل اصلی
+  function applyExactLayerColor(jsonIdx, hex, element) {
+    const domElement = anim.renderer.elements[jsonIdx];
+    if (domElement && domElement.layerElement) {
+      domElement.layerElement.querySelectorAll('path, rect, polygon').forEach(p => { 
+        p.setAttribute('fill', hex); 
+        p.setAttribute('stroke', hex); 
+      });
     }
+    
+    // ذخیره کدرنگ همراه با شماره لایه واقعی
+    designState.layers[jsonIdx] = hex;
+
     if (element && element.closest('.color-row')) {
       const row = element.closest('.color-row');
       row.querySelectorAll('.dot, .picker').forEach(el => el.classList.remove('active'));
@@ -247,21 +519,42 @@
     }
   }
 
+  function makeDraggable(element, onMoveCallback) {
+    let isDragging = false;
+    const stage = document.getElementById('stageWrapper');
+    function startDrag(e) { if(element.innerHTML.trim()==='' && element.innerText.trim()==='') return; isDragging = true; element.classList.add('active-drag'); e.preventDefault(); }
+    function doDrag(e) {
+      if (!isDragging) return;
+      const rect = stage.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      let xPercent = Math.max(5, Math.min(95, ((clientX - rect.left) / rect.width) * 100));
+      let yPercent = Math.max(5, Math.min(95, ((clientY - rect.top) / rect.height) * 100));
+      element.style.left = `${xPercent}%`; element.style.top = `${yPercent}%`;
+      if (onMoveCallback) onMoveCallback(xPercent, yPercent);
+    }
+    function stopDrag() { isDragging = false; element.classList.remove('active-drag'); }
+    element.addEventListener('mousedown', startDrag); element.addEventListener('touchstart', startDrag, { passive: false });
+    window.addEventListener('mousemove', doDrag); window.addEventListener('touchmove', doDrag, { passive: false });
+    window.addEventListener('mouseup', stopDrag); window.addEventListener('touchend', stopDrag);
+  }
+
+  function switchTab(t) {
+    document.getElementById('colorsView').style.display = t==='colors'?'flex':'none';
+    document.getElementById('logoView').style.display = t==='logo'?'flex':'none';
+    document.getElementById('textView').style.display = t==='text'?'flex':'none';
+    ['tabColor', 'tabLogo', 'tabText'].forEach(id => document.getElementById(id).classList.toggle('active', t===id.replace('tab','').toLowerCase()));
+  }
+
   function updateText() {
     const textVal = document.getElementById('customText').value;
     const sizeVal = document.getElementById('fontSize').value;
     const colorVal = document.getElementById('textColor').value;
     
-    designState.textData = { text: textVal, size: sizeVal, color: colorVal };
-    
+    designState.textData = { text: textVal, size: sizeVal, color: colorVal, x: designState.textData.x, y: designState.textData.y };
     const overlay = document.getElementById('textOverlay');
-    overlay.innerText = textVal;
-    overlay.style.fontSize = sizeVal + 'px';
-    overlay.style.color = colorVal;
+    overlay.innerText = textVal; overlay.style.fontSize = sizeVal + 'px'; overlay.style.color = colorVal;
     document.getElementById('sizeValue').innerText = sizeVal;
-    
-    const groups = Array.from(document.querySelectorAll('#lottieContainer svg > g > g'));
-    if (textVal.trim() !== '' && groups[1]) groups[1].style.opacity = '0';
   }
 
   document.getElementById('logoUpload').onchange = (e) => {
@@ -269,66 +562,22 @@
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      designState.logoData = ev.target.result; 
-      const overlay = document.getElementById('logoOverlay');
-      overlay.innerHTML = file.type.includes('svg') ? ev.target.result : `<img src="${ev.target.result}">`;
-      const groups = Array.from(document.querySelectorAll('#lottieContainer svg > g > g'));
-      if(groups[1]) groups[1].style.opacity = '0';
+      designState.logoData = ev.target.result;
+      document.getElementById('logoOverlay').innerHTML = `<img src="${ev.target.result}">`;
+      document.getElementById('logoSizeCard').style.display = 'flex';
+      updateLogoSize(designState.logoSize || 55);
     };
     reader.readAsDataURL(file);
   };
 
   async function saveDesignAndCheckout() {
     const btn = document.getElementById('btnSubmit');
-    const textSpan = document.getElementById('txtSubmit');
-    const toast = document.getElementById('successToast');
-    
-    btn.classList.add('loading');
     btn.disabled = true;
-    textSpan.innerText = i18n[currentLang].loading;
-
     try {
-      const response = await fetch('http://localhost:3001/api/save-design', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(designState)
-      });
-      
-      const rawText = await response.text();
-      let data;
-      try {
-        data = JSON.parse(rawText);
-      } catch (e) {
-        throw new Error("پاسخ سرور نامعتبر است: " + rawText);
-      }
-
-      if (response.ok && data.success) {
-        btn.classList.remove('loading');
-        btn.classList.add('success');
-        textSpan.innerText = i18n[currentLang].success;
-
-        // نمایش پیام موفقیت گرافیکی وسط صفحه
-        toast.classList.add('show');
-
-        designState.dbId = data.designId;
-        localStorage.setItem('finalCustomizedSticker', JSON.stringify(designState));
-
-        // کمی مکث برای اینکه کاربر پیام را ببیند، بعد هدایت به سبد خرید
-        setTimeout(() => {
-          window.location.href = '/html/shopping-cart.html';
-        }, 1500);
-      } else {
-        throw new Error(data.message || 'خطا در ثبت اطلاعات');
-      }
-
-    } catch (error) {
-      console.error('خطا:', error);
-      alert('خطا در ذخیره‌سازی: ' + error.message);
-      
-      btn.classList.remove('loading');
-      btn.disabled = false;
-      textSpan.innerText = i18n[currentLang].submit;
-    }
+      localStorage.setItem('finalCustomizedSticker', JSON.stringify(designState));
+      document.getElementById('successToast').classList.add('show');
+      setTimeout(() => window.location.href = '/html/shopping-cart.html', 800);
+    } catch (error) { alert('Error saving design.'); btn.disabled = false; }
   }
 
   init();

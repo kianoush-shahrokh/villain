@@ -131,24 +131,21 @@
     <!-- استیکرها به صورت داینامیک از دیتابیس بارگذاری می‌شوند -->
 </div>
 
-<!-- ===== دکمه ثابت پایین صفحه (حذف محدودیت و اتصال به صفحه ادیتور) ===== -->
-<a href="#" class="cart-fixed-btn" id="cartFixedBtn" onclick="proceedToNextPage(event)">
+<!-- ===== دکمه ثابت پایین صفحه ===== -->
+<a href="javascript:void(0)" class="cart-fixed-btn" id="cartFixedBtn" onclick="proceedToNextPage(event)">
     <span class="cart-icon"><img src="../assets/images/icons/4.png" alt=""></span>
     <span class="cart-text" data-lang-key="cart_selected">Selected:</span>
     <span class="cart-count" id="cartCount">0</span>
     <span class="cart-divider">|</span>
     <span class="cart-total" id="cartTotal">0</span>
     <span class="cart-currency">TON</span>
-    <!-- اخطار Min 5 کلاً حذف شد -->
 </a>
 
 <script src="../js/main.js"></script>
-<script src="../js/Products.js"></script>
 <script src="../js/language.js"></script>
 <script src="../js/TON.js"></script>
 <script src="../js/api.js"></script>
 
-<!-- اسکریپت رندر استیکرها از PostgreSQL -->
 <script>
   let allProducts = [];
   let selectedProducts = new Set();
@@ -238,19 +235,19 @@
     });
   }
 
-  // اضافه شدن تابع انتقال به صفحه بعد بدون محدودیت ۵ استیکر
   function proceedToNextPage(event) {
-      event.preventDefault(); // جلوگیری از رفرش شدن صفحه با تگ a
-      
-      if (selectedProducts.size >= 1) {
-          // ذخیره کردن آیدی استیکرهای انتخاب شده در حافظه تا در صفحه customize لود شوند
-          localStorage.setItem('selectedStickers', JSON.stringify(Array.from(selectedProducts)));
-          // انتقال به صفحه سفارشی سازی
-          window.location.href = 'customize.html';
-      } else {
-          // در صورتی که هیچی انتخاب نکرده باشد
-          alert('Please select at least one sticker.'); 
-      }
+    if (event) event.preventDefault();
+
+    // اگر محصولی انتخاب نشده بود، اولین محصول به صورت خودکار انتخاب می‌شود
+    let selectedIds = Array.from(selectedProducts);
+    if (selectedIds.length === 0 && allProducts.length > 0) {
+      selectedIds = [allProducts[0].id];
+    } else if (selectedIds.length === 0) {
+      selectedIds = [1];
+    }
+
+    localStorage.setItem('selectedStickers', JSON.stringify(selectedIds));
+    window.location.href = 'customize.html';
   }
 
   document.addEventListener('DOMContentLoaded', fetchAndRenderProducts);
