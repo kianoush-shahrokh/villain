@@ -1,34 +1,53 @@
-// ===== دیتابیس محصولات =====
-const products = [
-    { id: 1, name: 'Happy Emoji', img: '../assets/images/icons/1.png', price: 2, category: 'all' },
-    { id: 2, name: 'Heart Emoji', img: 'assets/images/icons/2.png', price: 3, category: 'gift' },
-    { id: 3, name: 'Star Emoji', img: 'assets/images/icons/3.png', price: 4, category: 'special' },
-    { id: 4, name: 'Flag Emoji', img: 'assets/images/icons/4.png', price: 5, category: 'flag' },
-    { id: 5, name: 'Fire Emoji', img: 'assets/images/icons/5.png', price: 3, category: 'all' },
-    { id: 6, name: 'Rocket Emoji', img: 'assets/images/icons/6.png', price: 6, category: 'special' },
-    { id: 7, name: 'Gift Box', img: 'assets/images/icons/7.png', price: 7, category: 'gift' },
-    { id: 8, name: 'Rainbow Flag', img: 'assets/images/icons/8.png', price: 5, category: 'flag' },
-    { id: 9, name: 'Diamond', img: 'assets/images/icons/9.png', price: 8, category: 'other' },
-    { id: 10, name: 'Crown', img: 'assets/images/icons/10.png', price: 9, category: 'special' },
-    { id: 11, name: 'Rose', img: 'assets/images/icons/11.png', price: 4, category: 'gift' },
-    { id: 12, name: 'Globe', img: 'assets/images/icons/12.png', price: 6, category: 'other' },
-];
-
-// ===== مدیریت سبد خرید =====
+// ===== متغیرهای مدیریت محصولات و سبد خرید =====
+let products = [];
 let cart = {};
 
-// ===== رندر محصولات =====
+// ===== دریافت محصولات واقعی از دیتابیس سرور =====
+async function loadProductsFromDB() {
+    try {
+        const response = await fetch('/api/products');
+        const data = await response.json();
+        
+        if (data.success && data.data.length > 0) {
+            products = data.data.map(p => ({
+                id: p.id,
+                name: p.title,
+                img: p.webp_path ? `/${p.webp_path}` : `/${p.svg_path}`,
+                price: parseFloat(p.price) || 4,
+                category: p.category || 'gifts',
+                json_path: p.json_path,
+                svg_path: p.svg_path
+            }));
+        } else {
+            console.warn('محصولی در دیتابیس یافت نشد.');
+        }
+    } catch (err) {
+        console.error('خطا در بارگذاری محصولات:', err);
+    }
+    
+    renderProducts('all');
+    updateUI();
+}
+
+// ===== رندر محصولات در صفحه =====
 function renderProducts(category = 'all') {
     const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+
     const filtered = category === 'all' 
         ? products 
-        : products.filter(p => p.category === category);
+        : products.filter(p => p.category === category || (category === 'gifts' && p.category === 'gift'));
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div style="color:#aaa; text-align:center; width:100%; grid-column: 1/-1;">محصولی در این بخش وجود ندارد</div>';
+        return;
+    }
 
     grid.innerHTML = filtered.map(product => {
         const count = cart[product.id] || 0;
         return `
             <div class="product-card ${count > 0 ? 'selected' : ''}" data-id="${product.id}" onclick="toggleProduct(${product.id})">
-                <img src="${product.img}" alt="${product.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23333%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22 font-size=%2230%22 font-family=%22Arial%22%3E${product.name}%3C/text%3E%3C/svg%3E'">
+                <img src="${product.img}" alt="${product.name}" onerror="this.src='../assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.webp'">
                 <div class="product-name">${product.name}</div>
                 <div class="product-price">${product.price} TON</div>
             </div>
@@ -36,16 +55,11 @@ function renderProducts(category = 'all') {
     }).join('');
 }
 
-// ===== انتخاب/عدم انتخاب محصول =====
+// ===== انتخاب / عدم انتخاب محصول =====
 function toggleProduct(productId) {
     const current = cart[productId] || 0;
-    const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
     
     if (current > 0) {
-        if (totalItems <= 0) {
-            alert(getTranslation('cart_min_error') || 'You must select at least 5 products!');
-            return;
-        }
         delete cart[productId];
     } else {
         cart[productId] = 1;
@@ -54,7 +68,7 @@ function toggleProduct(productId) {
     updateUI();
 }
 
-// ===== بروزرسانی UI =====
+// ===== بروزرسانی رابط کاربری (تعداد و قیمت) =====
 function updateUI() {
     const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
     const totalPrice = Object.entries(cart).reduce((sum, [id, count]) => {
@@ -62,8 +76,11 @@ function updateUI() {
         return sum + (product ? product.price * count : 0);
     }, 0);
 
-    document.getElementById('cartCount').textContent = totalItems;
-    document.getElementById('cartTotal').textContent = totalPrice;
+    const cartCountEl = document.getElementById('cartCount');
+    const cartTotalEl = document.getElementById('cartTotal');
+    
+    if (cartCountEl) cartCountEl.textContent = totalItems;
+    if (cartTotalEl) cartTotalEl.textContent = totalPrice.toFixed(2);
 
     document.querySelectorAll('.product-card').forEach(card => {
         const id = parseInt(card.dataset.id);
@@ -74,19 +91,17 @@ function updateUI() {
     const warning = document.getElementById('cartMinWarning');
     const cartBtn = document.getElementById('cartFixedBtn');
     
-    if (totalItems < 5 && totalItems > 0) {
-        if (warning) warning.classList.add('show');
-        cartBtn.style.opacity = '0.7';
-    } else if (totalItems >= 5) {
-        if (warning) warning.classList.remove('show');
-        cartBtn.style.opacity = '1';
-    } else {
-        if (warning) warning.classList.remove('show');
-        cartBtn.style.opacity = '1';
+    if (warning) {
+        if (totalItems < 5 && totalItems > 0) warning.classList.add('show');
+        else warning.classList.remove('show');
+    }
+
+    if (cartBtn) {
+        cartBtn.style.opacity = (totalItems > 0) ? '1' : '0.7';
     }
 }
 
-// ===== فیلتر =====
+// ===== مدیریت دکمه‌های فیلتر دسته‌بندی =====
 document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -96,7 +111,7 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
-// ===== دکمه ثابت پایین =====
+// ===== دکمه ثبت سبد خرید / رفتن به تسویه =====
 const cartBtn = document.getElementById('cartFixedBtn');
 if (cartBtn) {
     cartBtn.addEventListener('click', function(e) {
@@ -104,12 +119,7 @@ if (cartBtn) {
         const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
         
         if (totalItems === 0) {
-            alert(getTranslation('cart_empty') || 'Cart is empty!');
-            return;
-        }
-        
-        if (totalItems < 5) {
-            alert(getTranslation('cart_min_error') || 'You must select at least 5 products!');
+            alert('لطفاً حداقل یک استیکر انتخاب کنید.');
             return;
         }
         
@@ -118,8 +128,7 @@ if (cartBtn) {
     });
 }
 
-// ===== لود اولیه =====
+// ===== لود اولیه داده‌ها از سرور =====
 document.addEventListener('DOMContentLoaded', function() {
-    renderProducts('all');
-    updateUI();
+    loadProductsFromDB();
 });
