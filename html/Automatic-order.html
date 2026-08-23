@@ -174,15 +174,18 @@
       const card = document.createElement('div');
       card.className = 'product-card';
       card.setAttribute('data-id', item.id);
-      card.setAttribute('data-category', item.category);
+      card.setAttribute('data-category', item.category || 'gifts');
+
+      // آدرس صحیح تصویر از دیتابیس
+      const imageSrc = item.webp_path ? `/${item.webp_path}` : (item.svg_path ? `/${item.svg_path}` : '../assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.webp');
 
       card.innerHTML = `
         <div class="product-preview">
-          <img src="${item.thumbnail_path}" alt="${item.title}" onerror="this.src='../assets/images/icons/1.png'">
+          <img src="${imageSrc}" alt="${item.title}" onerror="this.src='../assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.webp'">
         </div>
         <div class="product-info">
           <h3 class="product-title">${item.title}</h3>
-          <span class="product-price">TON ${item.price_ton}</span>
+          <span class="product-price">TON ${parseFloat(item.price || 4).toFixed(2)}</span>
         </div>
       `;
 
@@ -209,7 +212,7 @@
     let totalTon = 0;
     allProducts.forEach(p => {
       if (selectedProducts.has(p.id)) {
-        totalTon += parseFloat(p.price_ton || 0);
+        totalTon += parseFloat(p.price || 4);
       }
     });
 
@@ -228,7 +231,7 @@
         if (category === 'all') {
           displayProducts(allProducts);
         } else {
-          const filtered = allProducts.filter(p => p.category.toLowerCase() === category.toLowerCase());
+          const filtered = allProducts.filter(p => (p.category || '').toLowerCase() === category.toLowerCase());
           displayProducts(filtered);
         }
       });
@@ -238,7 +241,6 @@
   function proceedToNextPage(event) {
     if (event) event.preventDefault();
 
-    // اگر محصولی انتخاب نشده بود، اولین محصول به صورت خودکار انتخاب می‌شود
     let selectedIds = Array.from(selectedProducts);
     if (selectedIds.length === 0 && allProducts.length > 0) {
       selectedIds = [allProducts[0].id];
