@@ -4,7 +4,7 @@ const { Pool } = require('pg');
 const path = require('path');
 const zlib = require('zlib');
 const fs = require('fs');
-const potrace = require('potrace'); // برای استفاده‌های آینده در صورت نیاز
+const potrace = require('potrace');
 
 const app = express();
 app.use(cors());
@@ -22,7 +22,7 @@ const pool = new Pool(
   process.env.DATABASE_URL
     ? {
         connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false } // برای ارتباط امن با دیتابیس ابری
+        ssl: { rejectUnauthorized: false }
       }
     : {
         user: 'postgres',
@@ -37,9 +37,10 @@ pool.on('error', (err) => {
   console.error('Database client error:', err);
 });
 
-// ساخت جدول کاربران و خریدها در دیتابیس PostgreSQL در صورت عدم وجود
+// ساخت جداول دیتابیس و درج داده‌های اولیه
 async function initTables() {
   try {
+    // ۱. جدول کاربران
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         telegram_id TEXT PRIMARY KEY,
@@ -49,6 +50,7 @@ async function initTables() {
       )
     `);
 
+    // ۲. جدول خریدها
     await pool.query(`
       CREATE TABLE IF NOT EXISTS purchases (
         id SERIAL PRIMARY KEY,
@@ -60,7 +62,54 @@ async function initTables() {
         FOREIGN KEY(telegram_id) REFERENCES users(telegram_id)
       )
     `);
-    console.log('✅ جداول کاربران و خریدها در دیتابیس بررسی/ایجاد شدند.');
+
+    // ۳. جدول طراحی‌های شخصی‌سازی‌شده
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS custom_stickers (
+        id SERIAL PRIMARY KEY,
+        base_sticker_id TEXT,
+        layers_data TEXT,
+        logo_data TEXT,
+        text_data TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // ۴. جدول محصولات / استیکرها
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        category TEXT DEFAULT 'gifts',
+        price TEXT DEFAULT '0',
+        json_path TEXT,
+        webp_path TEXT,
+        svg_path TEXT,
+        tgs_path TEXT,
+        zip_path TEXT
+      )
+    `);
+
+    // درج استیکر پیش‌فرض در صورت خالی بودن جدول محصولات
+    const existing = await pool.query('SELECT COUNT(*) FROM products');
+    if (parseInt(existing.rows[0].count, 10) === 0) {
+      await pool.query(`
+        INSERT INTO products (title, category, price, json_path, webp_path, svg_path, tgs_path, zip_path)
+        VALUES (
+          'استیکر گیفت شاپ',
+          'gifts',
+          '0',
+          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.json',
+          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.webp',
+          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.svg',
+          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.tgs.zip',
+          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.zip'
+        )
+      `);
+      console.log('✅ استیکر پیش‌فرض به دیتابیس اضافه شد.');
+    }
+
+    console.log('✅ تمامی جداول دیتابیس آماده هستند.');
   } catch (err) {
     console.error('خطا در ساخت جداول دیتابیس:', err.message);
   }
@@ -71,6 +120,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'html', 'index.html'));
 });
 
+// دریافت لیست محصولات برای صفحات سفارش و فروشگاه
 app.get('/api/products', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM products ORDER BY id ASC');
@@ -80,11 +130,7 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// ------------------------------------------------------------------
-// مسیرهای جدید برای مدیریت اطلاعات واقعی کاربر و خریدها
-// ------------------------------------------------------------------
-
-// ۱. ثبت یا به‌روزرسانی اطلاعات کاربر تلگرام
+// ثبت یا به‌روزرسانی اطلاعات کاربر تلگرام
 app.post('/api/users', async (req, res) => {
   const { telegram_id, full_name, username } = req.body;
   if (!telegram_id) {
@@ -106,7 +152,7 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
-// ۲. دریافت آمار و لیست محصولات خریداری‌شده واقعی کاربر
+// دریافت آمار و لیست محصولات خریداری‌شده واقعی کاربر
 app.get('/api/user/purchases', async (req, res) => {
   const telegramId = req.query.telegram_id;
   if (!telegramId) {
@@ -129,7 +175,6 @@ app.get('/api/user/purchases', async (req, res) => {
       if (row.status === 'pending') pendingCount++;
       else if (row.status === 'downloaded' || row.status === 'completed') downloadedCount++;
 
-      // فرمت‌بندی تاریخ
       const formattedDate = row.date ? new Date(row.date).toLocaleDateString('fa-IR') : 'اخیر';
 
       products.push({
@@ -151,8 +196,7 @@ app.get('/api/user/purchases', async (req, res) => {
   }
 });
 
-// ------------------------------------------------------------------
-
+// ذخیره طراحی استیکر
 app.post('/api/save-design', async (req, res) => {
   const { stickerId, layers, logoData, logoSize, textData, formatMode } = req.body;
   try {
@@ -179,7 +223,7 @@ app.post('/api/save-design', async (req, res) => {
   }
 });
 
-// تبدیل دقیق کدهای رنگ Hex به آرایه اعشاری 0 تا 1 Lottie
+// توابع پردازش لایه‌های رنگی و وکتور Lottie
 function hexToLottieColor(hex) {
   if (!hex) return [1, 1, 1, 1];
   let cleanHex = hex.replace('#', '');
@@ -197,12 +241,10 @@ function hexToLottieColor(hex) {
   ];
 }
 
-// تابع بازگشتی جامع برای تغییر تمام اشکال، خطوط و گروه‌های تودرتو
 function changeColorInShapes(shapes, newColorArray) {
   if (!shapes || !Array.isArray(shapes)) return;
 
   shapes.forEach(shape => {
-    // پرکننده‌ها (Fill) و خطوط دور (Stroke)
     if (shape.ty === 'fl' || shape.ty === 'st') {
       if (shape.c && shape.c.k) {
         if (typeof shape.c.k[0] === 'number') {
@@ -214,17 +256,12 @@ function changeColorInShapes(shapes, newColorArray) {
           });
         }
       }
-    } 
-    // گروه‌ها و پوشه‌های تودرتو
-    else if (shape.ty === 'gr' && shape.it) {
+    } else if (shape.ty === 'gr' && shape.it) {
       changeColorInShapes(shape.it, newColorArray);
     }
   });
 }
 
-// ------------------------------------------------------------------
-// تابع تبدیل کدهای SVG (d attribute) به نقاط برداری Lottie
-// ------------------------------------------------------------------
 function svgPathToLottie(d) {
   const v = [], i = [], o = [];
   let isClosed = false;
@@ -243,13 +280,11 @@ function svgPathToLottie(d) {
       curX = cmd === 'M' ? args[0] : curX + args[0];
       curY = cmd === 'M' ? args[1] : curY + args[1];
       v.push([curX, curY]); i.push([0, 0]); o.push([0, 0]);
-    } 
-    else if (cmd === 'L' || cmd === 'l') {
+    } else if (cmd === 'L' || cmd === 'l') {
       curX = cmd === 'L' ? args[0] : curX + args[0];
       curY = cmd === 'L' ? args[1] : curY + args[1];
       v.push([curX, curY]); i.push([0, 0]); o.push([0, 0]);
-    } 
-    else if (cmd === 'C' || cmd === 'c') {
+    } else if (cmd === 'C' || cmd === 'c') {
       let cp1x = cmd === 'C' ? args[0] : curX + args[0];
       let cp1y = cmd === 'C' ? args[1] : curY + args[1];
       let cp2x = cmd === 'C' ? args[2] : curX + args[2];
@@ -266,8 +301,7 @@ function svgPathToLottie(d) {
       i.push([cp2x - x, cp2y - y]);
       o.push([0, 0]);
       curX = x; curY = y;
-    } 
-    else if (cmd === 'Z' || cmd === 'z') {
+    } else if (cmd === 'Z' || cmd === 'z') {
       isClosed = true;
     }
   });
@@ -275,7 +309,6 @@ function svgPathToLottie(d) {
   return { v, i, o, c: isClosed };
 }
 
-// ساخت لایه وکتور خالص برای لوگو با استفاده از مسیرهای ریاضی SVG
 function createVectorLayer(ip, op, colorArray, svgPathData) {
   const lottiePathKeys = svgPathToLottie(svgPathData);
 
@@ -327,7 +360,7 @@ function createVectorLayer(ip, op, colorArray, svgPathData) {
   };
 }
 
-// خروجی نهایی TGS با اعمال دقیق رنگ بر روی تمام ساختار لایه‌ها
+// تولید و دانلود خروجی TGS تلگرام
 app.post('/api/download-tgs', (req, res) => {
   try {
     const { file, layers, svgPathData, logoColor } = req.body; 
@@ -340,7 +373,6 @@ app.post('/api/download-tgs', (req, res) => {
     const rawData = fs.readFileSync(absolutePath, 'utf8');
     let lottieJson = JSON.parse(rawData);
 
-    // ۱. اعمال رنگ‌ها روی لایه‌های پایه استیکر با فیلتر لایه‌های بصری Shape
     if (layers && typeof layers === 'object' && lottieJson.layers) {
       const visualLayers = lottieJson.layers.filter(l => l.ty === 4 && l.shapes && l.shapes.length > 0);
 
@@ -355,7 +387,6 @@ app.post('/api/download-tgs', (req, res) => {
       });
     }
 
-    // ۲. تزریق لایه وکتور در صورت ارسال مسیر SVG
     if (svgPathData && lottieJson.layers) {
       const vectorColor = hexToLottieColor(logoColor || '#ffffff');
       const vectorLayer = createVectorLayer(lottieJson.ip, lottieJson.op, vectorColor, svgPathData);
@@ -364,7 +395,6 @@ app.post('/api/download-tgs', (req, res) => {
 
     const updatedJsonString = JSON.stringify(lottieJson);
 
-    // ۳. فشرده‌سازی Gzip مطابق با استاندارد TGS تلگرام
     zlib.gzip(updatedJsonString, { level: 9 }, (err, compressedData) => {
       if (err) return res.status(500).send('Compression error');
 
