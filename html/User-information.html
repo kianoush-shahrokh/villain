@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="../css/User-information.css">
 </head>
 <body>
-    
 
 <!-- ============== هدر ============== -->
 <header class="header">
@@ -237,7 +236,6 @@
                 const username = tgUser.username ? `@${tgUser.username}` : `ID: ${tgUser.id}`;
                 const telegramId = tgUser.id;
 
-                // نمایش نام و آیدی واقعی کاربر در صفحه
                 document.getElementById('profileFullName').innerText = fullName;
                 document.getElementById('profileEmail').innerText = username;
                 document.getElementById('dropdownUserName').innerText = fullName;
@@ -255,9 +253,8 @@
                     document.getElementById('profileAvatarText').innerText = fullName.charAt(0).toUpperCase();
                 }
 
-                // ثبت یا همگام‌سازی کاربر در دیتابیس بک‌اند
                 try {
-                    await fetch('http://localhost:3001/api/users', {
+                    await fetch('/api/users', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -267,8 +264,7 @@
                         })
                     });
 
-                    // فراخوانی لیست واقعی محصولات خریداری‌شده کاربر از بک‌اند
-                    const res = await fetch(`http://localhost:3001/api/user/purchases?telegram_id=${telegramId}`);
+                    const res = await fetch(`/api/user/purchases?telegram_id=${telegramId}`);
                     const data = await res.json();
                     
                     if (data && data.success) {
@@ -291,7 +287,6 @@
                             container.innerHTML = '<p style="color: #94a3b8; font-size: 0.85rem;">هنوز محصولی خریداری نکرده‌اید.</p>';
                         }
                     } else {
-                        // اگر سرور پاسخ داد ولی محصولی نبود یا ساختار موفق نبود
                         document.getElementById('statPurchases').innerText = '0';
                         document.getElementById('statPending').innerText = '0';
                         document.getElementById('statDownloaded').innerText = '0';
@@ -299,7 +294,6 @@
                     }
                 } catch (e) {
                     console.warn('Backend connection error:', e);
-                    // در صورت قطع بودن سرور بک‌اند، به صورت پیش‌فرض همه چیز روی صفر باشد
                     document.getElementById('statPurchases').innerText = '0';
                     document.getElementById('statPending').innerText = '0';
                     document.getElementById('statDownloaded').innerText = '0';

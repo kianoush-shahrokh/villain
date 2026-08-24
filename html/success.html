@@ -225,7 +225,6 @@
             transform: none;
         }
 
-        /* استایل باکس کشویی هوشمند راهنما */
         .accordion-guide {
             background: rgba(15, 15, 18, 0.75);
             border: 1px solid rgba(244, 63, 94, 0.25);
@@ -359,7 +358,6 @@
             <span>📥</span> <span id="txtBtnDownload">دانلود استیکر تلگرام</span>
         </button>
 
-        <!-- باکس کشویی راهنمای افزودن به تلگرام -->
         <div class="accordion-guide" id="guideAccordion">
             <div class="accordion-header" onclick="toggleGuideAccordion()">
                 <div class="accordion-header-title">
@@ -368,9 +366,7 @@
                 </div>
                 <span class="accordion-arrow">▼</span>
             </div>
-            <div class="accordion-content" id="accordionBody">
-                <!-- متن راهنما بر اساس فرمت TGS یا WebM توسط JS پر می‌شود -->
-            </div>
+            <div class="accordion-content" id="accordionBody"></div>
         </div>
 
         <a href="index.html" class="home-btn">
@@ -522,6 +518,7 @@
     };
 
     function hexToRgb01(hex) {
+        if (!hex) return [1, 1, 1, 1];
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
         return [
@@ -550,12 +547,9 @@
         });
     }
 
-    // باز و بسته کردن باکس آکاردئونی راهنما
     function toggleGuideAccordion() {
         const accordion = document.getElementById('guideAccordion');
-        if (accordion) {
-            accordion.classList.toggle('open');
-        }
+        if (accordion) accordion.classList.toggle('open');
     }
 
     function changeLanguage(lang) {
@@ -587,7 +581,6 @@
             return;
         }
 
-        // تنظیم اندازه و موقعیت لوگو در پیش‌نمایش
         if (savedDesign.logoData) {
             const logoEl = document.getElementById('successLogo');
             logoEl.src = savedDesign.logoData;
@@ -599,7 +592,6 @@
             logoEl.style.display = 'block';
         }
 
-        // تنظیم اندازه و موقعیت متن در پیش‌نمایش
         if (savedDesign.textData && savedDesign.textData.text) {
             const textEl = document.getElementById('successText');
             textEl.innerText = savedDesign.textData.text;
@@ -611,14 +603,9 @@
         }
 
         try {
-            const res = await fetch('http://localhost:3001/api/products');
-            const data = await res.json();
-            const product = data.data.find(p => p.id == savedDesign.stickerId) || data.data[0];
-
-            const jsonRes = await fetch(product.json_path);
+            const jsonRes = await fetch('/api/sticker-json');
             modifiedLottieJson = await jsonRes.json();
 
-            // اعمال دقیق رنگ‌ها بر اساس ایندکس JSON
             if (savedDesign.layers) {
                 Object.keys(savedDesign.layers).forEach(idxStr => {
                     const jsonIdx = parseInt(idxStr, 10);
@@ -662,7 +649,6 @@
         btn.disabled = false;
     }
 
-    // ساخت فایل TGS استاندارد
     function generateDirectTgs() {
         try {
             const jsonStr = JSON.stringify(modifiedLottieJson);
@@ -674,7 +660,6 @@
         }
     }
 
-    // ساخت فایل WebM با حفظ شفافیت و تطابق دقیق فریم‌ها
     async function generatePreciseWebm() {
         return new Promise(async (resolve) => {
             const host = document.getElementById('hiddenHost');
@@ -706,7 +691,7 @@
             ctx.imageSmoothingQuality = 'high';
 
             const totalLottieFrames = renderAnim.totalFrames || 60;
-            const framesToCapture = 60; // ۲ ثانیه قطعی
+            const framesToCapture = 60;
             const renderedCanvases = [];
             const scaleFactor = 512 / 165;
 

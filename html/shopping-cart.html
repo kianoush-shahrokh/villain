@@ -126,7 +126,6 @@
         min-height: 160px;
       }
 
-      /* کارت استیکر در گوشی */
       .custom-cart-item {
         background: var(--card-bg);
         border: 1px solid var(--card-border);
@@ -187,7 +186,7 @@
 
       .cart-item-details {
         flex: 1;
-        min-width: 0; /* جلوگیری از شکستن کلمات طولانی */
+        min-width: 0;
       }
 
       .cart-item-details h4 {
@@ -256,7 +255,6 @@
         background: rgba(239, 68, 68, 0.25);
       }
 
-      /* فوتر و باکس تسویه‌حساب پایین گوشی */
       .cart-summary-box {
         background: var(--card-bg);
         border: 1px solid var(--card-border);
@@ -313,7 +311,6 @@
         transform: none;
       }
 
-      /* باکس ریسپانسیو سبد خالی */
       .empty-cart-container {
         text-align: center;
         padding: 30px 16px;
@@ -365,7 +362,6 @@
         transform: scale(0.96);
       }
 
-      /* تنظیمات بهینه برای صفحات بسیار کوچک (عرض کمتر از ۳۵۰px) */
       @media (max-width: 350px) {
         .cart-sticker-preview {
           width: 70px;
@@ -495,6 +491,7 @@
   };
 
   function hexToRgb01(hex) {
+    if (!hex) return [1, 1, 1, 1];
     hex = hex.replace('#', '');
     if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
     return [
@@ -545,7 +542,6 @@
     const btnBackToDesign = document.getElementById('btnBackToDesign');
     const savedDesign = JSON.parse(localStorage.getItem('finalCustomizedSticker'));
 
-    // اگر سبد خرید خالی باشد
     if (!savedDesign) {
       cartContainer.innerHTML = `
         <div class="empty-cart-container">
@@ -567,10 +563,10 @@
     btnCheckout.disabled = false;
 
     try {
-      const res = await fetch('http://localhost:3001/api/products');
+      const res = await fetch('/api/products');
       const data = await res.json();
-      const product = data.data.find(p => p.id == savedDesign.stickerId) || data.data[0];
-      const price = product.price ? parseFloat(product.price) : 1.50;
+      const product = (data.data && data.data.find(p => p.id == savedDesign.stickerId)) || (data.data && data.data[0]) || {};
+      const price = product.price ? parseFloat(product.price) : 4.00;
 
       const isWebm = savedDesign.formatMode === 'webm' || Boolean(savedDesign.logoData);
       const formatTitle = isWebm ? i18n[currentLang].formatWebm : i18n[currentLang].formatTgs;
@@ -590,7 +586,7 @@
             <div id="cartOverlayText" class="cart-overlay-text" style="display:none;"></div>
           </div>
           <div class="cart-item-details">
-            <h4>${product.name || i18n[currentLang].defaultSticker}</h4>
+            <h4>${product.title || product.name || i18n[currentLang].defaultSticker}</h4>
             <p>${detailsText}</p>
             <span class="cart-badge">${formatTitle}</span>
           </div>
@@ -603,7 +599,6 @@
       
       totalElement.innerText = `${price.toFixed(2)} TON`;
 
-      // اعمال اندازه و موقعیت لوگو در موبایل
       if (savedDesign.logoData) {
         const logoEl = document.getElementById('cartOverlayLogo');
         logoEl.src = savedDesign.logoData;
@@ -615,7 +610,6 @@
         logoEl.style.display = 'block';
       }
 
-      // اعمال اندازه و موقعیت متن در موبایل
       if (savedDesign.textData && savedDesign.textData.text && savedDesign.textData.text.trim() !== '') {
         const textEl = document.getElementById('cartOverlayText');
         textEl.innerText = savedDesign.textData.text;
@@ -626,8 +620,8 @@
         textEl.style.display = 'block';
       }
 
-      // جایگذاری رنگ‌ها در فایل Lottie
-      const jsonRes = await fetch(product.json_path);
+      // دریافت داده انیمیشن از مسیر مطمئن
+      const jsonRes = await fetch('/api/sticker-json');
       const lottieJson = await jsonRes.json();
 
       if (savedDesign.layers) {

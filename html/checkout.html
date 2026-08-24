@@ -257,7 +257,7 @@
                 <span id="txtDesignCodeLabel">کد سفارش:</span>
                 <span id="designIdText" style="color:#fff; font-weight:700;">-</span>
             </div>
-            <div class="price-text">1.50 TON</div>
+            <div class="price-text" id="checkoutPrice">4.00 TON</div>
         </div>
 
         <button class="btn-pay" onclick="processPayment()">
@@ -326,6 +326,7 @@
     };
 
     function hexToRgb01(hex) {
+        if (!hex) return [1, 1, 1, 1];
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
         return [
@@ -388,7 +389,6 @@
 
         document.getElementById('designIdText').innerText = savedDesign.dbId || i18n[currentLang].registered;
 
-        // تنظیم اندازه و مختصات لوگو در پیش‌نمایش
         if (savedDesign.logoData) {
             const logoEl = document.getElementById('checkoutLogo');
             logoEl.src = savedDesign.logoData;
@@ -400,7 +400,6 @@
             logoEl.style.display = 'block';
         }
 
-        // تنظیم اندازه، رنگ و مختصات متن
         if (savedDesign.textData && savedDesign.textData.text) {
             const textEl = document.getElementById('checkoutText');
             textEl.innerText = savedDesign.textData.text;
@@ -412,14 +411,18 @@
         }
 
         try {
-            const res = await fetch('http://localhost:3001/api/products');
+            const res = await fetch('/api/products');
             const data = await res.json();
-            const product = data.data.find(p => p.id == savedDesign.stickerId) || data.data[0];
+            const product = (data.data && data.data.find(p => p.id == savedDesign.stickerId)) || (data.data && data.data[0]);
 
-            const jsonRes = await fetch(product.json_path);
+            if (product && product.price) {
+                const priceEl = document.getElementById('checkoutPrice');
+                if (priceEl) priceEl.innerText = `${parseFloat(product.price).toFixed(2)} TON`;
+            }
+
+            const jsonRes = await fetch('/api/sticker-json');
             const lottieJson = await jsonRes.json();
 
-            // اعمال دقیق رنگ‌ها بر اساس ایندکس JSON
             if (savedDesign.layers) {
                 Object.keys(savedDesign.layers).forEach(idxStr => {
                     const jsonIdx = parseInt(idxStr, 10);
