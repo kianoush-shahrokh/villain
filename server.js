@@ -19,6 +19,26 @@ app.use('/html', express.static(path.join(__dirname, 'html')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 
+// روت اختصاصی مانیفست تون‌کانکت برای جلوگیری از خطای اتصال Tonkeeper
+app.get('/tonconnect-manifest.json', (req, res) => {
+  const manifestPath = path.join(__dirname, 'tonconnect-manifest.json');
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  if (fs.existsSync(manifestPath)) {
+    return res.sendFile(manifestPath);
+  }
+
+  // مانیفست پیش‌فرض پویا در صورت عدم وجود فیزیکی فایل
+  res.json({
+    url: 'https://villain-rexr.onrender.com',
+    name: 'Villain Sticker Store',
+    iconUrl: 'https://villain-rexr.onrender.com/assets/images/icons/1.png',
+    termsOfUseUrl: 'https://villain-rexr.onrender.com',
+    privacyPolicyUrl: 'https://villain-rexr.onrender.com'
+  });
+});
+
 // تنظیم اتصال به دیتابیس بدون SSL (سازگار با سرور Pxxl)
 const pool = new Pool(
   process.env.DATABASE_URL

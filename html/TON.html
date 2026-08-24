@@ -15,7 +15,6 @@
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     
     <style>
-        /* استایل اختصاصی برای وسط‌چین کردن و حذف منوی پایین */
         body {
             display: flex;
             flex-direction: column;
@@ -89,7 +88,7 @@
     <div class="header-divider"></div>
 </header>
 
-<!-- ============== کانتینر اصلی (وسط‌چین) ============== -->
+<!-- ============== کانتینر اصلی ============== -->
 <div class="ton-wallet-container">
     <div class="card">
         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -104,7 +103,6 @@
                 <small style="color: #666;">To process payments and view assets securely</small>
             </p>
             
-            <!-- دکمه استاندارد Ton Connect که دقیقاً وسط قرار می‌گیرد -->
             <div id="ton-connect-button"></div>
         </div>
 
@@ -128,10 +126,10 @@
 <script src="../js/language.js"></script>
 <script src="../js/api.js"></script>
 
-<!-- راه‌اندازی TON Connect -->
+<!-- راه‌اندازی TON Connect با مانیفست اختصاصی سرور -->
 <script>
     const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-        manifestUrl: 'https://raw.githubusercontent.com/ton-connect/docs/main/demo-dapp-manifest.json',
+        manifestUrl: 'https://villain-rexr.onrender.com/tonconnect-manifest.json',
         uiPreferences: {
             theme: 'DARK'
         },
@@ -156,7 +154,7 @@
             
             localStorage.setItem('ton_wallet_connected', 'true');
             localStorage.setItem('ton_wallet_address', rawAddress);
-            headerBalance.textContent = '42.50';
+            headerBalance.textContent = '0.00';
         } else {
             statusBadge.textContent = 'Disconnected';
             statusBadge.style.background = '#333';
