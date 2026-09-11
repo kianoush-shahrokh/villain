@@ -4,16 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>استودیو طراحی استیکر</title>
-  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
   <style>
     :root {
       --bg: #070709;
-      --card-bg: rgba(20, 20, 24, 0.7);
+      --card-bg: rgba(20, 20, 24, 0.75);
       --card-border: rgba(255, 255, 255, 0.08);
       --accent: #f43f5e;
       --accent-glow: rgba(244, 63, 94, 0.45);
@@ -42,18 +47,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px;
+      padding: 8px;
       background: radial-gradient(circle at 50% 10%, rgba(244, 63, 94, 0.12) 0%, transparent 60%), #070709;
     }
     
     .container {
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
       position: relative;
     }
 
@@ -68,93 +73,127 @@
       background: var(--card-bg);
       color: var(--text-muted);
       border: 1px solid var(--card-border);
-      padding: 6px 12px;
-      border-radius: 10px;
-      font-size: 0.8rem;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
       font-weight: 500;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       text-decoration: none;
       backdrop-filter: blur(12px);
-      transition: all 0.25s ease;
     }
 
     .lang-select {
       background: var(--card-bg);
       color: #fff;
       border: 1px solid var(--card-border);
-      padding: 6px 10px;
-      border-radius: 10px;
-      font-size: 0.8rem;
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 500;
       cursor: pointer;
       outline: none;
+      backdrop-filter: blur(12px);
     }
     .lang-select option { background: #121215; color: #fff; }
 
+    .multi-selector-bar {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 6px 4px 10px 4px;
+      flex-shrink: 0;
+      scrollbar-width: thin;
+      direction: ltr;
+    }
+    .multi-selector-bar::-webkit-scrollbar { height: 4px; }
+    .multi-selector-bar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+    
+    .thumb-item-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .mini-sticker-thumb {
+      width: 80px;
+      height: 80px; 
+      background: #141418;
+      border: 2px solid var(--card-border);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .thumb-item-wrapper.active { transform: scale(1.08); }
+    .thumb-item-wrapper.active .mini-sticker-thumb {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .thumb-mode-badge {
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .thumb-item-wrapper.active .thumb-mode-badge {
+      background: rgba(244, 63, 94, 0.25);
+      color: #fff;
+      border-color: rgba(244, 63, 94, 0.5);
+    }
+
     .mode-selector {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       background: rgba(15, 15, 18, 0.8);
-      padding: 4px;
-      border-radius: 14px;
+      padding: 3px;
+      border-radius: 12px;
       border: 1px solid var(--card-border);
-      gap: 5px;
+      gap: 4px;
       flex-shrink: 0;
     }
 
     .mode-btn {
-      padding: 7px 4px;
+      padding: 6px 2px;
       border: 1px solid transparent;
-      border-radius: 10px;
+      border-radius: 9px;
       background: transparent;
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
+      text-align: center;
       position: relative;
     }
-    .mode-btn .sub { font-size: 0.62rem; font-weight: 400; opacity: 0.7; }
+    .mode-btn .sub { font-size: 0.55rem; font-weight: 400; opacity: 0.7; }
     .mode-btn.active {
       background: linear-gradient(135deg, var(--accent), #be123c);
       color: #fff;
-      box-shadow: 0 4px 16px var(--accent-glow);
-    }
-
-    .rec-badge {
-      position: absolute;
-      top: -7px;
-      left: 6px;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff;
-      font-size: 0.58rem;
-      font-weight: 900;
-      padding: 1px 6px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      line-height: 1.3;
-    }
-
-    .mode-badge-info {
-      font-size: 0.7rem;
-      text-align: center;
-      color: #94a3b8;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px dashed var(--card-border);
-      padding: 6px 10px;
-      border-radius: 10px;
-      flex-shrink: 0;
+      box-shadow: 0 4px 14px var(--accent-glow);
     }
 
     .stage-wrapper {
-      background: radial-gradient(circle at center, rgba(244, 63, 94, 0.1) 0%, rgba(0,0,0,0.6) 100%), #000;
-      border-radius: 20px;
-      height: 165px;
+      background: #0d0e12;
+      border-radius: 18px;
+      height: 180px;
       min-height: 140px;
       flex: 1;
       display: flex;
@@ -163,11 +202,25 @@
       position: relative;
       border: 1px solid var(--card-border);
       overflow: hidden;
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.85);
       touch-action: none;
     }
 
-    #lottieContainer { width: 135px; height: 135px; pointer-events: none; }
+    #stageContentBox {
+      width: 140px;
+      height: 140px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lottieContainer { 
+      width: 100%; 
+      height: 100%; 
+      pointer-events: none;
+      position: absolute;
+      z-index: 1;
+    }
 
     .draggable-item {
       position: absolute;
@@ -175,106 +228,538 @@
       touch-action: none;
       user-select: none;
       transform: translate(-50%, -50%);
+      border: 1.5px dashed transparent;
+      border-radius: 6px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .draggable-item:hover { border-color: rgba(255, 255, 255, 0.4); }
+    .draggable-item.active-drag {
+      border-color: var(--accent);
+      background: rgba(244, 63, 94, 0.15);
+      cursor: grabbing;
+      z-index: 25 !important;
     }
 
     #logoOverlay { 
-      width: 55px; height: 55px; z-index: 10; display: flex; 
+      width: 48px; height: 48px; z-index: 10; display: none; 
       align-items: center; justify-content: center;
-      border: 1px dashed transparent; border-radius: 8px;
     }
-    #logoOverlay.active-drag { border-color: var(--accent); background: rgba(244, 63, 94, 0.1); }
-    #logoOverlay img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6)); pointer-events: none; }
+    #logoOverlay img { 
+      width: 100% !important; 
+      height: 100% !important; 
+      object-fit: contain; 
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7)); 
+      pointer-events: none; 
+    }
 
     #textOverlay { 
       z-index: 15; font-weight: 900; text-align: center; white-space: nowrap; 
-      text-shadow: 0 2px 6px rgba(0,0,0,0.95); padding: 4px 8px; border-radius: 6px; border: 1px dashed transparent;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.95); padding: 2px 6px; display: none;
     }
-    #textOverlay.active-drag { border-color: var(--accent); background: rgba(244, 63, 94, 0.1); }
 
     .tab-bar {
-      display: flex; gap: 6px; background: rgba(15, 15, 18, 0.8);
-      padding: 3px; border-radius: 12px; border: 1px solid var(--card-border); flex-shrink: 0;
+      display: flex; gap: 4px; background: rgba(15, 15, 18, 0.8);
+      padding: 3px; border-radius: 10px; border: 1px solid var(--card-border); flex-shrink: 0;
     }
-    .tab-btn { flex: 1; padding: 6px 0; border-radius: 9px; border: none; background: transparent; color: var(--text-muted); font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+    .tab-btn { flex: 1; padding: 5px 0; border-radius: 8px; border: none; background: transparent; color: var(--text-muted); font-size: 0.72rem; font-weight: 700; cursor: pointer; }
     .tab-btn.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
-    .panel-container { flex-shrink: 0; min-height: 125px; display: flex; flex-direction: column; justify-content: center; }
-    .panel-content { display: flex; flex-direction: column; gap: 6px; max-height: 140px; overflow-y: auto; }
+    .color-mode-toggle {
+      display: flex; background: #0c0c0e; border: 1px solid var(--card-border);
+      border-radius: 8px; margin-bottom: 6px; overflow: hidden;
+    }
+    .color-mode-btn {
+      flex: 1; padding: 6px 0; border: none; background: transparent; color: var(--text-muted);
+      font-size: 0.68rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+    }
+    .color-mode-btn.active {
+      background: rgba(244, 63, 94, 0.2); color: #fff; border-bottom: 2px solid var(--accent);
+    }
+
+    .panel-container { flex-shrink: 0; min-height: 135px; display: flex; flex-direction: column; justify-content: flex-start; }
+    .panel-content { 
+      display: flex; flex-direction: column; gap: 5px; max-height: 135px; overflow-y: auto; padding: 2px; 
+      direction: inherit; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;
+    }
+    .panel-content::-webkit-scrollbar { width: 5px; }
+    .panel-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
 
     .layer-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); padding: 6px 12px;
-      border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+      background: var(--card-bg); border: 1px solid var(--card-border); padding: 5px 10px;
+      border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
     }
-    .layer-title { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); }
-    .color-row { display: flex; gap: 6px; align-items: center; }
+    .layer-title-box { display: flex; align-items: center; gap: 6px; }
+    .current-color-badge { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #ffffff66; display: inline-block; flex-shrink: 0; }
+    .layer-title { font-size: 0.72rem; font-weight: 700; color: #e2e8f0; }
+    .color-row { display: flex; gap: 4px; align-items: center; }
 
     .dot, .picker {
-      width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.12);
+      width: 19px; height: 19px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.12);
+      transition: transform 0.2s;
     }
     .picker { background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); position: relative; overflow: hidden; }
     .picker input { opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer; }
-    .dot.active, .picker.active { border-color: #fff; transform: scale(1.25); box-shadow: 0 0 14px rgba(255,255,255,0.6); }
+    .dot.active, .picker.active { border-color: #fff; transform: scale(1.2); box-shadow: 0 0 10px rgba(255,255,255,0.6); }
 
     .upload-box {
-      background: var(--card-bg); border: 1.5px dashed var(--card-border); border-radius: 14px;
-      padding: 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
+      background: var(--card-bg); border: 1.5px dashed var(--card-border); border-radius: 12px;
+      padding: 6px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
     }
     
-    .input-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 6px; }
-    .input-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); }
-    .text-input { width: 100%; background: #0c0c0e; border: 1px solid var(--card-border); color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; outline: none; }
-    .range-input { width: 100%; cursor: pointer; accent-color: var(--accent); height: 4px; }
+    .input-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 6px 10px; border-radius: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .input-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); }
+    .text-input { width: 100%; background: #0c0c0e; border: 1px solid var(--card-border); color: #fff; padding: 4px 8px; border-radius: 7px; font-size: 0.78rem; outline: none; text-align: center; }
+    .range-input { width: 100%; cursor: pointer; accent-color: var(--accent); height: 3px; }
 
-    .action-row { display: flex; gap: 8px; flex-shrink: 0; }
-    .btn-action { padding: 11px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; justify-content: center; align-items: center; }
+    .action-row { display: flex; gap: 6px; flex-shrink: 0; margin-top: 4px; }
+    .btn-action { padding: 9px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; font-size: 0.8rem; display: flex; justify-content: center; align-items: center; }
     .btn-reset { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-muted); flex: 1; }
-    .btn-submit { flex: 2.3; background: linear-gradient(135deg, var(--accent), #be123c); color: white; box-shadow: 0 4px 18px var(--accent-glow); }
+    .btn-submit { flex: 2.3; background: linear-gradient(135deg, var(--accent), #be123c); color: white; box-shadow: 0 4px 14px var(--accent-glow); transition: 0.2s; }
+    .btn-submit:active { transform: scale(0.98); }
 
-    #successToast {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.85); background: rgba(16, 185, 129, 0.95);
-      color: white; padding: 12px 20px; border-radius: 14px; font-weight: 700; z-index: 100; display: none; text-align: center;
+    .checkout-modal-overlay, .download-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(5, 5, 7, 0.9);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      padding: 12px;
     }
-    #successToast.show { display: block; transform: translate(-50%, -50%) scale(1); }
+    .checkout-modal-overlay.show, .download-modal-overlay.show { display: flex; }
+    
+    .modal-card-base {
+      background: linear-gradient(145deg, #14161d, #0d0f14);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 24px 18px 18px 18px;
+      width: 100%;
+      max-width: 480px;
+      color: #fff;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      max-height: 94vh;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .close-modal-x {
+      position: absolute;
+      top: 14px; right: 16px;
+      background: rgba(255,255,255,0.06); 
+      border: none;
+      color: #94a3b8; 
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      font-size: 0.95rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 100;
+    }
+    .close-modal-x:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    
+    .modal-main-title {
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 4px;
+      margin-top: -6px;
+      text-align: center;
+      font-weight: 900;
+      width: 100%;
+    }
+    
+    .invoice-items-container {
+      max-height: 250px; 
+      overflow-y: auto; 
+      padding-right: 4px;
+      direction: ltr; 
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.2) transparent;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.2);
+    }
+    .invoice-row {
+      direction: inherit; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .invoice-row:last-child { border-bottom: none; }
+    
+    .invoice-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 4px 0;
+      padding: 12px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .proceed-pay-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .proceed-pay-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .proceed-pay-btn:active:not(:disabled) { transform: scale(0.98); filter: brightness(1.1); }
+    
+    .btn-bypass {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      border: 1px dashed var(--card-border);
+      padding: 11px;
+      width: 100%;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-bypass:active { transform: scale(0.97); background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+    .columns-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media(min-width: 400px) {
+      .columns-container { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .column-box {
+      background: rgba(15, 15, 19, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .column-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #fb7185;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 6px;
+      text-align: center;
+    }
+
+    .column-items {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 140px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .col-item-row {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .col-thumb {
+      width: 64px;
+      height: 64px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .col-download-btn {
+      background: linear-gradient(135deg, var(--accent), #be123c);
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 3px 12px var(--accent-glow);
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+    .col-download-btn:active { transform: scale(0.96); filter: brightness(1.1); }
+    .col-download-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; background: rgba(255, 255, 255, 0.1); color: #888; }
+
+    .empty-col-text {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .guides-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: right;
+    }
+    html[dir="ltr"] .guides-wrapper { text-align: left; }
+
+    .accordion-guide {
+      background: rgba(15, 15, 18, 0.8);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .accordion-header {
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      background: rgba(244, 63, 94, 0.05);
+      user-select: none;
+    }
+    .accordion-header-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #fb7185;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .accordion-arrow { font-size: 0.7rem; color: #fb7185; transition: transform 0.3s ease; }
+    .accordion-guide.open .accordion-arrow { transform: rotate(180deg); }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease-out, padding 0.3s ease;
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+      padding: 0 12px;
+    }
+    .accordion-guide.open .accordion-content {
+      max-height: 180px;
+      padding: 10px 12px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+    .accordion-content ol { padding-right: 14px; padding-left: 14px; margin: 4px 0; }
+    .accordion-content li { margin-bottom: 3px; }
+    .accordion-content code {
+      color: var(--accent);
+      font-weight: bold;
+      background: rgba(244, 63, 94, 0.15);
+      padding: 1px 4px;
+      border-radius: 4px;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .toast-error-banner {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50px);
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(153, 27, 27, 0.95));
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+      backdrop-filter: blur(10px);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+    .toast-error-banner.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
 
+<div class="toast-error-banner" id="errorToast">
+  <span style="font-size: 1.1rem;">⚠️</span>
+  <span id="errorToastText">خطایی رخ داده است.</span>
+</div>
+
 <div class="container">
-  <div id="successToast">
-    <span id="toastMsg">✨ طرح با موفقیت ذخیره شد!</span><br>
-    <span id="toastSub" style="font-size: 0.72rem; font-weight: 400; opacity: 0.9;">در حال انتقال به سبد خرید...</span>
+  
+  <div class="checkout-modal-overlay" id="checkoutModal">
+    <div class="modal-card-base">
+      <button class="close-modal-x" onclick="closeCheckoutModal()">✕</button>
+      <h3 class="modal-main-title" id="modalTitlePackName">صورت پرداخت</h3>
+      
+      <div class="invoice-items-container" id="invoiceItemsList"></div>
+      
+      <div class="invoice-total">
+        <span id="txtTotalLabel">مجموع پرداخت:</span>
+        <span style="color: #10b981;"><span id="modalTotalTon">0</span> TON</span>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div id="ton-connect-btn-root" style="display:flex; justify-content:center;" onclick="closeCheckoutModal()"></div>
+        
+        <button class="proceed-pay-btn" id="btn-pay-action" onclick="processPayment()" style="display:none;">
+          💎 <span id="txtPayBtn">پرداخت نهایی (ارسال تراکنش)</span>
+        </button>
+        
+        <button class="btn-bypass" onclick="bypassPayment()">
+          🚀 <span id="txtBypassBtn">عبور از پرداخت (تست لوکال و دانلود)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="download-modal-overlay" id="downloadModal">
+    <div class="modal-card-base" style="max-width: 520px;">
+      <button class="close-modal-x" onclick="closeDownloadModal()">✕</button>
+      <h3 class="modal-main-title" id="dlModalTitle">📦 ارسال و مدیریت استیکرها در تلگرام</h3>
+
+      <div class="columns-container">
+        <!-- TGS -->
+        <div class="column-box">
+          <div class="column-title" id="colTitleTgs">📦 متحرک (.tgs)</div>
+          <div class="column-items" id="colItemsTgs"><div class="empty-col-text">خالی</div></div>
+          <button class="col-download-btn" id="btnColTgs" onclick="handleColumnDownload('tgs')" disabled>
+            <span>✈️</span> <span id="txtDlColTgs">ارسال به تلگرام</span>
+          </button>
+        </div>
+
+        <!-- WebM -->
+        <div class="column-box">
+          <div class="column-title" id="colTitleWebm">🎬 لوگودار (.webm)</div>
+          <div class="column-items" id="colItemsWebm"><div class="empty-col-text">خالی</div></div>
+          <button class="col-download-btn" id="btnColWebm" onclick="handleColumnDownload('webm')" disabled>
+            <span>✈️</span> <span id="txtDlColWebm">ارسال به تلگرام</span>
+          </button>
+        </div>
+
+        <!-- Keyboard -->
+        <div class="column-box">
+          <div class="column-title" id="colTitleKey">⌨️ کیبورد (.tgs)</div>
+          <div class="column-items" id="colItemsKey"><div class="empty-col-text">خالی</div></div>
+          <button class="col-download-btn" id="btnColKey" onclick="handleColumnDownload('keyboard')" disabled>
+            <span>✈️</span> <span id="txtDlColKey">ارسال به تلگرام</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="guides-wrapper">
+        <div class="accordion-guide" id="guideTgs">
+          <div class="accordion-header" onclick="toggleAccordion('guideTgs')">
+            <div class="accordion-header-title"><span>📦</span> <span id="txtAccTitleTgs">راهنمای ثبت TGS</span></div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content" id="contentTgs"></div>
+        </div>
+
+        <div class="accordion-guide" id="guideWebm">
+          <div class="accordion-header" onclick="toggleAccordion('guideWebm')">
+            <div class="accordion-header-title"><span>🎬</span> <span id="txtAccTitleWebm">راهنمای ثبت WebM</span></div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content" id="contentWebm"></div>
+        </div>
+
+        <div class="accordion-guide" id="guideKey">
+          <div class="accordion-header" onclick="toggleAccordion('guideKey')">
+            <div class="accordion-header-title"><span>⌨️</span> <span id="txtAccTitleKey">راهنمای ثبت کیبورد</span></div>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content" id="contentKey"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="header">
-    <button class="back-btn" onclick="window.location.href='/html/Automatic-order.html'">
-      <span id="backIcon">❮</span> <span id="txtBack">بازگشت</span>
+    <button class="back-btn" onclick="window.location.href='Automatic-order.html'">
+      <span>❮</span> <span id="txtBackBtn">بازگشت</span>
     </button>
-    <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-      <option value="fa">🇮🇷 فارسی</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="ru">🇷🇺 Русский</option>
-      <option value="zh">🇨🇳 中文</option>
-    </select>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+        <option value="fa">🇮🇷 فارسی</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="zh">🇨🇳 中文</option>
+      </select>
+      <div style="font-size: 0.72rem; font-weight: 700; color: var(--accent);" id="packTitleIndicator">پک استیکر</div>
+    </div>
   </div>
+
+  <div class="multi-selector-bar" id="multiSelectorBar"></div>
 
   <div class="mode-selector">
     <button class="mode-btn active" id="btnModeTgs" onclick="setMode('tgs')">
-      <span class="rec-badge" id="txtRecBadge">پیشنهادی</span>
-      <span id="txtModeTgs">استیکر متحرک</span>
-      <span class="sub" id="txtModeTgsSub">وکتور خالص (.tgs)</span>
+      <span id="txtModeAnim">متحرک</span>
+      <span class="sub" id="txtSubTgs">وکتور (.tgs)</span>
     </button>
     <button class="mode-btn" id="btnModeWebm" onclick="setMode('webm')">
-      <span id="txtModeWebm">استیکر لوگودار</span>
-      <span class="sub" id="txtModeWebmSub">ویدیویی شفاف (.webm)</span>
+      <span id="txtModeLogo">لوگودار</span>
+      <span class="sub" id="txtSubWebm">ویدیویی (.webm)</span>
+    </button>
+    <button class="mode-btn" id="btnModeKeyboard" onclick="setMode('keyboard')">
+      <span id="txtModeKey">کیبورد</span>
+      <span class="sub" id="txtSubKey">ابعاد 100×100</span>
     </button>
   </div>
 
-  <p class="mode-badge-info" id="modeInfoText"></p>
-
   <div class="stage-wrapper" id="stageWrapper">
-    <div id="lottieContainer"></div>
-    <div id="logoOverlay" class="draggable-item" style="top: 50%; left: 50%;"></div>
-    <div id="textOverlay" class="draggable-item" style="top: 80%; left: 50%;"></div>
+    <div id="stageContentBox">
+      <div id="lottieContainer"></div>
+      <div id="logoOverlay" class="draggable-item" style="top: 50%; left: 50%;"></div>
+      <div id="textOverlay" class="draggable-item" style="top: 80%; left: 50%;">استاندارد</div>
+    </div>
   </div>
 
   <div class="tab-bar" id="tabBar" style="display: none;">
@@ -284,276 +769,898 @@
   </div>
 
   <div class="panel-container">
-    <div id="colorsView" class="panel-content"></div>
+    <div id="colorsView" style="display: flex; flex-direction: column; width: 100%;">
+      <div class="color-mode-toggle">
+        <button class="color-mode-btn active" id="btnColorQuick" onclick="toggleColorMode('quick')"><span id="txtColorQuick">رنگ‌بندی سریع (کلی)</span></button>
+        <button class="color-mode-btn" id="btnColorAdv" onclick="toggleColorMode('advanced')"><span id="txtColorAdv">پیشرفته (لایه‌ها)</span></button>
+      </div>
+      <div id="quickColorsContainer" class="panel-content"></div>
+      <div id="advancedColorsContainer" class="panel-content" style="display: none;"></div>
+    </div>
     
     <div id="logoView" class="panel-content" style="display:none;">
       <label class="upload-box" for="logoUpload">
-        <div style="font-size: 1.4rem;">📤</div>
-        <div id="txtUploadTitle" style="font-size: 0.8rem; font-weight: 700; color: #fff;">انتخاب تصویر لوگو</div>
-        <div id="txtUploadSub" style="font-size: 0.65rem; color: var(--text-muted);">برای جابه‌جایی، لوگو را بکشید</div>
+        <div style="font-size: 1.1rem;">📤</div>
+        <div style="font-size: 0.75rem; font-weight: 700; color: #fff;" id="txtUploadTitle">آپلود عکس/لوگو (قابل جابه‌جایی و تغییر سایز)</div>
         <input type="file" id="logoUpload" accept="image/*, .svg" hidden>
       </label>
       
       <div class="input-card" id="logoSizeCard" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span class="input-label"><span id="txtLogoSizeLabel">اندازه لوگو</span>: (<span id="logoSizeVal">55</span>px)</span>
+          <span class="input-label"><span id="txtLogoSizeLabel">اندازه عکس:</span> (<span id="logoSizeVal">48</span>px)</span>
+          <button onclick="removeUploadedLogo()" style="background:none; border:none; color:#ef4444; font-size:0.68rem; cursor:pointer;" id="txtRemoveLogo">حذف</button>
         </div>
-        <input type="range" id="logoSizeSlider" class="range-input" min="25" max="110" value="55" oninput="updateLogoSize(this.value)">
+        <input type="range" id="logoSizeSlider" class="range-input" min="15" max="130" value="48" oninput="updateLogoSize(this.value)">
       </div>
     </div>
 
     <div id="textView" class="panel-content" style="display:none;">
       <div class="input-card">
-        <span class="input-label" id="txtLabelInput">متن سفارشی:</span>
-        <input type="text" id="customText" class="text-input" placeholder="..." oninput="updateText()">
-        
+        <span class="input-label" id="txtTextInputLabel">متن سفارشی (وسط‌چین و قابل جابه‌جایی):</span>
+        <input type="text" id="customText" class="text-input" placeholder="متن خود را بنویسید..." oninput="updateText()">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span class="input-label"><span id="txtLabelSize">اندازه متن</span>: (<span id="sizeValue">22</span>px)</span>
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span class="input-label" id="txtLabelColor">رنگ:</span>
-            <input type="color" id="textColor" value="#ffffff" oninput="updateText()" style="background:none; border:none; width:24px; height:24px; cursor:pointer;">
+          <span class="input-label"><span id="txtTextSizeLabel">اندازه:</span> (<span id="sizeValue">18</span>px)</span>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <span class="input-label" id="txtTextColorLabel">رنگ:</span>
+            <input type="color" id="textColor" value="#ffffff" oninput="updateText()" style="background:none; border:none; width:20px; height:20px; cursor:pointer;">
           </div>
         </div>
-        <input type="range" id="fontSize" class="range-input" min="12" max="48" value="22" oninput="updateText()">
+        <input type="range" id="fontSize" class="range-input" min="8" max="32" value="18" oninput="updateText()">
       </div>
     </div>
   </div>
   
   <div class="action-row">
-    <button class="btn-action btn-reset" id="txtResetBtn" onclick="location.reload()">ریست</button>
-    <button class="btn-action btn-submit" id="btnSubmit" onclick="saveDesignAndCheckout()">ثبت و ادامه خرید</button>
+    <button class="btn-action btn-reset" onclick="location.reload()" id="txtResetBtn">ریست</button>
+    <button class="btn-action btn-submit" id="btnSubmit" onclick="openCheckoutModal()"><span id="txtSubmitBtn">ثبت نهایی و پرداخت</span></button>
   </div>
 </div>
+
+<div id="hiddenHost" style="position: absolute; width: 512px; height: 512px; top: -9999px; left: -9999px; visibility: hidden;"></div>
 
 <script>
   let anim = null;
   let rawLottieJson = null;
-  const palette = ['#000000', '#E11D48', '#FFFFFF', '#FFD60A', '#3B82F6', '#10B981'];
-  let currentLang = 'fa';
+  let originalLottieStringBackup = null;
+  const palette = ['#000000', '#E11D48', '#FFFFFF', '#FFD60A', '#3B82F6', '#10B981', '#8B5CF6', '#F97316'];
   
-  let designState = {
-    stickerId: 1,
-    formatMode: 'tgs',
-    layers: {}, 
-    logoData: null, 
-    logoSize: 55,
-    logoPos: { x: 50, y: 50 },
-    textData: { text: '', size: '22', color: '#ffffff', x: 50, y: 80 }
-  };
+  let stickerStates = {};
+  let selectedStickerIds = [];
+  let currentActiveId = null;
+  let productDetailsMap = {};
+  let colorGroupsMap = {};
+  let individualLayers = [];
+  let miniAnimMap = {};
+  
+  let tonConnectUI;
+  let currentLang = 'fa';
 
-  const i18n = {
+  const translations = {
     fa: {
-      back: "بازگشت", recBadge: "پیشنهادی", modeTgs: "استیکر متحرک", modeTgsSub: "وکتور خالص (.tgs)", modeWebm: "استیکر لوگودار", modeWebmSub: "ویدیویی شفاف (.webm)",
-      infoTgs: "⚡ <b>حالت وکتور تلگرام:</b> سبک و سریع برای تغییر پالت رنگی.", infoWebm: "🎬 <b>استیکر لوگودار:</b> لوگو و متن را با لمس جابه‌جا کرده و سایز آن را تغییر دهید.",
-      tabLogo: "لوگو", tabText: "متن", tabColor: "رنگ‌بندی", layerTitle: "لایه رنگی", uploadTitle: "انتخاب تصویر لوگو", uploadSub: "برای جابه‌جایی، لوگو را روی استیکر بکشید",
-      logoSizeLabel: "اندازه لوگو", inputLabel: "متن سفارشی:", inputPlaceholder: "متن دلخواه...", labelSize: "اندازه متن", labelColor: "رنگ",
-      resetBtn: "ریست", submitBtn: "ثبت و ادامه خرید", toastMsg: "✨ طرح با موفقیت ذخیره شد!", toastSub: "در حال انتقال به سبد خرید...", dir: "rtl"
+      dir: 'rtl',
+      back: 'بازگشت',
+      modeAnim: 'متحرک',
+      subTgs: 'وکتور (.tgs)',
+      modeLogo: 'لوگودار',
+      subWebm: 'ویدیویی (.webm)',
+      modeKey: 'کیبورد',
+      subKey: 'ابعاد 100×100',
+      tabLogo: 'لوگو',
+      tabText: 'متن',
+      tabColor: 'رنگ‌بندی',
+      colorQuick: 'رنگ‌بندی سریع (کلی)',
+      colorAdv: 'پیشرفته (لایه‌ها)',
+      uploadTitle: 'آپلود عکس/لوگو (قابل جابه‌جایی و تغییر سایز)',
+      logoSize: 'اندازه عکس:',
+      removeLogo: 'حذف',
+      textLabel: 'متن سفارشی (وسط‌چین و قابل جابه‌جایی):',
+      textPlaceholder: 'متن خود را بنویسید...',
+      textSize: 'اندازه:',
+      textColor: 'رنگ:',
+      mainColorPrefix: 'رنگ اصلی',
+      reset: 'ریست',
+      submit: 'ثبت نهایی و پرداخت',
+      invoiceTitle: 'صورت پرداخت',
+      totalLabel: 'مجموع پرداخت:',
+      payBtn: 'پرداخت نهایی (ارسال تراکنش)',
+      bypassBtn: 'عبور از پرداخت (تست لوکال و ارسال)',
+      errConnect: 'لطفاً ابتدا کیف پول خود را متصل کنید',
+      errCalc: 'خطا در محاسبه مبلغ تراکنش',
+      errCanceled: 'تراکنش لغو یا ناموفق بود',
+      errBalance: 'موجودی کیف پول کافی نیست',
+      successPay: 'پرداخت با موفقیت انجام شد!',
+      modeTgsBadge: 'متحرک',
+      modeWebmBadge: 'لوگودار',
+      modeKeyBadge: 'کیبورد',
+      dlModalHeader: '📦 ارسال فایل‌ها به چت تلگرام',
+      colTgs: '📦 متحرک (.tgs)',
+      colWebm: '🎬 لوگودار (.webm)',
+      colKey: '⌨️ کیبورد (.tgs)',
+      dlCol: 'ارسال به تلگرام',
+      empty: 'خالی',
+      accTgs: 'راهنمای ثبت TGS',
+      accWebm: 'راهنمای ثبت WebM',
+      accKey: 'راهنمای ثبت کیبورد',
+      stepsTgs: '<ol><li>فایل دریافت شده را در ربات <code>@Stickers</code> به صورت <b>File</b> بفرستید.</li></ol>',
+      stepsWebm: '<ol><li>فایل ویدیویی دریافت شده را در <code>@Stickers</code> بفرستید.</li></ol>',
+      stepsKey: '<ol><li>فایل کیبورد را در <code>@Stickers</code> ثبت کنید.</li></ol>'
     },
     en: {
-      back: "Back", recBadge: "Recommended", modeTgs: "Animated Sticker", modeTgsSub: "Pure Vector (.tgs)", modeWebm: "Logo Sticker", modeWebmSub: "Transparent Video (.webm)",
-      infoTgs: "⚡ <b>Telegram Vector:</b> Fast and lightweight for color customization.", infoWebm: "🎬 <b>Logo Sticker:</b> Drag & resize your logo and custom text freely.",
-      tabLogo: "Logo", tabText: "Text", tabColor: "Colors", layerTitle: "Color Layer", uploadTitle: "Upload Logo Image", uploadSub: "Drag and drop the logo on the sticker to reposition",
-      logoSizeLabel: "Logo Size", inputLabel: "Custom Text:", inputPlaceholder: "Enter text...", labelSize: "Text Size", labelColor: "Color",
-      resetBtn: "Reset", submitBtn: "Save & Checkout", toastMsg: "✨ Design saved successfully!", toastSub: "Redirecting to cart...", dir: "ltr"
+      dir: 'ltr',
+      back: 'Back',
+      modeAnim: 'Animated',
+      subTgs: 'Vector (.tgs)',
+      modeLogo: 'With Logo',
+      subWebm: 'Video (.webm)',
+      modeKey: 'Keyboard',
+      subKey: 'Size 100x100',
+      tabLogo: 'Logo',
+      tabText: 'Text',
+      tabColor: 'Colors',
+      colorQuick: 'Quick Colors',
+      colorAdv: 'Advanced (Layers)',
+      uploadTitle: 'Upload Image/Logo (Draggable & Resizable)',
+      logoSize: 'Size:',
+      removeLogo: 'Remove',
+      textLabel: 'Custom Text (Centered & Draggable):',
+      textPlaceholder: 'Type your text...',
+      textSize: 'Size:',
+      textColor: 'Color:',
+      mainColorPrefix: 'Main Color',
+      reset: 'Reset',
+      submit: 'Checkout & Pay',
+      invoiceTitle: 'Payment Invoice',
+      totalLabel: 'Total Amount:',
+      payBtn: 'Final Payment (Send Tx)',
+      bypassBtn: 'Bypass Payment (Test & Send)',
+      errConnect: 'Please connect your wallet first',
+      errCalc: 'Transaction amount calculation error',
+      errCanceled: 'Transaction canceled or failed',
+      errBalance: 'Insufficient wallet balance',
+      successPay: 'Payment completed successfully!',
+      modeTgsBadge: 'Animated',
+      modeWebmBadge: 'Logo',
+      modeKeyBadge: 'Keyboard',
+      dlModalHeader: '📦 Send Files to Telegram Chat',
+      colTgs: '📦 Animated (.tgs)',
+      colWebm: '🎬 With Logo (.webm)',
+      colKey: '⌨️ Keyboard (.tgs)',
+      dlCol: 'Send to Telegram',
+      empty: 'Empty',
+      accTgs: 'TGS Guide',
+      accWebm: 'WebM Guide',
+      accKey: 'Keyboard Guide',
+      stepsTgs: '<ol><li>Send received file to <code>@Stickers</code> bot as <b>File</b>.</li></ol>',
+      stepsWebm: '<ol><li>Send received video to <code>@Stickers</code> bot.</li></ol>',
+      stepsKey: '<ol><li>Send keyboard file to <code>@Stickers</code>.</li></ol>'
     },
     ru: {
-      back: "Назад", recBadge: "Рекомендуется", modeTgs: "Анимированный", modeTgsSub: "Вектор (.tgs)", modeWebm: "С логотипом", modeWebmSub: "Видео (.webm)",
-      infoTgs: "⚡ <b>Вектор Telegram:</b> Легкий и быстрый для смены палитры.", infoWebm: "🎬 <b>Стикер с логотипом:</b> Перетаскивайте и меняйте размер логотипа и текста.",
-      tabLogo: "Логотип", tabText: "Текст", tabColor: "Цвета", layerTitle: "Слой", uploadTitle: "Загрузить логотип", uploadSub: "Перетащите логотип по стикеру для изменения позиции",
-      logoSizeLabel: "Размер логотипа", inputLabel: "Ваш текст:", inputPlaceholder: "Введите текст...", labelSize: "Размер текста", labelColor: "Цвет",
-      resetBtn: "Сброс", submitBtn: "Сохранить и Купить", toastMsg: "✨ Дизайн успешно сохранен!", toastSub: "Переход в корзину...", dir: "ltr"
+      dir: 'ltr',
+      back: 'Назад',
+      modeAnim: 'Аним.',
+      subTgs: 'Вектор (.tgs)',
+      modeLogo: 'С лого',
+      subWebm: 'Видео (.webm)',
+      modeKey: 'Клавиатура',
+      subKey: 'Разм. 100x100',
+      tabLogo: 'Лого',
+      tabText: 'Текст',
+      tabColor: 'Цвета',
+      colorQuick: 'Быстрые цвета',
+      colorAdv: 'Слои',
+      uploadTitle: 'Загрузить лого (Перетаскивание)',
+      logoSize: 'Размер:',
+      removeLogo: 'Удалить',
+      textLabel: 'Текст (По центру):',
+      textPlaceholder: 'Введите текст...',
+      textSize: 'Размер:',
+      textColor: 'Цвет:',
+      mainColorPrefix: 'Основной цвет',
+      reset: 'Сброс',
+      submit: 'Оплатить',
+      invoiceTitle: 'Счет на оплату',
+      totalLabel: 'Итого:',
+      payBtn: 'Оплатить (Отправить)',
+      bypassBtn: 'Пропустить (Тест и отправка)',
+      errConnect: 'Пожалуйста, подключите кошелек',
+      errCalc: 'Ошибка расчета суммы',
+      errCanceled: 'Транзакция отменена',
+      errBalance: 'Недостаточно средств',
+      successPay: 'Оплата успешно завершена!',
+      modeTgsBadge: 'Анимация',
+      modeWebmBadge: 'С лого',
+      modeKeyBadge: 'Клавиатура',
+      dlModalHeader: '📦 Отправка файлов в Telegram',
+      colTgs: '📦 Анимация (.tgs)',
+      colWebm: '🎬 С логотипом (.webm)',
+      colKey: '⌨️ Клавиатура (.tgs)',
+      dlCol: 'Отправить в Telegram',
+      empty: 'Пусто',
+      accTgs: 'Гид по TGS',
+      accWebm: 'Гид по WebM',
+      accKey: 'Гид для клавиатуры',
+      stepsTgs: '<ol><li>Отправьте файл в <code>@Stickers</code> как <b>Документ</b>.</li></ol>',
+      stepsWebm: '<ol><li>Отправьте видео в <code>@Stickers</code>.</li></ol>',
+      stepsKey: '<ol><li>Отправьте файл клавиатуры в <code>@Stickers</code>.</li></ol>'
     },
     zh: {
-      back: "返回", recBadge: "推荐", modeTgs: "动态贴纸", modeTgsSub: "纯矢量 (.tgs)", modeWebm: "徽标贴纸", modeWebmSub: "透明视频 (.webm)",
-      infoTgs: "⚡ <b>Telegram 矢量模式:</b> 仅支持修改图层颜色。", infoWebm: "🎬 <b>徽标贴纸模式:</b> 可自由拖拽和缩放徽标及自定义文字。",
-      tabLogo: "徽标", tabText: "文字", tabColor: "调色", layerTitle: "图层", uploadTitle: "上传徽标图片", uploadSub: "可在贴纸上直接拖拽调整位置",
-      logoSizeLabel: "徽标大小", inputLabel: "自定义文字:", inputPlaceholder: "输入文字...", labelSize: "文字大小", labelColor: "颜色",
-      resetBtn: "重置", submitBtn: "保存并结账", toastMsg: "✨ 设计已成功保存！", toastSub: "正在跳转至购物车...", dir: "ltr"
+      dir: 'ltr',
+      back: '返回',
+      modeAnim: '动画',
+      subTgs: '矢量 (.tgs)',
+      modeLogo: '带徽标',
+      subWebm: '视频 (.webm)',
+      modeKey: '键盘',
+      subKey: '尺寸 100x100',
+      tabLogo: '徽标',
+      tabText: '文字',
+      tabColor: '颜色',
+      colorQuick: '快速配色',
+      colorAdv: '高级 (图层)',
+      uploadTitle: '上传图片/徽标 (可拖动调整大小)',
+      logoSize: '尺寸:',
+      removeLogo: '删除',
+      textLabel: '自定义文字:',
+      textPlaceholder: '输入您的文字...',
+      textSize: '大小:',
+      textColor: '颜色:',
+      mainColorPrefix: '主色调',
+      reset: '重置',
+      submit: '结算并支付',
+      invoiceTitle: '支付账单',
+      totalLabel: '总计:',
+      payBtn: '最终支付',
+      bypassBtn: '跳过支付 (测试并发送)',
+      errConnect: '请先连接您的钱包',
+      errCalc: '交易金额计算错误',
+      errCanceled: '交易已取消或失败',
+      errBalance: '钱包余额不足',
+      successPay: '支付成功！',
+      modeTgsBadge: '动画',
+      modeWebmBadge: '徽标',
+      modeKeyBadge: '键盘',
+      dlModalHeader: '📦 发送文件到 Telegram 聊天',
+      colTgs: '📦 动画 (.tgs)',
+      colWebm: '🎬 带徽标 (.webm)',
+      colKey: '⌨️ 键盘 (.tgs)',
+      dlCol: '发送至 Telegram',
+      empty: '空',
+      accTgs: 'TGS 指南',
+      accWebm: 'WebM 指南',
+      accKey: '键盘指南',
+      stepsTgs: '<ol><li>将收到的文件以<b>文件形式</b>发送给 <code>@Stickers</code>。</li></ol>',
+      stepsWebm: '<ol><li>将收到的视频发送给 <code>@Stickers</code>。</li></ol>',
+      stepsKey: '<ol><li>将键盘文件发送给 <code>@Stickers</code>。</li></ol>'
     }
   };
 
   function changeLanguage(lang) {
-    if(!i18n[lang]) lang = 'en';
     currentLang = lang;
-    document.documentElement.dir = i18n[lang].dir;
+    const t = translations[lang] || translations.fa;
+    document.documentElement.dir = t.dir;
 
-    document.getElementById('txtBack').innerText = i18n[lang].back;
-    document.getElementById('txtRecBadge').innerText = i18n[lang].recBadge;
-    document.getElementById('txtModeTgs').innerText = i18n[lang].modeTgs;
-    document.getElementById('txtModeTgsSub').innerText = i18n[lang].modeTgsSub;
-    document.getElementById('txtModeWebm').innerText = i18n[lang].modeWebm;
-    document.getElementById('txtModeWebmSub').innerText = i18n[lang].modeWebmSub;
-    document.getElementById('txtTabLogo').innerText = i18n[lang].tabLogo;
-    document.getElementById('txtTabText').innerText = i18n[lang].tabText;
-    document.getElementById('txtTabColor').innerText = i18n[lang].tabColor;
-    document.getElementById('txtUploadTitle').innerText = i18n[lang].uploadTitle;
-    document.getElementById('txtUploadSub').innerText = i18n[lang].uploadSub;
-    document.getElementById('txtLogoSizeLabel').innerText = i18n[lang].logoSizeLabel;
-    document.getElementById('txtLabelInput').innerText = i18n[lang].inputLabel;
-    document.getElementById('customText').placeholder = i18n[lang].inputPlaceholder;
-    document.getElementById('txtLabelSize').innerText = i18n[lang].labelSize;
-    document.getElementById('txtLabelColor').innerText = i18n[lang].labelColor;
-    document.getElementById('txtResetBtn').innerText = i18n[lang].resetBtn;
-    document.getElementById('btnSubmit').innerText = i18n[lang].submitBtn;
-    document.getElementById('toastMsg').innerText = i18n[lang].toastMsg;
-    document.getElementById('toastSub').innerText = i18n[lang].toastSub;
-    document.getElementById('backIcon').innerText = i18n[lang].dir === 'rtl' ? '❮' : '❯';
+    document.getElementById('txtBackBtn').innerText = t.back;
+    document.getElementById('txtModeAnim').innerText = t.modeAnim;
+    document.getElementById('txtSubTgs').innerText = t.subTgs;
+    document.getElementById('txtModeLogo').innerText = t.modeLogo;
+    document.getElementById('txtSubWebm').innerText = t.subWebm;
+    document.getElementById('txtModeKey').innerText = t.modeKey;
+    document.getElementById('txtSubKey').innerText = t.subKey;
+    document.getElementById('txtTabLogo').innerText = t.tabLogo;
+    document.getElementById('txtTabText').innerText = t.tabText;
+    document.getElementById('txtTabColor').innerText = t.tabColor;
+    document.getElementById('txtColorQuick').innerText = t.colorQuick;
+    document.getElementById('txtColorAdv').innerText = t.colorAdv;
+    document.getElementById('txtUploadTitle').innerText = t.uploadTitle;
+    document.getElementById('txtLogoSizeLabel').innerText = t.logoSize;
+    document.getElementById('txtRemoveLogo').innerText = t.removeLogo;
+    document.getElementById('txtTextInputLabel').innerText = t.textLabel;
+    document.getElementById('customText').placeholder = t.textPlaceholder;
+    document.getElementById('txtTextSizeLabel').innerText = t.textSize;
+    document.getElementById('txtTextColorLabel').innerText = t.textColor;
+    document.getElementById('txtResetBtn').innerText = t.reset;
+    document.getElementById('txtSubmitBtn').innerText = t.submit;
+    document.getElementById('txtTotalLabel').innerText = t.totalLabel;
+    document.getElementById('txtPayBtn').innerText = t.payBtn;
+    document.getElementById('txtBypassBtn').innerText = t.bypassBtn;
 
-    updateModeUI();
-    document.querySelectorAll('.layer-title').forEach((el, index) => el.innerText = `${i18n[currentLang].layerTitle} ${index + 1}`);
+    document.getElementById('dlModalTitle').innerText = t.dlModalHeader;
+    document.getElementById('colTitleTgs').innerText = t.colTgs;
+    document.getElementById('colTitleWebm').innerText = t.colWebm;
+    document.getElementById('colTitleKey').innerText = t.colKey;
+    document.getElementById('txtDlColTgs').innerText = t.dlCol;
+    document.getElementById('txtDlColWebm').innerText = t.dlCol;
+    document.getElementById('txtDlColKey').innerText = t.dlCol;
+
+    document.getElementById('txtAccTitleTgs').innerText = t.accTgs;
+    document.getElementById('txtAccTitleWebm').innerText = t.accWebm;
+    document.getElementById('txtAccTitleKey').innerText = t.accKey;
+    document.getElementById('contentTgs').innerHTML = t.stepsTgs;
+    document.getElementById('contentWebm').innerHTML = t.stepsWebm;
+    document.getElementById('contentKey').innerHTML = t.stepsKey;
+
+    const packName = localStorage.getItem('stickerPackName') || (lang === 'fa' ? 'پک من' : 'My Pack');
+    document.getElementById('packTitleIndicator').innerText = `${lang === 'fa' ? 'پک' : 'Pack'}: ${packName}`;
+    const invoicePrefix = lang === 'fa' ? 'صورت پرداخت' : (lang === 'ru' ? 'Счет' : (lang === 'zh' ? '账单' : 'Invoice'));
+    document.getElementById('modalTitlePackName').innerText = `${invoicePrefix}: ${packName}`;
+
+    buildDeepColorUI();
+    updateTopBarBadges();
   }
 
-  function updateModeUI() {
-    const infoText = document.getElementById('modeInfoText');
-    infoText.innerHTML = designState.formatMode === 'tgs' ? i18n[currentLang].infoTgs : i18n[currentLang].infoWebm;
+  function showToastError(msgKey) {
+    const t = translations[currentLang] || translations.fa;
+    let text = t.errCanceled;
+    if (msgKey === 'connect') text = t.errConnect;
+    if (msgKey === 'calc') text = t.errCalc;
+    if (msgKey === 'balance') text = t.errBalance;
+
+    const toast = document.getElementById('errorToast');
+    document.getElementById('errorToastText').innerText = text;
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 4000);
   }
 
-  function setMode(mode) {
-    designState.formatMode = mode;
-    if (mode === 'tgs') {
-      document.getElementById('btnModeTgs').classList.add('active');
-      document.getElementById('btnModeWebm').classList.remove('active');
-      document.getElementById('tabBar').style.display = 'none';
-      designState.logoData = null;
-      designState.textData = { text: '', size: '22', color: '#ffffff', x: 50, y: 80 };
-      document.getElementById('logoOverlay').innerHTML = '';
-      document.getElementById('textOverlay').innerText = '';
-      document.getElementById('customText').value = '';
-      document.getElementById('logoSizeCard').style.display = 'none';
-      switchTab('colors');
-    } else {
-      document.getElementById('btnModeWebm').classList.add('active');
-      document.getElementById('btnModeTgs').classList.remove('active');
-      document.getElementById('tabBar').style.display = 'flex';
-      switchTab('logo');
-    }
-    updateModeUI();
-  }
-
-  function updateLogoSize(val) {
-    designState.logoSize = parseFloat(val);
-    const overlay = document.getElementById('logoOverlay');
-    overlay.style.width = `${val}px`;
-    overlay.style.height = `${val}px`;
-    document.getElementById('logoSizeVal').innerText = val;
-  }
-
-  async function init() {
-    const savedStickers = JSON.parse(localStorage.getItem('selectedStickers') || '[]');
-    designState.stickerId = savedStickers.length > 0 ? savedStickers[0] : 1;
-
+  async function initMultiCustomizer() {
     try {
-      // استفاده مستقیم از روت سرور بدون ارور ۴۰۴
-      const jsonRes = await fetch('/api/sticker-json');
-      rawLottieJson = await jsonRes.json();
+      selectedStickerIds = JSON.parse(localStorage.getItem('selectedStickers')) || [];
+    } catch(e) { selectedStickerIds = []; }
+    if (selectedStickerIds.length === 0) selectedStickerIds = [1];
 
-      anim = lottie.loadAnimation({
-        container: document.getElementById('lottieContainer'),
-        renderer: 'svg', 
-        loop: true, 
-        autoplay: true, 
-        animationData: JSON.parse(JSON.stringify(rawLottieJson))
-      });
+    tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+        manifestUrl: 'https://villain-rexr.onrender.com/tonconnect-manifest.json',
+        buttonRootId: 'ton-connect-btn-root'
+    });
+    tonConnectUI.onStatusChange(wallet => {
+        const payBtn = document.getElementById('btn-pay-action');
+        const connectRoot = document.getElementById('ton-connect-btn-root');
+        if (wallet) {
+            connectRoot.style.display = 'none';
+            payBtn.style.display = 'flex';
+        } else {
+            connectRoot.style.display = 'flex';
+            payBtn.style.display = 'none';
+        }
+    });
 
-      anim.addEventListener('DOMLoaded', buildUI);
-    } catch (err) { 
-      console.error("خطا در بارگذاری استیکر:", err); 
-    }
+    renderMultiBar();
+    await loadSticker(selectedStickerIds[0]);
 
-    makeDraggable(document.getElementById('logoOverlay'), (x, y) => designState.logoPos = { x, y });
-    makeDraggable(document.getElementById('textOverlay'), (x, y) => { designState.textData.x = x; designState.textData.y = y; });
+    makeDraggable(document.getElementById('logoOverlay'), (x, y) => {
+      if (stickerStates[currentActiveId]) {
+        stickerStates[currentActiveId].logoPos = { x, y };
+        updateMiniThumbLive(currentActiveId);
+      }
+    });
+    makeDraggable(document.getElementById('textOverlay'), (x, y) => {
+      if (stickerStates[currentActiveId]) {
+        stickerStates[currentActiveId].textPos = { x, y };
+        updateMiniThumbLive(currentActiveId);
+      }
+    });
+
     changeLanguage('fa');
   }
 
-  function buildUI() {
-    const panel = document.getElementById('colorsView');
-    panel.innerHTML = ''; 
-    
-    let visualCounter = 1;
+  function getModeBadgeLabel(mode) {
+    const t = translations[currentLang] || translations.fa;
+    if (mode === 'keyboard') return t.modeKeyBadge;
+    if (mode === 'webm') return t.modeWebmBadge;
+    return t.modeTgsBadge;
+  }
 
-    if (!rawLottieJson || !rawLottieJson.layers) return;
-
-    rawLottieJson.layers.forEach((layer, jsonIdx) => {
-      if (layer.ty === 4) {
-        const domElement = anim.renderer.elements[jsonIdx];
-        if (domElement && domElement.layerElement) {
-          const paths = domElement.layerElement.querySelectorAll('path, rect, polygon');
-          if (paths.length > 0) {
-            const card = document.createElement('div');
-            card.className = 'layer-card';
-            let colorsHTML = '';
-            
-            palette.forEach(c => {
-              colorsHTML += `<div class="dot" style="background:${c}" onclick="applyExactLayerColor(${jsonIdx}, '${c}', this)"></div>`;
-            });
-            colorsHTML += `<div class="picker"><input type="color" oninput="applyExactLayerColor(${jsonIdx}, this.value, this.parentElement)"></div>`;
-            
-            card.innerHTML = `
-              <div class="layer-title">${i18n[currentLang].layerTitle} ${visualCounter}</div>
-              <div class="color-row">${colorsHTML}</div>
-            `;
-            panel.appendChild(card);
-            visualCounter++;
-          }
-        }
-      }
+  function updateTopBarBadges() {
+    selectedStickerIds.forEach(id => {
+      const badge = document.getElementById(`mode-badge-${id}`);
+      const st = stickerStates[id] || { formatMode: 'tgs' };
+      if (badge) badge.innerText = getModeBadgeLabel(st.formatMode);
     });
   }
 
-  function applyExactLayerColor(jsonIdx, hex, element) {
-    const domElement = anim.renderer.elements[jsonIdx];
-    if (domElement && domElement.layerElement) {
-      domElement.layerElement.querySelectorAll('path, rect, polygon').forEach(p => { 
-        p.setAttribute('fill', hex); 
-        p.setAttribute('stroke', hex); 
-      });
-    }
-    
-    designState.layers[jsonIdx] = hex;
+  function renderMultiBar() {
+    const bar = document.getElementById('multiSelectorBar');
+    bar.innerHTML = '';
 
+    selectedStickerIds.forEach(async (id) => {
+      const itemWrap = document.createElement('div');
+      itemWrap.className = `thumb-item-wrapper ${id === currentActiveId ? 'active' : ''}`;
+      itemWrap.id = `thumb-wrap-${id}`;
+      itemWrap.onclick = () => loadSticker(id);
+
+      const thumbBox = document.createElement('div');
+      thumbBox.className = 'mini-sticker-thumb';
+      thumbBox.id = `thumb-box-${id}`;
+
+      const badge = document.createElement('div');
+      badge.className = 'thumb-mode-badge';
+      badge.id = `mode-badge-${id}`;
+      badge.innerText = getModeBadgeLabel((stickerStates[id] || {}).formatMode || 'tgs');
+
+      itemWrap.appendChild(thumbBox);
+      itemWrap.appendChild(badge);
+      bar.appendChild(itemWrap);
+
+      try {
+        const res = await fetch(`/api/products/${id}`);
+        const data = await res.json();
+        if (data.success && data.data) { productDetailsMap[id] = data.data; }
+
+        const jsonRes = await fetch(`/api/product-json/${id}`);
+        const jsonText = await jsonRes.text();
+        miniAnimMap[id] = { rawString: jsonText };
+        
+        const lottieContainer = document.createElement('div');
+        lottieContainer.id = `thumb-lottie-${id}`;
+        lottieContainer.style.cssText = 'width:100%;height:100%;position:absolute;z-index:1;pointer-events:none;display:flex;align-items:center;justify-content:center;';
+        thumbBox.appendChild(lottieContainer);
+
+        const player = lottie.loadAnimation({
+          container: lottieContainer,
+          renderer: 'svg',
+          loop: true,
+          autoplay: (id === currentActiveId),
+          animationData: JSON.parse(miniAnimMap[id].rawString)
+        });
+        miniAnimMap[id].anim = player;
+
+        itemWrap.addEventListener('mouseenter', () => { player.play(); });
+        itemWrap.addEventListener('mouseleave', () => {
+          if (id !== currentActiveId) {
+            player.stop();
+            player.goToAndStop(0, true);
+          }
+        });
+      } catch(e) {}
+    });
+  }
+
+  function updateMiniThumbLive(id) {
+    const wrap = document.getElementById(`thumb-box-${id}`);
+    const badge = document.getElementById(`mode-badge-${id}`);
+    const st = stickerStates[id];
+    if (!wrap || !st || !miniAnimMap[id]) return;
+
+    if (badge) badge.innerText = getModeBadgeLabel(st.formatMode);
+
+    wrap.querySelectorAll('.thumb-live-logo, .thumb-live-text').forEach(el => el.remove());
+
+    const lottieWrap = document.getElementById(`thumb-lottie-${id}`);
+    if (!lottieWrap) return;
+
+    const effectiveSize = wrap.offsetWidth; 
+    const scaleRatio = effectiveSize / 140;
+
+    if (st.formatMode === 'webm' && st.logoData) {
+      const img = document.createElement('img');
+      img.src = st.logoData;
+      img.className = 'thumb-live-logo';
+      img.style.position = 'absolute';
+      img.style.pointerEvents = 'none';
+      img.style.transform = 'translate(-50%, -50%)';
+      img.style.objectFit = 'contain';
+      const size = Math.round((st.logoSize || 48) * scaleRatio);
+      img.style.width = `${size}px`;
+      img.style.height = `${size}px`;
+      img.style.left = `${st.logoPos ? st.logoPos.x : 50}%`;
+      img.style.top = `${st.logoPos ? st.logoPos.y : 50}%`;
+      img.style.zIndex = '5';
+      wrap.appendChild(img);
+    }
+
+    if (st.formatMode === 'webm' && st.textData && st.textData.text) {
+      const txt = document.createElement('div');
+      txt.innerText = st.textData.text;
+      txt.className = 'thumb-live-text';
+      txt.style.position = 'absolute';
+      txt.style.pointerEvents = 'none';
+      txt.style.transform = 'translate(-50%, -50%)';
+      txt.style.left = `${st.textPos ? st.textPos.x : 50}%`;
+      txt.style.top = `${st.textPos ? st.textPos.y : 80}%`;
+      txt.style.zIndex = '6';
+      txt.style.fontSize = `${Math.max(5, Math.round((parseFloat(st.textData.size) || 18) * scaleRatio))}px`;
+      txt.style.color = st.textData.color || '#ffffff';
+      txt.style.fontWeight = '900';
+      txt.style.whiteSpace = 'nowrap';
+      txt.style.textShadow = `0 ${Math.round(1*scaleRatio)}px ${Math.round(3*scaleRatio)}px rgba(0,0,0,0.95)`;
+      wrap.appendChild(txt);
+    }
+
+    if (miniAnimMap[id].anim && st.layers) {
+      const json = JSON.parse(miniAnimMap[id].rawString);
+      const allTargets = [];
+      if (json.layers) deepExtractColorTargets(json.layers, allTargets);
+      if (json.assets) {
+        json.assets.forEach(asset => { if (asset.layers) deepExtractColorTargets(asset.layers, allTargets); });
+      }
+
+      Object.keys(st.layers).forEach(idxStr => {
+        const idx = parseInt(idxStr, 10);
+        const rgb = hexToLottieColor(st.layers[idx]);
+        if (allTargets[idx] && allTargets[idx].target) {
+          const tgt = allTargets[idx].target;
+          if (typeof tgt.k[0] === 'number') tgt.k = rgb;
+          else if (Array.isArray(tgt.k)) {
+            tgt.k.forEach(kf => { if (kf && kf.s) kf.s = rgb; if (kf && kf.e) kf.e = rgb; });
+          }
+        }
+      });
+
+      if (st.formatMode === 'webm' && st.logoData) hideCenterEmblem(json);
+
+      const currentFr = miniAnimMap[id].anim.currentFrame || 0;
+      miniAnimMap[id].anim.destroy();
+      miniAnimMap[id].anim = lottie.loadAnimation({
+        container: lottieWrap,
+        renderer: 'svg',
+        loop: true,
+        autoplay: (id === currentActiveId),
+        animationData: json
+      });
+      miniAnimMap[id].anim.goToAndPlay(currentFr, true);
+    }
+  }
+
+  function saveCurrentStickerState() {
+    if (!currentActiveId) return;
+    const txtInput = document.getElementById('customText');
+    const sizeInput = document.getElementById('fontSize');
+    const colorInput = document.getElementById('textColor');
+    const sizeSlider = document.getElementById('logoSizeSlider');
+
+    if (!stickerStates[currentActiveId]) {
+      stickerStates[currentActiveId] = { formatMode: 'tgs', layers: {}, logoData: null, logoSize: 48, logoPos: {x:50, y:50}, textPos: {x:50, y:80}, textData: {text:'', size:'18', color:'#ffffff'} };
+    }
+
+    stickerStates[currentActiveId].logoSize = parseFloat(sizeSlider.value) || 48;
+    stickerStates[currentActiveId].textData = {
+      text: txtInput.value,
+      size: sizeInput.value,
+      color: colorInput.value
+    };
+    updateMiniThumbLive(currentActiveId);
+  }
+
+  async function loadSticker(id) {
+    if (currentActiveId && currentActiveId !== id) {
+      saveCurrentStickerState();
+    }
+
+    currentActiveId = id;
+    document.querySelectorAll('.thumb-item-wrapper').forEach(el => el.classList.remove('active'));
+    const activeThumbWrap = document.getElementById(`thumb-wrap-${id}`);
+    if (activeThumbWrap) activeThumbWrap.classList.add('active');
+
+    Object.keys(miniAnimMap).forEach(key => {
+      if (miniAnimMap[key] && miniAnimMap[key].anim) {
+        if (parseInt(key, 10) === id) miniAnimMap[key].anim.play();
+        else { miniAnimMap[key].anim.stop(); miniAnimMap[key].anim.goToAndStop(0, true); }
+      }
+    });
+
+    if (!stickerStates[id]) {
+      stickerStates[id] = { formatMode: 'tgs', layers: {}, logoData: null, logoSize: 48, logoPos: { x: 50, y: 50 }, textPos: { x: 50, y: 80 }, textData: { text: '', size: '18', color: '#ffffff' } };
+    }
+
+    try {
+      const res = await fetch(`/api/product-json/${id}`);
+      if (!res.ok) throw new Error('فایل یافت نشد');
+      const jsonText = await res.text();
+      originalLottieStringBackup = jsonText;
+      rawLottieJson = JSON.parse(jsonText);
+
+      const st = stickerStates[id];
+      const logoEl = document.getElementById('logoOverlay');
+      if (st.logoData) {
+        logoEl.innerHTML = `<img src="${st.logoData}">`;
+        document.getElementById('logoSizeCard').style.display = 'flex';
+        document.getElementById('logoSizeSlider').value = st.logoSize || 48;
+        updateLogoSize(st.logoSize || 48);
+        logoEl.style.left = `${st.logoPos ? st.logoPos.x : 50}%`;
+        logoEl.style.top = `${st.logoPos ? st.logoPos.y : 50}%`;
+        hideCenterEmblem(rawLottieJson);
+        logoEl.style.display = 'flex';
+      } else {
+        logoEl.innerHTML = '';
+        logoEl.style.display = 'none';
+        document.getElementById('logoSizeCard').style.display = 'none';
+      }
+
+      const txtInput = document.getElementById('customText');
+      txtInput.value = st.textData.text || '';
+      document.getElementById('fontSize').value = st.textData.size || 18;
+      document.getElementById('textColor').value = st.textData.color || '#ffffff';
+      
+      const txtEl = document.getElementById('textOverlay');
+      txtEl.style.left = `${st.textPos ? st.textPos.x : 50}%`;
+      txtEl.style.top = `${st.textPos ? st.textPos.y : 80}%`;
+      
+      setMode(st.formatMode, true);
+      updateText();
+
+      renderLottieAnimation();
+      buildDeepColorUI();
+
+      if (st.layers) {
+        Object.keys(st.layers).forEach(idxStr => {
+          const idx = parseInt(idxStr, 10);
+          if (individualLayers[idx]) applyIndividualColor(idx, st.layers[idx], null, true);
+        });
+        const currentFrame = anim ? anim.currentFrame : 0;
+        renderLottieAnimation();
+        if (anim) anim.goToAndPlay(currentFrame, true);
+      }
+      updateMiniThumbLive(id);
+    } catch (err) {}
+  }
+
+  function renderLottieAnimation() {
+    const container = document.getElementById('lottieContainer');
+    container.innerHTML = '';
+    if (anim) anim.destroy();
+    anim = lottie.loadAnimation({ container: container, renderer: 'svg', loop: true, autoplay: true, animationData: JSON.parse(JSON.stringify(rawLottieJson)) });
+  }
+
+  function lottieColorToHex(c) {
+    if (!c || !Array.isArray(c)) return '#FFFFFF';
+    const r = Math.min(255, Math.max(0, Math.round(c[0] * 255)));
+    const g = Math.min(255, Math.max(0, Math.round(c[1] * 255)));
+    const b = Math.min(255, Math.max(0, Math.round(c[2] * 255)));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+  }
+
+  function hexToLottieColor(hex) {
+    let c = hex.replace('#', '');
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    return [ parseInt(c.substring(0, 2), 16) / 255, parseInt(c.substring(2, 4), 16) / 255, parseInt(c.substring(4, 6), 16) / 255, 1 ];
+  }
+
+  function hideCenterEmblem(node) {
+    if (!node) return;
+    if (Array.isArray(node)) { node.forEach(hideCenterEmblem); return; }
+    const name = (node.nm || '').toLowerCase();
+    if (name.includes('logo') || name.includes('emblem') || name === 'v' || name.includes('icon')) {
+      if (node.ks && node.ks.o) node.ks.o.k = 0;
+      if (node.c && node.c.k) node.c.k = [0,0,0,0];
+    }
+    if (node.shapes) hideCenterEmblem(node.shapes);
+    if (node.it) hideCenterEmblem(node.it);
+    if (node.layers) hideCenterEmblem(node.layers);
+  }
+
+  function deepExtractColorTargets(node, list = [], parentName = '') {
+    if (!node) return list;
+    if (Array.isArray(node)) { node.forEach(child => deepExtractColorTargets(child, list, parentName)); return list; }
+    const currentName = node.nm || parentName;
+    if (node.ty === 'fl' && node.c && node.c.k) {
+      let rawVal = null;
+      if (typeof node.c.k[0] === 'number') rawVal = node.c.k;
+      else if (Array.isArray(node.c.k) && node.c.k[0] && Array.isArray(node.c.k[0].s)) rawVal = node.c.k[0].s;
+      if (rawVal) list.push({ target: node.c, type: 'fill', name: currentName || 'بخش', originalHex: lottieColorToHex(rawVal) });
+    }
+    if (node.ty === 'st' && node.c && node.c.k) {
+      let rawVal = null;
+      if (typeof node.c.k[0] === 'number') rawVal = node.c.k;
+      else if (Array.isArray(node.c.k) && node.c.k[0] && Array.isArray(node.c.k[0].s)) rawVal = node.c.k[0].s;
+      if (rawVal) list.push({ target: node.c, type: 'stroke', name: currentName || 'خط کانتور', originalHex: lottieColorToHex(rawVal) });
+    }
+    if (node.shapes) deepExtractColorTargets(node.shapes, list, currentName);
+    if (node.it) deepExtractColorTargets(node.it, list, currentName);
+    if (node.layers) deepExtractColorTargets(node.layers, list, currentName);
+    return list;
+  }
+
+  function buildDeepColorUI() {
+    const advPanel = document.getElementById('advancedColorsContainer');
+    const quickPanel = document.getElementById('quickColorsContainer');
+    advPanel.innerHTML = '';
+    quickPanel.innerHTML = '';
+    individualLayers = [];
+    colorGroupsMap = {};
+    if (!rawLottieJson) return;
+
+    const allTargets = [];
+    if (rawLottieJson.layers) deepExtractColorTargets(rawLottieJson.layers, allTargets);
+    if (rawLottieJson.assets) rawLottieJson.assets.forEach(asset => { if (asset.layers) deepExtractColorTargets(asset.layers, allTargets); });
+    individualLayers = allTargets;
+
+    const st = stickerStates[currentActiveId];
+    const t = translations[currentLang] || translations.fa;
+
+    individualLayers.forEach((item, idx) => {
+      const activeHex = (st.layers && st.layers[idx]) ? st.layers[idx] : item.originalHex;
+      const baseHexGroup = item.originalHex.toUpperCase();
+      if (!colorGroupsMap[baseHexGroup]) colorGroupsMap[baseHexGroup] = [];
+      colorGroupsMap[baseHexGroup].push(idx);
+
+      const card = document.createElement('div');
+      card.className = 'layer-card';
+      let colorsHTML = '';
+      palette.forEach(c => { colorsHTML += `<div class="dot ${c.toUpperCase() === activeHex.toUpperCase() ? 'active' : ''}" style="background:${c}" onclick="applyIndividualColor(${idx}, '${c}', this)"></div>`; });
+      colorsHTML += `<div class="picker"><input type="color" value="${activeHex}" oninput="applyIndividualColor(${idx}, this.value, this.parentElement)"></div>`;
+      card.innerHTML = `<div class="layer-title-box"><span class="current-color-badge" id="badge-adv-${idx}" style="background: ${activeHex};"></span><span class="layer-title">${currentLang === 'fa' ? `لایه ${idx + 1}: ${item.name}` : `Layer ${idx + 1}`}</span></div><div class="color-row">${colorsHTML}</div>`;
+      advPanel.appendChild(card);
+    });
+
+    let groupCounter = 1;
+    for (const [baseHex, indices] of Object.entries(colorGroupsMap)) {
+      const activeHex = (st.layers && st.layers[indices[0]]) ? st.layers[indices[0]] : baseHex;
+      const card = document.createElement('div');
+      card.className = 'layer-card';
+      let colorsHTML = '';
+      palette.forEach(c => { colorsHTML += `<div class="dot ${c.toUpperCase() === activeHex.toUpperCase() ? 'active' : ''}" style="background:${c}" onclick="applyGroupColor('${baseHex}', '${c}', this)"></div>`; });
+      colorsHTML += `<div class="picker"><input type="color" value="${activeHex}" oninput="applyGroupColor('${baseHex}', this.value, this.parentElement)"></div>`;
+      card.innerHTML = `<div class="layer-title-box"><span class="current-color-badge" id="badge-quick-${baseHex.replace('#','')}" style="background: ${activeHex};"></span><span class="layer-title">${t.mainColorPrefix} ${groupCounter}</span></div><div class="color-row">${colorsHTML}</div>`;
+      quickPanel.appendChild(card);
+      groupCounter++;
+    }
+  }
+
+  function applyIndividualColor(index, newHex, element, isSilent = false) {
+    const item = individualLayers[index];
+    if (!item || !item.target) return;
+    const newColorArray = hexToLottieColor(newHex);
+
+    if (typeof item.target.k[0] === 'number') { item.target.k = newColorArray; } 
+    else if (Array.isArray(item.target.k)) { item.target.k.forEach(kf => { if (kf && kf.s) kf.s = newColorArray; if (kf && kf.e) kf.e = newColorArray; }); }
+
+    if (!isSilent) {
+      const currentFrame = anim ? anim.currentFrame : 0;
+      renderLottieAnimation();
+      if (anim) anim.goToAndPlay(currentFrame, true);
+    }
+    const badge = document.getElementById(`badge-adv-${index}`);
+    if (badge) badge.style.background = newHex;
+
+    if (stickerStates[currentActiveId]) {
+      if (!stickerStates[currentActiveId].layers) stickerStates[currentActiveId].layers = {};
+      stickerStates[currentActiveId].layers[index] = newHex;
+    }
     if (element && element.closest('.color-row')) {
       const row = element.closest('.color-row');
       row.querySelectorAll('.dot, .picker').forEach(el => el.classList.remove('active'));
       element.classList.add('active');
     }
+    updateMiniThumbLive(currentActiveId);
+  }
+
+  function applyGroupColor(baseHex, newHex, element) {
+    const indices = colorGroupsMap[baseHex];
+    if(!indices) return;
+    indices.forEach(idx => {
+      applyIndividualColor(idx, newHex, null, true);
+      const advBadge = document.getElementById(`badge-adv-${idx}`);
+      if(advBadge) advBadge.style.background = newHex;
+    });
+    const currentFrame = anim ? anim.currentFrame : 0;
+    renderLottieAnimation();
+    if (anim) anim.goToAndPlay(currentFrame, true);
+
+    const quickBadge = document.getElementById(`badge-quick-${baseHex.replace('#','')}`);
+    if (quickBadge) quickBadge.style.background = newHex;
+    if (element && element.closest('.color-row')) {
+      const row = element.closest('.color-row');
+      row.querySelectorAll('.dot, .picker').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+    }
+    updateMiniThumbLive(currentActiveId);
+  }
+
+  function toggleColorMode(mode) {
+    document.getElementById('btnColorQuick').classList.toggle('active', mode === 'quick');
+    document.getElementById('btnColorAdv').classList.toggle('active', mode === 'advanced');
+    document.getElementById('quickColorsContainer').style.display = mode === 'quick' ? 'flex' : 'none';
+    document.getElementById('advancedColorsContainer').style.display = mode === 'advanced' ? 'flex' : 'none';
+  }
+
+  function setMode(mode, isSilent = false) {
+    if (stickerStates[currentActiveId]) stickerStates[currentActiveId].formatMode = mode;
+    document.getElementById('btnModeTgs').classList.remove('active');
+    document.getElementById('btnModeWebm').classList.remove('active');
+    document.getElementById('btnModeKeyboard').classList.remove('active');
+    const logoEl = document.getElementById('logoOverlay');
+    const txtEl = document.getElementById('textOverlay');
+
+    if (mode === 'tgs') {
+      document.getElementById('btnModeTgs').classList.add('active');
+      document.getElementById('tabBar').style.display = 'none';
+      logoEl.style.display = 'none';
+      txtEl.style.display = 'none';
+      document.getElementById('colorsView').style.display = 'flex';
+    } else if (mode === 'webm') {
+      document.getElementById('btnModeWebm').classList.add('active');
+      document.getElementById('tabBar').style.display = 'flex';
+      if (stickerStates[currentActiveId] && stickerStates[currentActiveId].logoData) logoEl.style.display = 'flex';
+      if (stickerStates[currentActiveId] && stickerStates[currentActiveId].textData.text) txtEl.style.display = 'block';
+      document.getElementById('colorsView').style.display = 'none';
+      switchTab('logo', true);
+    } else if (mode === 'keyboard') {
+      document.getElementById('btnModeKeyboard').classList.add('active');
+      document.getElementById('tabBar').style.display = 'none';
+      logoEl.style.display = 'none';
+      txtEl.style.display = 'none';
+      document.getElementById('colorsView').style.display = 'flex';
+    }
+    updateMiniThumbLive(currentActiveId);
+  }
+
+  function updateLogoSize(val) {
+    val = parseFloat(val);
+    if (stickerStates[currentActiveId]) stickerStates[currentActiveId].logoSize = val;
+    const overlay = document.getElementById('logoOverlay');
+    overlay.style.width = `${val}px`;
+    overlay.style.height = `${val}px`;
+    const valEl = document.getElementById('logoSizeVal');
+    if (valEl) valEl.innerText = val;
+    updateMiniThumbLive(currentActiveId);
+  }
+
+  function removeUploadedLogo() {
+    if (stickerStates[currentActiveId]) stickerStates[currentActiveId].logoData = null;
+    const logoEl = document.getElementById('logoOverlay');
+    logoEl.innerHTML = '';
+    logoEl.style.display = 'none';
+    document.getElementById('logoSizeCard').style.display = 'none';
+    document.getElementById('logoUpload').value = '';
+    if (originalLottieStringBackup) {
+      rawLottieJson = JSON.parse(originalLottieStringBackup);
+      renderLottieAnimation();
+      buildDeepColorUI();
+    }
+    updateMiniThumbLive(currentActiveId);
   }
 
   function makeDraggable(element, onMoveCallback) {
     let isDragging = false;
-    const stage = document.getElementById('stageWrapper');
-    function startDrag(e) { if(element.innerHTML.trim()==='' && element.innerText.trim()==='') return; isDragging = true; element.classList.add('active-drag'); e.preventDefault(); }
+    const stage = document.getElementById('stageContentBox');
+    function startDrag(e) { isDragging = true; element.classList.add('active-drag'); e.preventDefault(); }
     function doDrag(e) {
       if (!isDragging) return;
       const rect = stage.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      let xPercent = Math.max(5, Math.min(95, ((clientX - rect.left) / rect.width) * 100));
-      let yPercent = Math.max(5, Math.min(95, ((clientY - rect.top) / rect.height) * 100));
+      let xPercent = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      let yPercent = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
       element.style.left = `${xPercent}%`; element.style.top = `${yPercent}%`;
       if (onMoveCallback) onMoveCallback(xPercent, yPercent);
     }
     function stopDrag() { isDragging = false; element.classList.remove('active-drag'); }
-    element.addEventListener('mousedown', startDrag); element.addEventListener('touchstart', startDrag, { passive: false });
-    window.addEventListener('mousemove', doDrag); window.addEventListener('touchmove', doDrag, { passive: false });
-    window.addEventListener('mouseup', stopDrag); window.addEventListener('touchend', stopDrag);
+    element.addEventListener('mousedown', startDrag); 
+    element.addEventListener('touchstart', startDrag, { passive: false });
+    window.addEventListener('mousemove', doDrag); 
+    window.addEventListener('touchmove', doDrag, { passive: false });
+    window.addEventListener('mouseup', stopDrag); 
+    window.addEventListener('touchend', stopDrag);
   }
 
-  function switchTab(t) {
-    document.getElementById('colorsView').style.display = t==='colors'?'flex':'none';
-    document.getElementById('logoView').style.display = t==='logo'?'flex':'none';
-    document.getElementById('textView').style.display = t==='text'?'flex':'none';
-    ['tabColor', 'tabLogo', 'tabText'].forEach(id => document.getElementById(id).classList.toggle('active', t===id.replace('tab','').toLowerCase()));
+  function switchTab(t, bypassDisplay = false) {
+    if(!bypassDisplay) document.getElementById('colorsView').style.display = t === 'colors' ? 'flex' : 'none';
+    document.getElementById('logoView').style.display = t === 'logo' ? 'flex' : 'none';
+    document.getElementById('textView').style.display = t === 'text' ? 'flex' : 'none';
+    ['tabColor', 'tabLogo', 'tabText'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.classList.toggle('active', t === id.replace('tab', '').toLowerCase());
+    });
   }
 
   function updateText() {
     const textVal = document.getElementById('customText').value;
     const sizeVal = document.getElementById('fontSize').value;
     const colorVal = document.getElementById('textColor').value;
-    
-    designState.textData = { text: textVal, size: sizeVal, color: colorVal, x: designState.textData.x, y: designState.textData.y };
+    const st = stickerStates[currentActiveId];
+    if (st) {
+      st.textData = { text: textVal, size: sizeVal, color: colorVal };
+      st.textPos = st.textPos || { x: 50, y: 80 };
+    }
     const overlay = document.getElementById('textOverlay');
-    overlay.innerText = textVal; overlay.style.fontSize = sizeVal + 'px'; overlay.style.color = colorVal;
+    overlay.innerText = textVal || '';
+    overlay.style.fontSize = sizeVal + 'px'; 
+    overlay.style.color = colorVal;
+    
+    if (st && st.formatMode === 'webm' && textVal.trim() !== '') overlay.style.display = 'block';
+    else overlay.style.display = 'none';
+    
     document.getElementById('sizeValue').innerText = sizeVal;
+    updateMiniThumbLive(currentActiveId);
   }
 
   document.getElementById('logoUpload').onchange = (e) => {
@@ -561,25 +1668,430 @@
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      designState.logoData = ev.target.result;
-      document.getElementById('logoOverlay').innerHTML = `<img src="${ev.target.result}">`;
+      const imgData = ev.target.result;
+      if (stickerStates[currentActiveId]) {
+        stickerStates[currentActiveId].logoData = imgData;
+        stickerStates[currentActiveId].logoPos = stickerStates[currentActiveId].logoPos || { x: 50, y: 50 };
+      }
+      const logoEl = document.getElementById('logoOverlay');
+      logoEl.innerHTML = `<img src="${imgData}">`;
+      logoEl.style.display = 'flex';
       document.getElementById('logoSizeCard').style.display = 'flex';
-      updateLogoSize(designState.logoSize || 55);
+      updateLogoSize(48);
+      if (rawLottieJson) { hideCenterEmblem(rawLottieJson); renderLottieAnimation(); }
+      setMode('webm');
+      updateMiniThumbLive(currentActiveId);
     };
     reader.readAsDataURL(file);
   };
 
-  async function saveDesignAndCheckout() {
-    const btn = document.getElementById('btnSubmit');
-    btn.disabled = true;
+  async function loadModalPreview(id, containerId, state) {
     try {
-      localStorage.setItem('finalCustomizedSticker', JSON.stringify(designState));
-      document.getElementById('successToast').classList.add('show');
-      setTimeout(() => window.location.href = '/html/shopping-cart.html', 800);
-    } catch (error) { alert('Error saving design.'); btn.disabled = false; }
+        const wrap = document.getElementById(containerId);
+        if (!wrap) return;
+
+        wrap.innerHTML = `<div id="lottie-wrap-${containerId}" style="width:100%;height:100%;position:absolute;z-index:1;display:flex;align-items:center;justify-content:center;"></div>`;
+        const lottieWrap = document.getElementById(`lottie-wrap-${containerId}`);
+
+        const json = JSON.parse(miniAnimMap[id].rawString);
+        
+        if (state.layers) {
+            const allTargets = [];
+            if (json.layers) deepExtractColorTargets(json.layers, allTargets);
+            if (json.assets) json.assets.forEach(asset => { if (asset.layers) deepExtractColorTargets(asset.layers, allTargets); });
+
+            Object.keys(state.layers).forEach(idxStr => {
+                const idx = parseInt(idxStr, 10);
+                const rgb = hexToLottieColor(state.layers[idx]);
+                if (allTargets[idx] && allTargets[idx].target) {
+                    const tgt = allTargets[idx].target;
+                    if (typeof tgt.k[0] === 'number') tgt.k = rgb;
+                    else if (Array.isArray(tgt.k)) { tgt.k.forEach(kf => { if (kf && kf.s) kf.s = rgb; if (kf && kf.e) kf.e = rgb; }); }
+                }
+            });
+        }
+
+        const effectiveSize = wrap.offsetWidth; 
+        const scaleRatio = effectiveSize / 140;
+
+        if (state.formatMode === 'webm' && state.logoData) {
+            hideCenterEmblem(json);
+            const img = document.createElement('img');
+            img.src = state.logoData;
+            img.style.position = 'absolute';
+            img.style.pointerEvents = 'none';
+            img.style.transform = 'translate(-50%, -50%)';
+            img.style.objectFit = 'contain';
+            const miniSize = Math.round((state.logoSize || 48) * scaleRatio);
+            img.style.width = `${miniSize}px`;
+            img.style.height = `${miniSize}px`;
+            img.style.left = `${state.logoPos ? state.logoPos.x : 50}%`;
+            img.style.top = `${state.logoPos ? state.logoPos.y : 50}%`;
+            img.style.zIndex = '5';
+            wrap.appendChild(img);
+        }
+
+        if (state.formatMode === 'webm' && state.textData && state.textData.text) {
+            const txt = document.createElement('div');
+            txt.innerText = state.textData.text;
+            txt.style.position = 'absolute';
+            txt.style.pointerEvents = 'none';
+            txt.style.transform = 'translate(-50%, -50%)';
+            txt.style.left = `${state.textPos ? state.textPos.x : 50}%`;
+            txt.style.top = `${state.textPos ? state.textPos.y : 80}%`;
+            txt.style.zIndex = '6';
+            txt.style.fontSize = `${Math.max(5, Math.round((parseFloat(state.textData.size) || 18) * scaleRatio))}px`;
+            txt.style.color = state.textData.color || '#ffffff';
+            txt.style.fontWeight = '900';
+            txt.style.whiteSpace = 'nowrap';
+            txt.style.textShadow = `0 ${Math.round(1*scaleRatio)}px ${Math.round(3*scaleRatio)}px rgba(0,0,0,0.95)`;
+            wrap.appendChild(txt);
+        }
+
+        const miniAnim = lottie.loadAnimation({
+            container: lottieWrap,
+            renderer: 'svg',
+            loop: true,
+            autoplay: false,
+            animationData: json
+        });
+
+        wrap.addEventListener('mouseenter', () => miniAnim.play());
+        wrap.addEventListener('mouseleave', () => { miniAnim.stop(); miniAnim.goToAndStop(0, true); });
+    } catch(e) {}
   }
 
-  init();
+  function openCheckoutModal() {
+    saveCurrentStickerState();
+    const packName = localStorage.getItem('stickerPackName') || 'پک من';
+    const t = translations[currentLang] || translations.fa;
+    document.getElementById('modalTitlePackName').innerText = `${t.invoiceTitle}: ${packName}`;
+
+    const listContainer = document.getElementById('invoiceItemsList');
+    listContainer.innerHTML = '';
+    let totalTonSum = 0;
+
+    selectedStickerIds.forEach(id => {
+      const prod = productDetailsMap[id] || { title: `استیکر #${id}`, price_ton: 0.5 };
+      const itemPrice = parseFloat(prod.price_ton || prod.price || 0.5);
+      totalTonSum += itemPrice;
+      const st = stickerStates[id] || { formatMode: 'tgs', layers: {}, logoData: null, textData: {} };
+
+      const row = document.createElement('div');
+      row.className = 'invoice-row';
+      const containerId = `modal-thumb-checkout-${id}-${Date.now()}`;
+      const modeBadgeText = getModeBadgeLabel(st.formatMode);
+
+      row.innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div id="${containerId}" style="width:72px; height:72px; background:rgba(0,0,0,0.5); border-radius:12px; display:flex; justify-content:center; align-items:center; position:relative; overflow:hidden; border: 1px solid rgba(255,255,255,0.08); cursor:pointer;" title="برای حرکت هاور کنید"></div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <span style="font-size:0.95rem; font-weight:700; color:#e2e8f0;">${prod.title}</span>
+            <span style="font-size:0.65rem; color:#888; background:rgba(255,255,255,0.1); padding:3px 8px; border-radius:6px; width:fit-content;">${modeBadgeText}</span>
+          </div>
+        </div>
+        <span style="font-weight:900; color:#fff; font-size: 1.05rem;">${itemPrice.toFixed(2)} TON</span>
+      `;
+      listContainer.appendChild(row);
+      setTimeout(() => loadModalPreview(id, containerId, st), 50);
+    });
+
+    document.getElementById('modalTotalTon').innerText = totalTonSum.toFixed(2);
+    document.getElementById('checkoutModal').classList.add('show');
+  }
+
+  function closeCheckoutModal() { document.getElementById('checkoutModal').classList.remove('show'); }
+
+  async function processPayment() {
+    try {
+        if (!tonConnectUI || !tonConnectUI.wallet) { showToastError('connect'); return; }
+        const totalTon = parseFloat(document.getElementById('modalTotalTon').innerText);
+        if (isNaN(totalTon) || totalTon <= 0) { showToastError('calc'); return; }
+        const nanoTon = Math.round(totalTon * 1000000000).toString();
+        const btn = document.getElementById('btn-pay-action');
+        const t = translations[currentLang] || translations.fa;
+        
+        btn.innerHTML = currentLang === 'fa' ? '⏳ در حال انتقال به کیف پول...' : '⏳ Connecting to wallet...';
+        btn.disabled = true;
+
+        const transaction = { validUntil: Math.floor(Date.now() / 1000) + 360, messages: [{ address: "UQCtuFsFh6ocItdV5zltA8JQEV875u35_xIbiFsyYG1FyK2-", amount: nanoTon }] };
+        await tonConnectUI.sendTransaction(transaction);
+        
+        btn.style.background = 'linear-gradient(135deg, #10b981, #047857)';
+        btn.innerHTML = `✅ ${t.successPay}`;
+        setTimeout(() => { closeCheckoutModal(); openDownloadModal(); }, 1500);
+    } catch (e) {
+        let errType = 'cancel';
+        if (e && (e.message?.includes('not enough') || e.message?.includes('balance') || e.message?.includes('funds'))) errType = 'balance';
+        showToastError(errType);
+        const btn = document.getElementById('btn-pay-action');
+        const t = translations[currentLang] || translations.fa;
+        btn.innerHTML = `💎 ${t.payBtn}`;
+        btn.disabled = false;
+    }
+  }
+
+  function bypassPayment() {
+    saveCurrentStickerState();
+    closeCheckoutModal();
+    openDownloadModal();
+  }
+
+  function openDownloadModal() {
+    renderDownloadColumns();
+    document.getElementById('downloadModal').classList.add('show');
+  }
+  function closeDownloadModal() { document.getElementById('downloadModal').classList.remove('show'); }
+  function toggleAccordion(id) { const el = document.getElementById(id); if (el) el.classList.toggle('open'); }
+
+  function renderDownloadColumns() {
+    const t = translations[currentLang] || translations.fa;
+    const listTgs = document.getElementById('colItemsTgs');
+    const listWebm = document.getElementById('colItemsWebm');
+    const listKey = document.getElementById('colItemsKey');
+    listTgs.innerHTML = ''; listWebm.innerHTML = ''; listKey.innerHTML = '';
+    let countTgs = 0, countWebm = 0, countKey = 0;
+
+    selectedStickerIds.forEach(id => {
+      const st = stickerStates[id] || { formatMode: 'tgs', layers: {}, logoData: null, textData: {} };
+      const prod = productDetailsMap[id] || { title: `Sticker #${id}` };
+      const isKey = (st.formatMode === 'keyboard');
+      const isWebm = (st.formatMode === 'webm' || Boolean(st.logoData) || Boolean(st.textData && st.textData.text));
+
+      const row = document.createElement('div');
+      row.className = 'col-item-row';
+      const thumbId = `col-thumb-dl-${id}-${Date.now()}`;
+
+      row.innerHTML = `
+        <div class="col-thumb" id="${thumbId}"></div>
+        <span style="font-size:0.75rem; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:85px;">${prod.title}</span>
+      `;
+
+      if (isKey) { listKey.appendChild(row); countKey++; } 
+      else if (isWebm) { listWebm.appendChild(row); countWebm++; } 
+      else { listTgs.appendChild(row); countTgs++; }
+
+      setTimeout(() => loadModalPreview(id, thumbId, st), 50);
+    });
+
+    if (countTgs === 0) listTgs.innerHTML = `<div class="empty-col-text">${t.empty}</div>`;
+    if (countWebm === 0) listWebm.innerHTML = `<div class="empty-col-text">${t.empty}</div>`;
+    if (countKey === 0) listKey.innerHTML = `<div class="empty-col-text">${t.empty}</div>`;
+
+    document.getElementById('btnColTgs').disabled = (countTgs === 0);
+    document.getElementById('btnColWebm').disabled = (countWebm === 0);
+    document.getElementById('btnColKey').disabled = (countKey === 0);
+  }
+
+  // تابع ارسال مستقیم به تلگرام از طریق سرور (حل مشکل دانلود در مینی‌اپ)
+  async function sendFileToTelegram(base64Data, filename, caption) {
+    const tg = window.Telegram && window.Telegram.WebApp;
+    const telegram_id = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : '123456789';
+
+    try {
+        const res = await fetch('/api/send-to-telegram', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ telegram_id, fileBase64: base64Data, filename, caption })
+        });
+        const data = await res.json();
+        if (!data.success) {
+            alert(data.message || 'خطا در ارسال فایل به تلگرام');
+        }
+    } catch(e) {
+        console.error('Send to telegram failed', e);
+    }
+  }
+
+  async function handleColumnDownload(type) {
+    const btnId = type === 'tgs' ? 'btnColTgs' : (type === 'webm' ? 'btnColWebm' : 'btnColKey');
+    const btn = document.getElementById(btnId);
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳ در حال ارسال به تلگرام...</span>`;
+
+    for (let i = 0; i < selectedStickerIds.length; i++) {
+        const id = selectedStickerIds[i];
+        const st = stickerStates[id] || { formatMode: 'tgs', layers: {}, logoData: null, textData: {} };
+
+        const isKey = (st.formatMode === 'keyboard');
+        const isWebm = (st.formatMode === 'webm' || Boolean(st.logoData) || Boolean(st.textData && st.textData.text));
+
+        let match = false;
+        if (type === 'tgs' && !isKey && !isWebm) match = true;
+        if (type === 'webm' && !isKey && isWebm) match = true;
+        if (type === 'keyboard' && isKey) match = true;
+        if (!match) continue;
+
+        try {
+            const json = JSON.parse(miniAnimMap[id].rawString);
+            if (st.layers) {
+                const allTargets = [];
+                if (json.layers) deepExtractColorTargets(json.layers, allTargets);
+                if (json.assets) json.assets.forEach(asset => { if (asset.layers) deepExtractColorTargets(asset.layers, allTargets); });
+
+                Object.keys(st.layers).forEach(idxStr => {
+                    const idx = parseInt(idxStr, 10);
+                    const rgb = hexToLottieColor(st.layers[idx]);
+                    if (allTargets[idx] && allTargets[idx].target) {
+                        const tgt = allTargets[idx].target;
+                        if (typeof tgt.k[0] === 'number') tgt.k = rgb;
+                        else if (Array.isArray(tgt.k)) { tgt.k.forEach(kf => { if (kf && kf.s) kf.s = rgb; if (kf && kf.e) kf.e = rgb; }); }
+                    }
+                });
+            }
+
+            if (type === 'webm') {
+                const webmBlob512 = await generateSingleWebmBlob(json, st, 512);
+                const base64_512 = await blobToBase64(webmBlob512);
+                await sendFileToTelegram(base64_512, `sticker_${id}_512x512.webm`, `🎬 Sticker #${id} (512x512)`);
+
+                await new Promise(r => setTimeout(r, 400));
+
+                const webmBlob100 = await generateSingleWebmBlob(json, st, 100);
+                const base64_100 = await blobToBase64(webmBlob100);
+                await sendFileToTelegram(base64_100, `sticker_${id}_100x100.webm`, `⌨️ Video Emoji #${id} (100x100)`);
+            } else {
+                const jsonStr = JSON.stringify(json);
+                const gzipped = pako.gzip(jsonStr, { level: 9 });
+                const blob = new Blob([gzipped], { type: 'application/x-tgsticker' });
+                const base64 = await blobToBase64(blob);
+                const fname = type === 'keyboard' ? `keyboard_${id}.tgs` : `sticker_${id}.tgs`;
+                await sendFileToTelegram(base64, fname, `📦 Vector Sticker #${id}`);
+            }
+        } catch(err) {
+            console.error(err);
+        }
+        await new Promise(r => setTimeout(r, 300));
+    }
+
+    btn.innerHTML = orig;
+    btn.disabled = false;
+    alert('✅ فایل‌ها با موفقیت به چت تلگرام شما ارسال شدند! ربات را چک کنید.');
+  }
+
+  function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+              const base64String = reader.result.split(',')[1];
+              resolve(base64String);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+      });
+  }
+
+  async function generateSingleWebmBlob(json, st, targetDim) {
+      return new Promise(async (resolve) => {
+          const host = document.getElementById('hiddenHost');
+          host.innerHTML = '';
+          const renderAnim = lottie.loadAnimation({ container: host, renderer: 'svg', loop: false, autoplay: false, animationData: JSON.parse(JSON.stringify(json)) });
+          await new Promise(r => renderAnim.addEventListener('DOMLoaded', r));
+          const svg = host.querySelector('svg');
+
+          let logoImg = null;
+          if (st.logoData) {
+              logoImg = new Image();
+              logoImg.src = st.logoData;
+              await new Promise(r => logoImg.onload = r);
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = targetDim;
+          canvas.height = targetDim;
+          const ctx = canvas.getContext('2d', { alpha: true });
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+
+          const totalFrames = renderAnim.totalFrames || 60;
+          const framesToCapture = (targetDim === 100) ? 30 : 40; 
+          const renderedCanvases = [];
+          const scaleFactor = targetDim / 140;
+
+          for (let f = 0; f < framesToCapture; f++) {
+              const targetFrame = (f * (totalFrames / framesToCapture)) % totalFrames;
+              renderAnim.goToAndStop(targetFrame, true);
+              const svgString = new XMLSerializer().serializeToString(svg);
+              const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+              const blobURL = URL.createObjectURL(svgBlob);
+
+              await new Promise(frameDone => {
+                  const img = new Image();
+                  img.onload = () => {
+                      const offCanvas = document.createElement('canvas');
+                      offCanvas.width = targetDim; offCanvas.height = targetDim;
+                      const offCtx = offCanvas.getContext('2d', { alpha: true });
+                      offCtx.imageSmoothingEnabled = true; offCtx.imageSmoothingQuality = 'high';
+                      offCtx.drawImage(img, 0, 0, targetDim, targetDim);
+
+                      if (logoImg) {
+                          const posX = (st.logoPos ? st.logoPos.x : 50) / 100 * targetDim;
+                          const posY = (st.logoPos ? st.logoPos.y : 50) / 100 * targetDim;
+                          const logoRenderSize = (parseFloat(st.logoSize) || 48) * scaleFactor;
+                          
+                          const aspect = logoImg.width / logoImg.height;
+                          let drawW = logoRenderSize, drawH = logoRenderSize;
+                          if (aspect > 1) drawH = logoRenderSize / aspect;
+                          else drawW = logoRenderSize * aspect;
+                          
+                          offCtx.drawImage(logoImg, posX - drawW / 2, posY - drawH / 2, drawW, drawH);
+                      }
+
+                      if (st.textData && st.textData.text) {
+                          const exactFontSize = Math.round((parseFloat(st.textData.size) || 18) * scaleFactor);
+                          offCtx.font = `900 ${exactFontSize}px Vazirmatn, Tahoma, sans-serif`;
+                          offCtx.fillStyle = st.textData.color || '#ffffff';
+                          offCtx.textAlign = 'center';
+                          offCtx.textBaseline = 'middle';
+                          offCtx.shadowColor = 'rgba(0,0,0,0.95)';
+                          offCtx.shadowOffsetY = Math.round(1 * scaleFactor);
+                          offCtx.shadowBlur = Math.round(3 * scaleFactor);
+
+                          const posX = (st.textPos ? st.textPos.x : 50) / 100 * targetDim;
+                          const posY = (st.textPos ? st.textPos.y : 80) / 100 * targetDim;
+                          offCtx.fillText(st.textData.text, posX, posY);
+                      }
+
+                      renderedCanvases.push(offCanvas);
+                      URL.revokeObjectURL(blobURL);
+                      frameDone();
+                  };
+                  img.src = blobURL;
+              });
+          }
+
+          renderAnim.destroy();
+          host.innerHTML = '';
+          const fps = 30;
+          const stream = canvas.captureStream(fps);
+          let mimeType = 'video/webm; codecs=vp9';
+          if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm; codecs=vp8';
+          
+          const bitsPerSecond = (targetDim === 100) ? 120000 : 1800000;
+          const recorder = new MediaRecorder(stream, { mimeType: mimeType, videoBitsPerSecond: bitsPerSecond });
+
+          const chunks = [];
+          recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+          recorder.onstop = () => {
+              const blob = new Blob(chunks, { type: 'video/webm' });
+              resolve(blob);
+          };
+          ctx.drawImage(renderedCanvases[0], 0, 0);
+          recorder.start();
+
+          let idx = 0;
+          const interval = setInterval(() => {
+              idx++;
+              if (idx < renderedCanvases.length) {
+                  ctx.clearRect(0, 0, targetDim, targetDim);
+                  ctx.drawImage(renderedCanvases[idx], 0, 0);
+              } else { clearInterval(interval); recorder.stop(); }
+          }, 1000 / fps);
+      });
+  }
+
+  initMultiCustomizer();
 </script>
 </body>
 </html>

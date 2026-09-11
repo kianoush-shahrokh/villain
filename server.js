@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb', extended: true }));
 
-// سرو فایل‌های استاتیک با ساختار دقیق
+// سرو فایل‌های استاتیک
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
@@ -19,7 +19,7 @@ app.use('/html', express.static(path.join(__dirname, 'html')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 
-// روت اختصاصی مانیفست تون‌کانکت برای جلوگیری از خطای اتصال Tonkeeper
+// روت مانیفست TonConnect
 app.get('/tonconnect-manifest.json', (req, res) => {
   const manifestPath = path.join(__dirname, 'tonconnect-manifest.json');
   res.setHeader('Content-Type', 'application/json');
@@ -29,7 +29,6 @@ app.get('/tonconnect-manifest.json', (req, res) => {
     return res.sendFile(manifestPath);
   }
 
-  // مانیفست پیش‌فرض پویا در صورت عدم وجود فیزیکی فایل
   res.json({
     url: 'https://villain-rexr.onrender.com',
     name: 'Villain Sticker Store',
@@ -39,7 +38,7 @@ app.get('/tonconnect-manifest.json', (req, res) => {
   });
 });
 
-// تنظیم اتصال به دیتابیس بدون SSL (سازگار با سرور Pxxl)
+// اتصال به دیتابیس PostgreSQL
 const pool = new Pool(
   process.env.DATABASE_URL
     ? {
@@ -59,10 +58,20 @@ pool.on('error', (err) => {
   console.error('Database client error:', err);
 });
 
-// ساخت جداول دیتابیس و درج داده‌های اولیه
+// تابع خواندن خودکار فایل‌های ایموجی از پوشه assets/emojis
+function getEmojiFiles() {
+  const emojisDir = path.join(__dirname, 'assets', 'emojis');
+  if (!fs.existsSync(emojisDir)) {
+    return [];
+  }
+  return fs.readdirSync(emojisDir).sort((a, b) => {
+    return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+  });
+}
+
+// ساخت جداول دیتابیس و ثبت دقیق ۶۸ ایموجی با فایل‌های واقعی پوشه assets/emojis
 async function initTables() {
   try {
-    // ۱. جدول کاربران
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         telegram_id TEXT PRIMARY KEY,
@@ -72,7 +81,6 @@ async function initTables() {
       )
     `);
 
-    // ۲. جدول خریدها
     await pool.query(`
       CREATE TABLE IF NOT EXISTS purchases (
         id SERIAL PRIMARY KEY,
@@ -85,7 +93,6 @@ async function initTables() {
       )
     `);
 
-    // ۳. جدول طراحی‌های سفارشی
     await pool.query(`
       CREATE TABLE IF NOT EXISTS custom_stickers (
         id SERIAL PRIMARY KEY,
@@ -97,14 +104,16 @@ async function initTables() {
       )
     `);
 
-    // ۴. جدول محصولات / استیکرها
+    // بازنشانی کامل جدول محصولات برای ثبت فایل‌های پوشه assets/emojis
+    await pool.query('DROP TABLE IF EXISTS products CASCADE');
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS products (
+      CREATE TABLE products (
         id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
-        category TEXT DEFAULT 'gifts',
-        price TEXT DEFAULT '4.00',
+        category TEXT DEFAULT 'emojis',
+        price_ton TEXT DEFAULT '0.50',
         json_path TEXT,
+        thumbnail_path TEXT,
         webp_path TEXT,
         svg_path TEXT,
         tgs_path TEXT,
@@ -112,28 +121,46 @@ async function initTables() {
       )
     `);
 
-    // درج خودکار استیکر پیش‌فرض در صورت خالی بودن جدول
-    const existing = await pool.query('SELECT COUNT(*) FROM products');
-    if (parseInt(existing.rows[0].count, 10) === 0) {
+    // لیست ۶۸ قیمت دقیق اعلام‌شده توسط کارفرما
+    const exactPrices = [
+      '0.50', '0.50', '0.50', '0.50', '0.50', '0.50', '0.50', '0.50', '0.50', '0.50',
+      '0.50', '0.75', '0.75', '0.50', '1.00', '0.50', '0.50', '0.50', '0.50', '0.75', '0.75', '1.50',
+      '0.75', '0.50', '0.75', '2.00', '0.50', '0.75', '0.50', '0.75', '0.50', '3.00', '0.50',
+      '0.75', '2.00', '0.75', '1.50', '0.75', '0.75', '1.00', '2.00', '2.00', '0.50', '0.50', '1.00',
+      '0.50', '1.00', '0.50', '0.75', '2.00', '0.50', '0.50', '0.75', '2.00', '0.50', '1.50',
+      '1.50', '1.50', '1.00', '1.00', '1.00', '1.00', '1.00', '1.00', '1.00', '1.00', '1.00', '1.00'
+    ];
+
+    const filesInEmojis = getEmojiFiles();
+    const jsonFiles = filesInEmojis.filter(f => f.endsWith('.json'));
+    const imgFiles = filesInEmojis.filter(f => f.endsWith('.webp') || f.endsWith('.png') || f.endsWith('.svg'));
+
+    for (let i = 0; i < 68; i++) {
+      const numStr = String(i + 1).padStart(3, '0');
+      const title = `Emoji ${numStr}`;
+      const price = exactPrices[i] || '0.50';
+
+      let jsonRel = 'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.json';
+      let imgRel = 'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.webp';
+
+      if (jsonFiles.length > 0) {
+        jsonRel = `assets/emojis/${jsonFiles[i % jsonFiles.length]}`;
+      }
+      if (imgFiles.length > 0) {
+        imgRel = `assets/emojis/${imgFiles[i % imgFiles.length]}`;
+      } else if (jsonFiles.length > 0) {
+        imgRel = jsonRel;
+      }
+
       await pool.query(`
-        INSERT INTO products (title, category, price, json_path, webp_path, svg_path, tgs_path, zip_path)
-        VALUES (
-          'Gift Shop Emoji',
-          'gifts',
-          '4.00',
-          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.json',
-          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.webp',
-          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.svg',
-          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.tgs.zip',
-          'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.zip'
-        )
-      `);
-      console.log('✅ استیکر پیش‌فرض با موفقیت به دیتابیس اضافه شد.');
+        INSERT INTO products (title, category, price_ton, json_path, thumbnail_path, webp_path, svg_path, tgs_path, zip_path)
+        VALUES ($1, 'emojis', $2, $3, $4, $4, $4, 'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.tgs.zip', 'assets/stickers/GiftShop_Farsi_AgAD-BwAAvQXsVA.zip')
+      `, [title, price, jsonRel, imgRel]);
     }
 
-    console.log('✅ تمامی جداول دیتابیس آماده هستند.');
+    console.log('✅ تمامی ۶۸ ایموجی مستقیماً از پوشه assets/emojis متصل و ثبت شدند.');
   } catch (err) {
-    console.error('خطا در ساخت جداول دیتابیس:', err.message);
+    console.error('خطا در ساخت دیتابیس:', err.message);
   }
 }
 initTables();
@@ -142,17 +169,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'html', 'index.html'));
 });
 
-// مسیر دریافت مستقیم فایل JSON برای جلوگیری از خطای ۴۰۴ در ادیتور
-app.get('/api/sticker-json', (req, res) => {
-  const filePath = path.join(__dirname, 'assets', 'stickers', 'GiftShop_Farsi_AgAD-BwAAvQXsVA.json');
-  if (fs.existsSync(filePath)) {
-    res.setHeader('Content-Type', 'application/json');
-    return res.sendFile(filePath);
-  }
-  res.status(404).json({ success: false, message: 'فایل استیکر یافت نشد.' });
-});
-
-// مسیر دریافت لیست محصولات
+// دریافت لیست محصولات
 app.get('/api/products', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM products ORDER BY id ASC');
@@ -162,7 +179,50 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// مسیر ثبت اطلاعات کاربر تلگرام
+// دریافت مشخصات یک محصول
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'محصول یافت نشد.' });
+    }
+    res.json({ success: true, data: result.rows[0] });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// ارسال مستقیم فایل JSON اختصاصی هر محصول
+app.get('/api/product-json/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('SELECT json_path FROM products WHERE id = $1', [id]);
+
+    if (result.rows.length === 0 || !result.rows[0].json_path) {
+      return res.status(404).json({ success: false, message: 'فایل در دیتابیس یافت نشد.' });
+    }
+
+    let filePath = result.rows[0].json_path;
+    const fullPath = path.join(__dirname, filePath.startsWith('/') ? filePath.slice(1) : filePath);
+
+    if (!fs.existsSync(fullPath)) {
+      const fallbackPath = path.join(__dirname, 'assets', 'stickers', 'GiftShop_Farsi_AgAD-BwAAvQXsVA.json');
+      if (fs.existsSync(fallbackPath)) {
+        res.setHeader('Content-Type', 'application/json');
+        return res.sendFile(fallbackPath);
+      }
+      return res.status(404).json({ success: false, message: 'فایل یافت نشد.' });
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.sendFile(fullPath);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// ثبت کاربر تلگرام
 app.post('/api/users', async (req, res) => {
   const { telegram_id, full_name, username } = req.body;
   if (!telegram_id) {
@@ -178,13 +238,13 @@ app.post('/api/users', async (req, res) => {
       username = EXCLUDED.username;
     `;
     await pool.query(query, [telegram_id.toString(), full_name, username]);
-    res.json({ success: true, message: 'کاربر با موفقیت ثبت/بروزرسانی شد.' });
+    res.json({ success: true, message: 'کاربر ثبت شد.' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// مسیر دریافت خریدهای کاربر
+// دریافت خریدهای کاربر
 app.get('/api/user/purchases', async (req, res) => {
   const telegramId = req.query.telegram_id;
   if (!telegramId) {
@@ -228,7 +288,7 @@ app.get('/api/user/purchases', async (req, res) => {
   }
 });
 
-// مسیر ذخیره طراحی
+// ذخیره طراحی سفارشی
 app.post('/api/save-design', async (req, res) => {
   const { stickerId, layers, logoData, logoSize, textData, formatMode } = req.body;
   try {
@@ -239,7 +299,7 @@ app.post('/api/save-design', async (req, res) => {
     `;
     const payloadText = {
       ...(textData || {}),
-      logoSize: logoSize || 55,
+      logoSize: logoSize || 48,
       formatMode: formatMode || 'tgs'
     };
     const values = [ 
@@ -391,7 +451,7 @@ function createVectorLayer(ip, op, colorArray, svgPathData) {
   };
 }
 
-// مسیر دانلود استیکر TGS
+// دانلود فایل نهایی TGS
 app.post('/api/download-tgs', (req, res) => {
   try {
     const { file, layers, svgPathData, logoColor } = req.body; 
@@ -438,6 +498,46 @@ app.post('/api/download-tgs', (req, res) => {
   } catch (error) {
     console.error('TGS Generation error:', error);
     res.status(500).send('Internal Server Error');
+  }
+});
+
+// اندپوینت ارسال مستقیم فایل به چت تلگرام کاربر (جهت حل مشکل دانلود در مینی‌اپ)
+app.post('/api/send-to-telegram', async (req, res) => {
+  try {
+    const { telegram_id, fileBase64, filename, caption } = req.body;
+    if (!telegram_id || !fileBase64) {
+      return res.status(400).json({ success: false, message: 'اطلاعات ناقص است.' });
+    }
+
+    // توکن ربات تلگرام خود را از متغیر محیطی یا به صورت مستقیم قرار دهید
+    const botToken = process.env.TELEGRAM_BOT_TOKEN || '8937158151:AAE94CZGvR6P7cu-B3Q1YwV8fc2l6hYhLp8';
+    if (!botToken || botToken === 'YOUR_BOT_TOKEN_HERE') {
+      return res.status(500).json({ success: false, message: 'توکن ربات تلگرام در سرور تنظیم نشده است.' });
+    }
+
+    const buffer = Buffer.from(fileBase64, 'base64');
+    const formData = new FormData();
+    formData.append('chat_id', telegram_id.toString());
+    formData.append('document', new Blob([buffer]), filename || 'sticker.tgs');
+    if (caption) {
+      formData.append('caption', caption);
+    }
+
+    const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
+    const tgRes = await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const tgData = await tgRes.json();
+    if (tgData.ok) {
+      res.json({ success: true, message: 'فایل با موفقیت به چت تلگرام شما ارسال شد!' });
+    } else {
+      res.status(400).json({ success: false, message: tgData.description || 'خطا در ارسال به تلگرام' });
+    }
+  } catch (err) {
+    console.error('Telegram Send Error:', err);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 

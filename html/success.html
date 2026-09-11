@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>دانلود استیکر</title>
+    <title>دانلود استیکرها</title>
     
     <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- فونت وزیرمتن -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -17,7 +16,7 @@
     <style>
         :root {
             --bg: #070709;
-            --card-bg: rgba(20, 20, 24, 0.85);
+            --card-bg: rgba(20, 20, 24, 0.88);
             --card-border: rgba(255, 255, 255, 0.08);
             --accent: #f43f5e;
             --accent-glow: rgba(244, 63, 94, 0.45);
@@ -45,13 +44,13 @@
             justify-content: center;
             align-items: center;
             background: radial-gradient(circle at 50% 10%, rgba(244, 63, 94, 0.12) 0%, transparent 60%), #070709;
-            padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px)) 14px;
+            padding: 14px 16px calc(16px + env(safe-area-inset-bottom, 0px)) 16px;
             overflow-x: hidden;
         }
 
         .success-wrapper {
             width: 100%;
-            max-width: 420px;
+            max-width: 460px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -69,15 +68,15 @@
             background: var(--card-bg);
             color: var(--text-muted);
             border: 1px solid var(--card-border);
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 10px;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             backdrop-filter: blur(10px);
             transition: all 0.2s ease;
         }
@@ -92,9 +91,9 @@
             background: var(--card-bg);
             color: #fff;
             border: 1px solid var(--card-border);
-            padding: 6px 10px;
+            padding: 7px 12px;
             border-radius: 10px;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             font-weight: 500;
             cursor: pointer;
             outline: none;
@@ -109,13 +108,13 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 20px;
-            padding: 18px 16px;
+            padding: 20px 18px;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0,0,0,0.6);
             backdrop-filter: blur(14px);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 14px;
         }
 
         .success-badge-top {
@@ -123,177 +122,209 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--success);
             background: rgba(16, 185, 129, 0.12);
             border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 20px;
             align-self: center;
         }
 
         .main-title {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 900;
             color: #fff;
         }
 
         .sub-desc {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
-        .stage-wrapper {
-            background: radial-gradient(circle at center, rgba(244, 63, 94, 0.12) 0%, rgba(0,0,0,0.85) 100%), #000;
-            border-radius: 16px;
-            height: 165px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+        /* ساختار ۳ ستونی استاندارد و چشم‌نواز */
+        .columns-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            max-height: 290px;
+            overflow-y: auto;
+            padding-right: 2px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+
+        @media(min-width: 390px) {
+            .columns-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .column-box {
+            background: rgba(15, 15, 19, 0.8);
             border: 1px solid var(--card-border);
-            overflow: hidden;
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.7);
-        }
-
-        #successLottie {
-            width: 135px;
-            height: 135px;
-            pointer-events: none;
-        }
-
-        .overlay-logo {
-            position: absolute;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 10;
-            object-fit: contain;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6));
-        }
-
-        .overlay-text {
-            position: absolute;
-            transform: translate(-50%, -50%);
-            font-weight: 900;
-            pointer-events: none;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.95);
-            white-space: nowrap;
-            z-index: 12;
-        }
-
-        .format-badge {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #fff;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--card-border);
-            padding: 6px 12px;
-            border-radius: 10px;
+            border-radius: 14px;
+            padding: 10px;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .column-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #fb7185;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 6px;
+            text-align: center;
+        }
+
+        .column-items {
+            display: flex;
+            flex-direction: column;
             gap: 6px;
+            max-height: 110px;
+            overflow-y: auto;
+            padding-right: 2px;
+            scrollbar-width: thin;
         }
 
-        .btn-download {
+        .col-item-row {
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 5px 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .col-thumb {
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .col-thumb lottie-player {
+            width: 28px !important;
+            height: 28px !important;
+            pointer-events: none;
+        }
+        .col-thumb-logo {
+            position: absolute;
+            object-fit: contain;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .col-thumb-text {
+            position: absolute;
+            font-weight: 900;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 6;
+            font-size: 5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+        }
+
+        .col-download-btn {
             background: linear-gradient(135deg, var(--accent), #be123c);
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 13px;
-            font-weight: 800;
+            padding: 7px;
+            border-radius: 8px;
+            font-weight: 700;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.72rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 18px var(--accent-glow);
+            gap: 4px;
+            box-shadow: 0 3px 10px var(--accent-glow);
             transition: all 0.2s ease;
+            width: 100%;
+        }
+        .col-download-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--card-border);
+            box-shadow: none;
+            color: #e2e8f0;
+        }
+        .col-download-btn:active { transform: scale(0.97); }
+        .col-download-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .empty-col-text {
+            font-size: 0.68rem;
+            color: #64748b;
+            text-align: center;
+            padding: 18px 0;
         }
 
-        .btn-download:active {
-            transform: scale(0.97);
-            filter: brightness(1.1);
+        /* منوهای کشویی (آکاردئون) استاندارد و تفکیک‌شده برای ۳ بخش */
+        .guides-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: right;
         }
-
-        .btn-download:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        html[dir="ltr"] .guides-wrapper { text-align: left; }
 
         .accordion-guide {
-            background: rgba(15, 15, 18, 0.75);
-            border: 1px solid rgba(244, 63, 94, 0.25);
-            border-radius: 14px;
+            background: rgba(15, 15, 18, 0.8);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .accordion-header {
-            padding: 10px 14px;
+            padding: 9px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            background: rgba(244, 63, 94, 0.06);
+            background: rgba(244, 63, 94, 0.05);
             user-select: none;
         }
-
         .accordion-header-title {
-            font-size: 0.8rem;
+            font-size: 0.76rem;
             font-weight: 800;
             color: #fb7185;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-
-        .accordion-arrow {
-            font-size: 0.75rem;
-            color: #fb7185;
-            transition: transform 0.3s ease;
-        }
-
-        .accordion-guide.open .accordion-arrow {
-            transform: rotate(180deg);
-        }
+        .accordion-arrow { font-size: 0.7rem; color: #fb7185; transition: transform 0.3s ease; }
+        .accordion-guide.open .accordion-arrow { transform: rotate(180deg); }
 
         .accordion-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.35s ease-out, padding 0.3s ease;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: #cbd5e1;
-            text-align: right;
-            line-height: 1.6;
-            padding: 0 14px;
+            line-height: 1.5;
+            padding: 0 12px;
         }
-
         .accordion-guide.open .accordion-content {
-            max-height: 250px;
-            padding: 12px 14px;
+            max-height: 180px;
+            padding: 10px 12px;
             border-top: 1px dashed rgba(255, 255, 255, 0.08);
         }
-
-        .accordion-content ol {
-            padding-right: 18px;
-            padding-left: 18px;
-            margin: 4px 0;
-        }
-
-        .accordion-content li {
-            margin-bottom: 4px;
-        }
-
+        .accordion-content ol { padding-right: 14px; padding-left: 14px; margin: 2px 0; }
+        .accordion-content li { margin-bottom: 3px; }
         .accordion-content code {
             color: var(--accent);
             font-weight: bold;
             background: rgba(244, 63, 94, 0.15);
-            padding: 1px 5px;
+            padding: 1px 4px;
             border-radius: 4px;
             direction: ltr;
             display: inline-block;
@@ -314,11 +345,9 @@
             gap: 6px;
             transition: 0.2s;
         }
-
         .home-btn:active {
             transform: scale(0.97);
             color: #fff;
-            border-color: rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.04);
         }
     </style>
@@ -327,8 +356,8 @@
 
 <div class="success-wrapper">
     <header class="header-container">
-        <a href="checkout.html" class="back-btn">
-            <span id="backArrow">❮</span> <span id="txtBack">بازگشت به پرداخت</span>
+        <a href="customize.html" class="back-btn">
+            <span id="backArrow">❮</span> <span id="txtBack">بازگشت به ویرایش</span>
         </a>
         <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
             <option value="fa">🇮🇷 فارسی</option>
@@ -343,30 +372,79 @@
             <span>✓</span> <span id="txtBadge">پرداخت با موفقیت انجام شد</span>
         </div>
 
-        <h2 class="main-title" id="txtMainTitle">استیکر شما آماده دانلود است</h2>
-        <p class="sub-desc" id="txtSubDesc">فایل اختصاصی شما پردازش شد.</p>
+        <h2 class="main-title" id="txtMainTitle">استیکرهای شما آماده دانلود است</h2>
+        <p class="sub-desc" id="txtSubDesc">خروجی‌ها بر اساس فرمت انتخابی در ۳ بخش مجزا دسته‌بندی شده‌اند.</p>
 
-        <div class="stage-wrapper" id="stageWrapper">
-            <div id="successLottie"></div>
-            <img id="successLogo" class="overlay-logo" style="display:none;" />
-            <div id="successText" class="overlay-text" style="display:none;"></div>
+        <!-- ۳ ستون مجزا برای دسته‌بندی استیکرها بر اساس فرمت -->
+        <div class="columns-container">
+            <!-- ستون اول: متحرک TGS -->
+            <div class="column-box">
+                <div class="column-title" id="colTitleTgs">📦 متحرک (.tgs)</div>
+                <div class="column-items" id="colItemsTgs">
+                    <div class="empty-col-text" id="emptyTgs">خالی</div>
+                </div>
+                <button class="col-download-btn" id="btnColTgs" onclick="handleColumnDownload('tgs')" disabled>
+                    <span>⬇</span> <span id="txtDlColTgs">دانلود TGS</span>
+                </button>
+            </div>
+
+            <!-- ستون دوم: ویدیویی لوگودار WebM -->
+            <div class="column-box">
+                <div class="column-title" id="colTitleWebm">🎬 لوگودار (.webm)</div>
+                <div class="column-items" id="colItemsWebm">
+                    <div class="empty-col-text" id="emptyWebm">خالی</div>
+                </div>
+                <button class="col-download-btn secondary" id="btnColWebm" onclick="handleColumnDownload('webm')" disabled>
+                    <span>⬇</span> <span id="txtDlColWebm">دانلود WebM</span>
+                </button>
+            </div>
+
+            <!-- ستون سوم: کیبورد (TGS) -->
+            <div class="column-box">
+                <div class="column-title" id="colTitleKey">⌨️ کیبورد (.tgs)</div>
+                <div class="column-items" id="colItemsKey">
+                    <div class="empty-col-text" id="emptyKey">خالی</div>
+                </div>
+                <button class="col-download-btn secondary" id="btnColKey" onclick="handleColumnDownload('keyboard')" disabled>
+                    <span>⬇</span> <span id="txtDlColKey">دانلود کیبورد</span>
+                </button>
+            </div>
         </div>
 
-        <div id="formatBadge" class="format-badge">...</div>
-
-        <button id="btnDownload" class="btn-download" onclick="handleDownload()">
-            <span>📥</span> <span id="txtBtnDownload">دانلود استیکر تلگرام</span>
-        </button>
-
-        <div class="accordion-guide" id="guideAccordion">
-            <div class="accordion-header" onclick="toggleGuideAccordion()">
-                <div class="accordion-header-title">
-                    <span>💡</span>
-                    <span id="txtAccordionTitle">راهنمای ثبت در ربات استیکر تلگرام</span>
+        <!-- منوهای کشویی راهنمای تفکیک‌شده برای هر ۳ بخش -->
+        <div class="guides-wrapper">
+            <!-- راهنمای بخش TGS -->
+            <div class="accordion-guide" id="guideTgs">
+                <div class="accordion-header" onclick="toggleAccordion('guideTgs')">
+                    <div class="accordion-header-title">
+                        <span>📦</span> <span id="txtAccTitleTgs">راهنمای ثبت استیکر متحرک (TGS)</span>
+                    </div>
+                    <span class="accordion-arrow">▼</span>
                 </div>
-                <span class="accordion-arrow">▼</span>
+                <div class="accordion-content" id="contentTgs"></div>
             </div>
-            <div class="accordion-content" id="accordionBody"></div>
+
+            <!-- راهنمای بخش WebM -->
+            <div class="accordion-guide" id="guideWebm">
+                <div class="accordion-header" onclick="toggleAccordion('guideWebm')">
+                    <div class="accordion-header-title">
+                        <span>🎬</span> <span id="txtAccTitleWebm">راهنمای ثبت استیکر ویدیویی لوگودار (WebM)</span>
+                    </div>
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-content" id="contentWebm"></div>
+            </div>
+
+            <!-- راهنمای بخش کیبورد -->
+            <div class="accordion-guide" id="guideKey">
+                <div class="accordion-header" onclick="toggleAccordion('guideKey')">
+                    <div class="accordion-header-title">
+                        <span>⌨️</span> <span id="txtAccTitleKey">راهنمای ثبت استیکر کیبورد (TGS)</span>
+                    </div>
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-content" id="contentKey"></div>
+            </div>
         </div>
 
         <a href="index.html" class="home-btn">
@@ -378,140 +456,173 @@
 <div id="hiddenHost" style="position: absolute; width: 512px; height: 512px; top: -9999px; left: -9999px; visibility: hidden;"></div>
 
 <script>
-    let savedDesign = null;
-    let modifiedLottieJson = null;
+    let allStates = {};
+    let selectedIds = [];
+    let productDetailsMap = {};
     let currentLang = 'fa';
 
     const i18n = {
         fa: {
-            back: "بازگشت به پرداخت",
+            back: "بازگشت به ویرایش",
             badge: "پرداخت با موفقیت انجام شد",
-            mainTitle: "استیکر شما آماده دانلود است",
-            subDesc: "فایل اختصاصی شما با رنگ‌بندی و ابعاد دقیق آماده شد.",
-            btnDownload: "دانلود استیکر تلگرام",
+            mainTitle: "استیکرهای شما آماده دانلود است",
+            subDesc: "خروجی‌ها بر اساس فرمت انتخابی در ۳ بخش مجزا دسته‌بندی شده‌اند.",
+            colTgs: "📦 متحرک (.tgs)",
+            colWebm: "🎬 لوگودار (.webm)",
+            colKey: "⌨️ کیبورد (.tgs)",
+            dlCol: "دانلود",
+            empty: "خالی",
             home: "بازگشت به صفحه اصلی",
-            formatTgs: "فرمت خروجی: استیکر وکتور (.tgs)",
-            formatWebm: "فرمت خروجی: استیکر ویدیویی استاندارد (.webm)",
-            accordionTitle: "راهنمای ثبت در ربات استیکر تلگرام",
-            guideTgsSteps: `
+            accTgs: "راهنمای ثبت استیکر متحرک (TGS)",
+            accWebm: "راهنمای ثبت استیکر ویدیویی (WebM)",
+            accKey: "راهنمای ثبت استیکر کیبورد (TGS)",
+            stepsTgs: `
                 <ol>
                     <li>فایل <code>.tgs</code> را دانلود کنید.</li>
-                    <li>وارد ربات رسمی <code>@Stickers</code> در تلگرام شوید.</li>
-                    <li>دستور <code>/newanimated</code> را ارسال کنید.</li>
-                    <li>یک نام برای پک انتخاب کرده و فایل دانلود شده را به صورت <b>File (بدون فشرده‌سازی)</b> بفرستید.</li>
-                    <li>یک ایموجی به آن اختصاص دهید و پک را منتشر کنید!</li>
+                    <li>به ربات <code>@Stickers</code> در تلگرام بروید.</li>
+                    <li>دستور <code>/newanimated</code> را بفرستید.</li>
+                    <li>فایل را به صورت <b>File (بدون فشرده‌سازی)</b> بفرستید و یک ایموجی اختصاص دهید.</li>
                 </ol>
             `,
-            guideWebmSteps: `
+            stepsWebm: `
                 <ol>
                     <li>فایل <code>.webm</code> را دانلود کنید.</li>
-                    <li>وارد ربات رسمی <code>@Stickers</code> در تلگرام شوید.</li>
-                    <li>دستور <code>/newvideo</code> را ارسال کنید.</li>
-                    <li>یک نام برای پک انتخاب کرده و فایل ویدیو را به صورت <b>File</b> برای ربات بفرستید.</li>
-                    <li>ایموجی مرتبط را ارسال و پک استیکر خود را نهایی کنید!</li>
+                    <li>به ربات <code>@Stickers</code> در تلگرام بروید.</li>
+                    <li>دستور <code>/newvideo</code> را بفرستید.</li>
+                    <li>فایل را به صورت <b>File</b> ارسال کرده و ایموجی مرتبط را وارد کنید.</li>
                 </ol>
             `,
-            loadingTgs: "⏳ در حال ساخت فایل TGS...",
-            loadingWebm: "⏳ در حال رندر ویدیوی WebM...",
+            stepsKey: `
+                <ol>
+                    <li>فایل کیبورد <code>.tgs</code> را دانلود کنید.</li>
+                    <li>به ربات <code>@Stickers</code> در تلگرام بروید.</li>
+                    <li>دستور <code>/newanimated</code> را ارسال کنید.</li>
+                    <li>فایل را بفرستید (مناسب برای ایموجی‌ها و استیکرهای کوچک کیبورد).</li>
+                </ol>
+            `,
             noOrder: "سفارشی یافت نشد!",
             dir: "rtl"
         },
         en: {
-            back: "Back to Checkout",
+            back: "Back to Edit",
             badge: "Payment Completed Successfully",
-            mainTitle: "Your Sticker is Ready",
-            subDesc: "Your custom file is ready with exact palette and scale.",
-            btnDownload: "Download Telegram Sticker",
+            mainTitle: "Your Stickers are Ready",
+            subDesc: "Your stickers are grouped into 3 separate sections based on format.",
+            colTgs: "📦 Animated (.tgs)",
+            colWebm: "🎬 With Logo (.webm)",
+            colKey: "⌨️ Keyboard (.tgs)",
+            dlCol: "Download",
+            empty: "Empty",
             home: "Back to Home",
-            formatTgs: "Output Format: Vector Sticker (.tgs)",
-            formatWebm: "Output Format: Standard Video Sticker (.webm)",
-            accordionTitle: "How to Add to Telegram Sticker Bot",
-            guideTgsSteps: `
+            accTgs: "Animated Sticker Guide (TGS)",
+            accWebm: "Video Sticker Guide (WebM)",
+            accKey: "Keyboard Sticker Guide (TGS)",
+            stepsTgs: `
                 <ol>
-                    <li>Download the <code>.tgs</code> file above.</li>
-                    <li>Open official bot <code>@Stickers</code> in Telegram.</li>
-                    <li>Send the <code>/newanimated</code> command.</li>
-                    <li>Choose a pack name and send the downloaded file as a <b>File (Uncompressed)</b>.</li>
-                    <li>Assign an emoji and publish your sticker pack!</li>
+                    <li>Download the <code>.tgs</code> file.</li>
+                    <li>Go to bot <code>@Stickers</code> in Telegram.</li>
+                    <li>Send <code>/newanimated</code>.</li>
+                    <li>Upload the file as a <b>File (Uncompressed)</b> and send an emoji.</li>
                 </ol>
             `,
-            guideWebmSteps: `
+            stepsWebm: `
                 <ol>
-                    <li>Download the <code>.webm</code> video sticker.</li>
-                    <li>Open official bot <code>@Stickers</code> in Telegram.</li>
-                    <li>Send the <code>/newvideo</code> command.</li>
-                    <li>Choose a pack name and send the downloaded video as a <b>File</b>.</li>
-                    <li>Assign an emoji and publish your animated sticker!</li>
+                    <li>Download the <code>.webm</code> file.</li>
+                    <li>Go to bot <code>@Stickers</code> in Telegram.</li>
+                    <li>Send <code>/newvideo</code>.</li>
+                    <li>Upload as a <b>File</b> and assign an emoji.</li>
                 </ol>
             `,
-            loadingTgs: "⏳ Compressing TGS...",
-            loadingWebm: "⏳ Rendering WebM...",
+            stepsKey: `
+                <ol>
+                    <li>Download the keyboard <code>.tgs</code> file.</li>
+                    <li>Go to bot <code>@Stickers</code> in Telegram.</li>
+                    <li>Send <code>/newanimated</code>.</li>
+                    <li>Upload the file for emoji/keyboard usage.</li>
+                </ol>
+            `,
             noOrder: "No customized sticker found!",
             dir: "ltr"
         },
         ru: {
-            back: "Назад к оплате",
+            back: "Назад к правке",
             badge: "Оплата прошла успешно",
-            mainTitle: "Ваш стикер готов к скачиванию",
-            subDesc: "Файл с точной цветовой палитрой и размерами готов.",
-            btnDownload: "Скачать стикер Telegram",
+            mainTitle: "Ваши стикеры готовы",
+            subDesc: "Стикеры распределены по 3 отдельным блокам в зависимости от формата.",
+            colTgs: "📦 Анимация (.tgs)",
+            colWebm: "🎬 С логотипом (.webm)",
+            colKey: "⌨️ Клавиатура (.tgs)",
+            dlCol: "Скачать",
+            empty: "Пусто",
             home: "На главную",
-            formatTgs: "Формат: Векторный стикер (.tgs)",
-            formatWebm: "Формат: Видеостикер (.webm)",
-            accordionTitle: "Инструкция по добавлению в @Stickers",
-            guideTgsSteps: `
+            accTgs: "Гид по анимации (TGS)",
+            accWebm: "Гид по видеостикерам (WebM)",
+            accKey: "Гид для клавиатуры (TGS)",
+            stepsTgs: `
                 <ol>
                     <li>Скачайте файл <code>.tgs</code>.</li>
-                    <li>Перейдите в официальный бот <code>@Stickers</code> в Telegram.</li>
-                    <li>Отправьте команду <code>/newanimated</code>.</li>
-                    <li>Задайте имя набора и отправьте файл как <b>Документ (файл)</b>.</li>
-                    <li>Привяжите эмодзи и опубликуйте стикерпак!</li>
+                    <li>Откройте бот <code>@Stickers</code> в Telegram.</li>
+                    <li>Отправьте <code>/newanimated</code>.</li>
+                    <li>Загрузите файл как <b>Документ</b> и отправьте эмодзи.</li>
                 </ol>
             `,
-            guideWebmSteps: `
+            stepsWebm: `
                 <ol>
                     <li>Скачайте файл <code>.webm</code>.</li>
-                    <li>Перейдите в бот <code>@Stickers</code> в Telegram.</li>
-                    <li>Отправьте команду <code>/newvideo</code>.</li>
-                    <li>Задайте имя набора и отправьте видеофайл как <b>Документ (файл)</b>.</li>
-                    <li>Привяжите эмодзи и завершите добавление!</li>
+                    <li>Откройте бот <code>@Stickers</code> в Telegram.</li>
+                    <li>Отправьте <code>/newvideo</code>.</li>
+                    <li>Загрузите как <b>Документ</b> и привяжите эмодзи.</li>
                 </ol>
             `,
-            loadingTgs: "⏳ Сжатие TGS...",
-            loadingWebm: "⏳ Рендеринг WebM...",
+            stepsKey: `
+                <ol>
+                    <li>Скачайте файл клавиатуры <code>.tgs</code>.</li>
+                    <li>Откройте бот <code>@Stickers</code> в Telegram.</li>
+                    <li>Отправьте <code>/newanimated</code>.</li>
+                    <li>Загрузите файл как <b>Документ</b>.</li>
+                </ol>
+            `,
             noOrder: "Заказ не найден!",
             dir: "ltr"
         },
         zh: {
-            back: "返回支付",
+            back: "返回编辑",
             badge: "支付成功",
-            mainTitle: "您的贴纸已准备就绪",
-            subDesc: "已按精准配色与尺寸生成专属贴纸。",
-            btnDownload: "下载 Telegram 贴纸",
+            mainTitle: "您的贴纸已全部就绪",
+            subDesc: "您的贴纸已根据格式分为 3 个独立区域。",
+            colTgs: "📦 动画 (.tgs)",
+            colWebm: "🎬 带徽标 (.webm)",
+            colKey: "⌨️ 键盘 (.tgs)",
+            dlCol: "下载",
+            empty: "空",
             home: "返回首页",
-            formatTgs: "输出格式: 矢量贴纸 (.tgs)",
-            formatWebm: "输出格式: 标准视频贴纸 (.webm)",
-            accordionTitle: "如何在 Telegram 中添加此贴纸",
-            guideTgsSteps: `
+            accTgs: "动态贴纸指南 (TGS)",
+            accWebm: "视频贴纸指南 (WebM)",
+            accKey: "键盘贴纸指南 (TGS)",
+            stepsTgs: `
                 <ol>
-                    <li>点击上方按钮下载 <code>.tgs</code> 文件。</li>
-                    <li>在 Telegram 中打开官方机器人 <code>@Stickers</code>。</li>
-                    <li>发送命令 <code>/newanimated</code>。</li>
-                    <li>输入贴纸包名称，并将下载的文件以 <b>文件形式 (未压缩)</b> 发送给机器人。</li>
-                    <li>关联一个 Emoji 表情并发布贴纸包！</li>
+                    <li>下载 <code>.tgs</code> 文件。</li>
+                    <li>在 Telegram 中打开机器人 <code>@Stickers</code>。</li>
+                    <li>发送 <code>/newanimated</code>。</li>
+                    <li>以<b>未压缩文件</b>形式上传并发送 Emoji。</li>
                 </ol>
             `,
-            guideWebmSteps: `
+            stepsWebm: `
                 <ol>
-                    <li>下载 <code>.webm</code> 格式视频贴纸。</li>
-                    <li>在 Telegram 中打开官方机器人 <code>@Stickers</code>。</li>
-                    <li>发送命令 <code>/newvideo</code>。</li>
-                    <li>输入贴纸包名称，并将下载的视频以 <b>文件形式</b> 发送给机器人。</li>
-                    <li>关联一个 Emoji 表情即可完成发布！</li>
+                    <li>下载 <code>.webm</code> 文件。</li>
+                    <li>在 Telegram 中打开机器人 <code>@Stickers</code>。</li>
+                    <li>发送 <code>/newvideo</code>。</li>
+                    <li>以文件形式上传并绑定 Emoji。</li>
                 </ol>
             `,
-            loadingTgs: "⏳ 正在生成 TGS...",
-            loadingWebm: "⏳ 正在渲染视频...",
+            stepsKey: `
+                <ol>
+                    <li>下载键盘版 <code>.tgs</code> 文件。</li>
+                    <li>在 Telegram 中打开机器人 <code>@Stickers</code>。</li>
+                    <li>发送 <code>/newanimated</code>。</li>
+                    <li>以文件形式上传。</li>
+                </ol>
+            `,
             noOrder: "未找到定制贴纸！",
             dir: "ltr"
         }
@@ -547,9 +658,9 @@
         });
     }
 
-    function toggleGuideAccordion() {
-        const accordion = document.getElementById('guideAccordion');
-        if (accordion) accordion.classList.toggle('open');
+    function toggleAccordion(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('open');
     }
 
     function changeLanguage(lang) {
@@ -560,20 +671,43 @@
         document.getElementById('txtBadge').innerText = i18n[lang].badge;
         document.getElementById('txtMainTitle').innerText = i18n[lang].mainTitle;
         document.getElementById('txtSubDesc').innerText = i18n[lang].subDesc;
-        document.getElementById('txtBtnDownload').innerText = i18n[lang].btnDownload;
         document.getElementById('txtHome').innerText = i18n[lang].home;
-        document.getElementById('txtAccordionTitle').innerText = i18n[lang].accordionTitle;
         document.getElementById('backArrow').innerText = i18n[lang].dir === 'rtl' ? '❮' : '❯';
 
-        const isWebm = savedDesign && (savedDesign.formatMode === 'webm' || Boolean(savedDesign.logoData) || Boolean(savedDesign.textData && savedDesign.textData.text));
-        
-        document.getElementById('formatBadge').innerText = isWebm ? i18n[lang].formatWebm : i18n[lang].formatTgs;
-        document.getElementById('accordionBody').innerHTML = isWebm ? i18n[lang].guideWebmSteps : i18n[lang].guideTgsSteps;
+        document.getElementById('colTitleTgs').innerText = i18n[lang].colTgs;
+        document.getElementById('colTitleWebm').innerText = i18n[lang].colWebm;
+        document.getElementById('colTitleKey').innerText = i18n[lang].colKey;
+
+        document.getElementById('txtDlColTgs').innerText = i18n[lang].dlCol;
+        document.getElementById('txtDlColWebm').innerText = i18n[lang].dlCol;
+        document.getElementById('txtDlColKey').innerText = i18n[lang].dlCol;
+
+        document.getElementById('txtAccTitleTgs').innerText = i18n[lang].accTgs;
+        document.getElementById('txtAccTitleWebm').innerText = i18n[lang].accWebm;
+        document.getElementById('txtAccTitleKey').innerText = i18n[lang].accKey;
+
+        document.getElementById('contentTgs').innerHTML = i18n[lang].stepsTgs;
+        document.getElementById('contentWebm').innerHTML = i18n[lang].stepsWebm;
+        document.getElementById('contentKey').innerHTML = i18n[lang].stepsKey;
+
+        renderColumns();
     }
 
     async function initSuccessPage() {
-        savedDesign = JSON.parse(localStorage.getItem('finalCustomizedSticker'));
-        if (!savedDesign) {
+        try {
+            allStates = JSON.parse(localStorage.getItem('allCustomizedStickers')) || {};
+            selectedIds = JSON.parse(localStorage.getItem('selectedStickers')) || [];
+        } catch(e) { allStates = {}; selectedIds = []; }
+
+        if (selectedIds.length === 0) {
+            const single = JSON.parse(localStorage.getItem('finalCustomizedSticker'));
+            if (single) {
+                selectedIds = [1];
+                allStates = { 1: single };
+            }
+        }
+
+        if (selectedIds.length === 0) {
             document.querySelector('.success-card').innerHTML = `
                 <h3 style="color:#f43f5e; padding: 20px 0;">${i18n[currentLang].noOrder}</h3>
                 <a href="index.html" class="home-btn">${i18n[currentLang].home}</a>
@@ -581,199 +715,153 @@
             return;
         }
 
-        if (savedDesign.logoData) {
-            const logoEl = document.getElementById('successLogo');
-            logoEl.src = savedDesign.logoData;
-            logoEl.style.left = `${savedDesign.logoPos ? savedDesign.logoPos.x : 50}%`;
-            logoEl.style.top = `${savedDesign.logoPos ? savedDesign.logoPos.y : 50}%`;
-            const scaledLogo = Math.max(18, Math.round((savedDesign.logoSize || 55) * 0.8));
-            logoEl.style.width = `${scaledLogo}px`;
-            logoEl.style.height = `${scaledLogo}px`;
-            logoEl.style.display = 'block';
+        for (const id of selectedIds) {
+            try {
+                const res = await fetch(`/api/products/${id}`);
+                const data = await res.json();
+                if (data.success && data.data) {
+                    productDetailsMap[id] = data.data;
+                }
+            } catch(e) {}
         }
 
-        if (savedDesign.textData && savedDesign.textData.text) {
-            const textEl = document.getElementById('successText');
-            textEl.innerText = savedDesign.textData.text;
-            textEl.style.left = `${savedDesign.textData.x !== undefined ? savedDesign.textData.x : 50}%`;
-            textEl.style.top = `${savedDesign.textData.y !== undefined ? savedDesign.textData.y : 80}%`;
-            textEl.style.fontSize = `${Math.max(10, Math.round((savedDesign.textData.size || 22) * 0.75))}px`;
-            if (savedDesign.textData.color) textEl.style.color = savedDesign.textData.color;
-            textEl.style.display = 'block';
-        }
+        renderColumns();
+        changeLanguage('fa');
+    }
 
+    function renderColumns() {
+        const t = i18n[currentLang];
+        
+        const listTgs = document.getElementById('colItemsTgs');
+        const listWebm = document.getElementById('colItemsWebm');
+        const listKey = document.getElementById('colItemsKey');
+
+        listTgs.innerHTML = '';
+        listWebm.innerHTML = '';
+        listKey.innerHTML = '';
+
+        let countTgs = 0, countWebm = 0, countKey = 0;
+
+        selectedIds.forEach(id => {
+            const st = allStates[id] || { formatMode: 'tgs', layers: {}, logoData: null, textData: {} };
+            const prod = productDetailsMap[id] || { title: `Sticker #${id}` };
+
+            const isKey = (st.formatMode === 'keyboard');
+            const isWebm = (st.formatMode === 'webm' || Boolean(st.logoData) || Boolean(st.textData && st.textData.text));
+
+            const row = document.createElement('div');
+            row.className = 'col-item-row';
+            const thumbId = `col-thumb-${id}-${Date.now()}`;
+
+            row.innerHTML = `
+                <div class="col-thumb" id="${thumbId}"></div>
+                <span style="font-size:0.7rem; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:75px;">${prod.title}</span>
+            `;
+
+            if (isKey) {
+                listKey.appendChild(row);
+                countKey++;
+            } else if (isWebm) {
+                listWebm.appendChild(row);
+                countWebm++;
+            } else {
+                listTgs.appendChild(row);
+                countTgs++;
+            }
+
+            loadColThumb(id, thumbId, st);
+        });
+
+        if (countTgs === 0) listTgs.innerHTML = `<div class="empty-col-text">${t.empty}</div>`;
+        if (countWebm === 0) listWebm.innerHTML = `<div class="empty-col-text">${t.empty}</div>`;
+        if (countKey === 0) listKey.innerHTML = `<div class="empty-col-text">${t.empty}</div>`;
+
+        document.getElementById('btnColTgs').disabled = (countTgs === 0);
+        document.getElementById('btnColWebm').disabled = (countWebm === 0);
+        document.getElementById('btnColKey').disabled = (countKey === 0);
+    }
+
+    async function loadColThumb(id, containerId, state) {
         try {
-            const jsonRes = await fetch('/api/sticker-json');
-            modifiedLottieJson = await jsonRes.json();
-
-            if (savedDesign.layers) {
-                Object.keys(savedDesign.layers).forEach(idxStr => {
-                    const jsonIdx = parseInt(idxStr, 10);
-                    const rgb = hexToRgb01(savedDesign.layers[idxStr]);
-                    if (modifiedLottieJson.layers[jsonIdx] && modifiedLottieJson.layers[jsonIdx].shapes) {
-                        updateShapesDeep(modifiedLottieJson.layers[jsonIdx].shapes, rgb);
+            const res = await fetch(`/api/product-json/${id}`);
+            const json = await res.json();
+            
+            if (state.layers) {
+                Object.keys(state.layers).forEach(idx => {
+                    const rgb = hexToRgb01(state.layers[idx]);
+                    if (json.layers[idx] && json.layers[idx].shapes) {
+                        updateShapesDeep(json.layers[idx].shapes, rgb);
                     }
                 });
             }
 
-            lottie.loadAnimation({
-                container: document.getElementById('successLottie'),
-                renderer: 'svg',
-                loop: true,
-                autoplay: true,
-                animationData: JSON.parse(JSON.stringify(modifiedLottieJson))
-            });
-        } catch (err) {
-            console.error('Error loading Lottie preview:', err);
-        }
+            const wrap = document.getElementById(containerId);
+            if (wrap) {
+                const miniAnim = lottie.loadAnimation({
+                    container: wrap,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: false,
+                    animationData: json
+                });
 
-        changeLanguage('fa');
-    }
-
-    async function handleDownload() {
-        const btn = document.getElementById('btnDownload');
-        const origContent = btn.innerHTML;
-        btn.disabled = true;
-
-        const isWebmMode = savedDesign.formatMode === 'webm' || Boolean(savedDesign.logoData) || Boolean(savedDesign.textData && savedDesign.textData.text);
-        
-        if (isWebmMode) {
-            btn.innerHTML = `<span>⏳</span> <span>${i18n[currentLang].loadingWebm}</span>`;
-            await generatePreciseWebm();
-        } else {
-            btn.innerHTML = `<span>⏳</span> <span>${i18n[currentLang].loadingTgs}</span>`;
-            generateDirectTgs();
-        }
-
-        btn.innerHTML = origContent;
-        btn.disabled = false;
-    }
-
-    function generateDirectTgs() {
-        try {
-            const jsonStr = JSON.stringify(modifiedLottieJson);
-            const gzipped = pako.gzip(jsonStr, { level: 9 });
-            const blob = new Blob([gzipped], { type: 'application/x-tgsticker' });
-            downloadBlob(blob, 'sticker.tgs');
-        } catch (e) {
-            alert('Error creating TGS file');
-        }
-    }
-
-    async function generatePreciseWebm() {
-        return new Promise(async (resolve) => {
-            const host = document.getElementById('hiddenHost');
-            host.innerHTML = '';
-
-            const renderAnim = lottie.loadAnimation({
-                container: host,
-                renderer: 'svg',
-                loop: false,
-                autoplay: false,
-                animationData: JSON.parse(JSON.stringify(modifiedLottieJson))
-            });
-
-            await new Promise(r => renderAnim.addEventListener('DOMLoaded', r));
-            const svg = host.querySelector('svg');
-
-            let logoImg = null;
-            if (savedDesign.logoData) {
-                logoImg = new Image();
-                logoImg.src = savedDesign.logoData;
-                await new Promise(r => logoImg.onload = r);
-            }
-
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 512;
-            const ctx = canvas.getContext('2d', { alpha: true });
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-
-            const totalLottieFrames = renderAnim.totalFrames || 60;
-            const framesToCapture = 60;
-            const renderedCanvases = [];
-            const scaleFactor = 512 / 165;
-
-            for (let f = 0; f < framesToCapture; f++) {
-                const targetFrame = (f * (totalLottieFrames / framesToCapture)) % totalLottieFrames;
-                renderAnim.goToAndStop(targetFrame, true);
-
-                const svgString = new XMLSerializer().serializeToString(svg);
-                const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-                const blobURL = URL.createObjectURL(svgBlob);
-
-                await new Promise(frameDone => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const offCanvas = document.createElement('canvas');
-                        offCanvas.width = 512;
-                        offCanvas.height = 512;
-                        const offCtx = offCanvas.getContext('2d', { alpha: true });
-                        offCtx.imageSmoothingEnabled = true;
-                        offCtx.imageSmoothingQuality = 'high';
-                        offCtx.drawImage(img, 0, 0, 512, 512);
-
-                        if (logoImg) {
-                            const posX = (savedDesign.logoPos ? savedDesign.logoPos.x : 50) / 100 * 512;
-                            const posY = (savedDesign.logoPos ? savedDesign.logoPos.y : 50) / 100 * 512;
-                            const logoRenderSize = (parseFloat(savedDesign.logoSize) || 55) * scaleFactor;
-                            offCtx.drawImage(logoImg, posX - logoRenderSize / 2, posY - logoRenderSize / 2, logoRenderSize, logoRenderSize);
-                        }
-
-                        if (savedDesign.textData && savedDesign.textData.text) {
-                            const exactFontSize = Math.round((parseFloat(savedDesign.textData.size) || 22) * scaleFactor);
-                            offCtx.font = `900 ${exactFontSize}px Vazirmatn, Tahoma, sans-serif`;
-                            offCtx.fillStyle = savedDesign.textData.color || '#ffffff';
-                            offCtx.textAlign = 'center';
-                            offCtx.textBaseline = 'middle';
-                            offCtx.shadowColor = 'rgba(0,0,0,0.95)';
-                            offCtx.shadowBlur = Math.round(6 * scaleFactor);
-
-                            const posX = (savedDesign.textData.x !== undefined ? savedDesign.textData.x : 50) / 100 * 512;
-                            const posY = (savedDesign.textData.y !== undefined ? savedDesign.textData.y : 80) / 100 * 512;
-                            offCtx.fillText(savedDesign.textData.text, posX, posY);
-                        }
-
-                        renderedCanvases.push(offCanvas);
-                        URL.revokeObjectURL(blobURL);
-                        frameDone();
-                    };
-                    img.src = blobURL;
+                wrap.addEventListener('mouseenter', () => miniAnim.play());
+                wrap.addEventListener('mouseleave', () => {
+                    miniAnim.stop();
+                    miniAnim.goToAndStop(0, true);
                 });
             }
+        } catch(e) {}
+    }
 
-            renderAnim.destroy();
-            host.innerHTML = '';
+    async function handleColumnDownload(type) {
+        const btnId = type === 'tgs' ? 'btnColTgs' : (type === 'webm' ? 'btnColWebm' : 'btnColKey');
+        const btn = document.getElementById(btnId);
+        const orig = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ ...</span>`;
 
-            const stream = canvas.captureStream(30);
-            let mimeType = 'video/webm; codecs=vp9';
-            if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm; codecs=vp8';
-            const recorder = new MediaRecorder(stream, { mimeType: mimeType, videoBitsPerSecond: 2500000 });
+        for (let i = 0; i < selectedIds.length; i++) {
+            const id = selectedIds[i];
+            const st = allStates[id] || { formatMode: 'tgs', layers: {}, logoData: null, textData: {} };
 
-            const chunks = [];
-            recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-            recorder.onstop = () => {
-                const blob = new Blob(chunks, { type: 'video/webm' });
-                downloadBlob(blob, 'sticker.webm');
-                resolve();
-            };
+            const isKey = (st.formatMode === 'keyboard');
+            const isWebm = (st.formatMode === 'webm' || Boolean(st.logoData) || Boolean(st.textData && st.textData.text));
 
-            ctx.drawImage(renderedCanvases[0], 0, 0);
-            recorder.start();
+            let match = false;
+            if (type === 'tgs' && !isKey && !isWebm) match = true;
+            if (type === 'webm' && !isKey && isWebm) match = true;
+            if (type === 'keyboard' && isKey) match = true;
 
-            let playbackIndex = 0;
-            const playbackInterval = setInterval(() => {
-                playbackIndex++;
-                if (playbackIndex < renderedCanvases.length) {
-                    ctx.clearRect(0, 0, 512, 512);
-                    ctx.drawImage(renderedCanvases[playbackIndex], 0, 0);
-                } else {
-                    clearInterval(playbackInterval);
-                    recorder.stop();
+            if (!match) continue;
+
+            try {
+                const res = await fetch(`/api/product-json/${id}`);
+                const json = await res.json();
+
+                if (st.layers) {
+                    Object.keys(st.layers).forEach(idx => {
+                        const rgb = hexToRgb01(st.layers[idx]);
+                        if (json.layers[idx] && json.layers[idx].shapes) {
+                            updateShapesDeep(json.layers[idx].shapes, rgb);
+                        }
+                    });
                 }
-            }, 1000 / 30);
-        });
+
+                // هم مدل TGS معمولی و هم مدل کیبورد به صورت فایل .tgs دانلود می‌شوند
+                const jsonStr = JSON.stringify(json);
+                const gzipped = pako.gzip(jsonStr, { level: 9 });
+                const blob = new Blob([gzipped], { type: 'application/x-tgsticker' });
+                downloadBlob(blob, `sticker_${id}.tgs`);
+
+            } catch(err) {
+                console.error(`Error downloading sticker ${id}:`, err);
+            }
+            await new Promise(r => setTimeout(r, 250));
+        }
+
+        btn.innerHTML = orig;
+        btn.disabled = false;
     }
 
     function downloadBlob(blob, filename) {
