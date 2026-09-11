@@ -522,7 +522,6 @@ app.post('/api/send-to-telegram', async (req, res) => {
       formData.append('caption', caption);
     }
 
-    const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
     const tgRes = await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, {
       method: 'POST',
       body: formData
