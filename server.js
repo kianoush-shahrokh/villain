@@ -38,12 +38,12 @@ app.get('/tonconnect-manifest.json', (req, res) => {
   });
 });
 
-// اتصال به دیتابیس PostgreSQL
+// اتصال به دیتابیس PostgreSQL با پشتیبانی امن از SSL برای Render
 const pool = new Pool(
   process.env.DATABASE_URL
     ? {
         connectionString: process.env.DATABASE_URL,
-        ssl: false
+        ssl: { rejectUnauthorized: false }
       }
     : {
         user: 'postgres',
@@ -509,9 +509,8 @@ app.post('/api/send-to-telegram', async (req, res) => {
       return res.status(400).json({ success: false, message: 'اطلاعات ناقص است.' });
     }
 
-    // توکن ربات تلگرام خود را از متغیر محیطی یا به صورت مستقیم قرار دهید
     const botToken = process.env.TELEGRAM_BOT_TOKEN || '8937158151:AAE94CZGvR6P7cu-B3Q1YwV8fc2l6hYhLp8';
-    if (!botToken || botToken === 'YOUR_BOT_TOKEN_HERE') {
+    if (!botToken) {
       return res.status(500).json({ success: false, message: 'توکن ربات تلگرام در سرور تنظیم نشده است.' });
     }
 
